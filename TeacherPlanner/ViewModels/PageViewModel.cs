@@ -19,8 +19,8 @@ namespace TeacherPlanner.ViewModels
 
         public PageViewModel(TextBlock DEBUGGER)
         {
-            LeftDay = new Day(TimeTable.CurrentDateLeftString, 6);
-            RightDay = new Day(TimeTable.CurrentDateRightString, 6);
+            LeftDay = new Day(TimeTable.CurrentDateLeftString, this);
+            RightDay = new Day(TimeTable.CurrentDateRightString, this);
             _debug = DEBUGGER;
             TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
@@ -32,7 +32,7 @@ namespace TeacherPlanner.ViewModels
         public Day LeftDay
         {
             get => _leftDay;
-            set => RaiseAndSet(ref _leftDay, value);
+            set => RaiseAndSetIfChanged(ref _leftDay, value);
         }
 
         public Day RightDay
@@ -44,19 +44,20 @@ namespace TeacherPlanner.ViewModels
         public void OnTurnPageForward(int numOfDays)
         {
             TimeTable.ChangeCurrentDate(numOfDays, "Left");
-            LeftDay = new Day(TimeTable.CurrentDateLeftString);
-            RightDay = new Day(TimeTable.CurrentDateRightString);
-            _debug.Text = $"{LeftDay.Periods[0].MarginFields[0]}";
+            LeftDay = new Day(TimeTable.CurrentDateLeftString, this);
+            RightDay = new Day(TimeTable.CurrentDateRightString, this);
+            _debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }
 
-        public void OnTurnPageBackward(int numOfDays) 
+        public void OnTurnPageBackward(int numOfDays)
         {
-            //TimeTable.ChangeCurrentDate(numOfDays, "Left");
-            //LeftDay = new Day(TimeTable.CurrentDateLeftString);
-            //RightDay = new Day(TimeTable.CurrentDateRightString);
+            TimeTable.ChangeCurrentDate(numOfDays, "Left");
+            LeftDay = new Day(TimeTable.CurrentDateLeftString, this);
+            RightDay = new Day(TimeTable.CurrentDateRightString, this);
             Random r = new Random();
-            _debug.Text = $"{r.Next(1,10)}:{LeftDay.Periods[0].MarginFields[0]}";
+            _debug.Text = $"{r.Next(1, 10)}:{LeftDay.Period1.Row1.LeftText}";
         }
+
     }
 
    
