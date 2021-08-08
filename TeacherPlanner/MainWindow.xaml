@@ -1,0 +1,280 @@
+﻿<Window x:Class="TeacherPlanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TeacherPlanner"
+        xmlns:model="clr-namespace:TeacherPlanner.Models"
+        
+        mc:Ignorable="d"
+        
+        Title="Teacher Planner" Height="1080" Width="1920" Name="mainwindow">
+
+    <Window.Resources>
+        <DataTemplate x:Key="DateTemplate">
+            <TextBlock 
+                Text="{Binding Date}"
+                Foreground="White"
+                Background="Black"
+                FontSize="20"
+                FontWeight="Medium"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                TextAlignment="Center"
+            />
+        </DataTemplate>
+        <DataTemplate x:Key="ClassCodeBoxTemplate">
+            <Border BorderThickness="0,0,1,0" BorderBrush="Gray">
+            <TextBox 
+                Text="{Binding Path=.}"
+                GotFocus="TextBoxMouseOver"
+                LostFocus="TextBoxOutOfFocus"
+                SelectionChanged="TextBoxSelectionChanged"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                IsReadOnly="True"
+                TextAlignment="Center"
+                BorderBrush="Transparent"
+            />
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TextEntryBoxTemplate">
+            <Border BorderThickness="0,0,1,1" BorderBrush="Gray">
+            <TextBox 
+                Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                LostFocus="TextBoxOutOfFocus"
+                MouseEnter="TextBoxMouseOver"
+                MouseLeave="TextBoxMouseOut"
+                SelectionChanged="TextBoxSelectionChanged"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                IsReadOnly="True"
+                TextAlignment="Left"
+                BorderBrush="Transparent"
+            />
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PeriodTemplate">
+            <Border BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <!--Period Number-->
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.RowSpan="5"
+                        Text="{Binding Path=Number}"
+                        TextAlignment="Center"
+                        Background="#AAAAAA"
+                        FontSize="60"
+                        Foreground="Black"
+                    />
+
+
+                    <!--Form Group-->
+                    <Border Grid.Row="5" BorderThickness="0,0,1,0" BorderBrush="Gray">
+                        <TextBlock 
+                            Text="Form Group"
+                            TextAlignment="Center"
+                            Background="White"
+                            FontSize="10"
+                            Foreground="Black"
+                        />  
+                    </Border>
+
+                    <ContentPresenter Grid.Row="6" Grid.Column="0" Content="{Binding Path=ClassCode}" ContentTemplate="{StaticResource ClassCodeBoxTemplate}"/>
+
+                    <!--Margin Text Boxes-->
+                    <ContentPresenter Grid.Row="0" Grid.Column="1" Content="{Binding Path=MarginFields[0]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Path=MarginFields[1]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="2" Grid.Column="1" Content="{Binding Path=MarginFields[2]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="3" Grid.Column="1" Content="{Binding Path=MarginFields[3]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="4" Grid.Column="1" Content="{Binding Path=MarginFields[4]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="5" Grid.Column="1" Content="{Binding Path=MarginFields[5]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="6" Grid.Column="1" Content="{Binding Path=MarginFields[6]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+
+                    <!--Main Text Boxes-->
+                    <ContentPresenter Grid.Row="0" Grid.Column="2" Content="{Binding Path=MainContentFields[0]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="1" Grid.Column="2" Content="{Binding Path=MainContentFields[1]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="2" Grid.Column="2" Content="{Binding Path=MainContentFields[2]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="3" Grid.Column="2" Content="{Binding Path=MainContentFields[3]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="4" Grid.Column="2" Content="{Binding Path=MainContentFields[4]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="5" Grid.Column="2" Content="{Binding Path=MainContentFields[5]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="6" Grid.Column="2" Content="{Binding Path=MainContentFields[6]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+
+                    <!--Side Text Boxes-->
+                    <ContentPresenter Grid.Row="0" Grid.Column="3" Content="{Binding Path=SideFields[0]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="1" Grid.Column="3" Content="{Binding Path=SideFields[1]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="2" Grid.Column="3" Content="{Binding Path=SideFields[2]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="3" Grid.Column="3" Content="{Binding Path=SideFields[3]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="4" Grid.Column="3" Content="{Binding Path=SideFields[4]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="5" Grid.Column="3" Content="{Binding Path=SideFields[5]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+                    <ContentPresenter Grid.Row="6" Grid.Column="3" Content="{Binding Path=SideFields[6]}" ContentTemplate="{StaticResource TextEntryBoxTemplate}"/>
+
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Grid Name="Layout_Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="48*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="48*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock 
+            Name="DEBUGGER"
+            Grid.Row="0" 
+            Grid.Column="1" 
+            Text="DEBUG"                      
+            Foreground="Black"
+            Background="White"
+            FontSize="8"
+            FontWeight="Medium"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            TextAlignment="Left"
+        />
+
+
+        <!--Day 1 Date Header-->
+
+        <Button Content="--/"
+                Grid.Column="4"
+                Grid.Row="1"
+                Command="{Binding TurnPageForwardCommand}"
+                CommandParameter="1"
+                />
+        
+        <Button Content="\--"
+                Grid.Column="0"
+                Grid.Row="1"
+                Command="{Binding TurnPageBackwardCommand}"
+                CommandParameter="-1"
+                />
+
+        <ContentPresenter 
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Content="{Binding LeftDay}"
+            ContentTemplate="{StaticResource DateTemplate}">
+        </ContentPresenter>
+
+        <ContentPresenter 
+            Grid.Row="1" 
+            Grid.Column="3" 
+            Content="{Binding RightDay}"
+            ContentTemplate="{StaticResource DateTemplate}">
+        </ContentPresenter>
+        
+        <!--Periods-->
+        <!--Left Day-->
+
+        <ContentPresenter Grid.Row="2" Grid.Column="1" Content="{Binding LeftDay.Periods[0]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="3" Grid.Column="1" Content="{Binding LeftDay.Periods[1]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="4" Grid.Column="1" Content="{Binding LeftDay.Periods[2]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="5" Grid.Column="1" Content="{Binding LeftDay.Periods[3]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="6" Grid.Column="1" Content="{Binding LeftDay.Periods[4]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="7" Grid.Column="1" Content="{Binding LeftDay.Periods[5]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+
+        <!--Right Day-->
+        <ContentPresenter Grid.Row="2" Grid.Column="3" Content="{Binding RightDay.Periods[0]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="3" Grid.Column="3" Content="{Binding RightDay.Periods[1]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="4" Grid.Column="3" Content="{Binding RightDay.Periods[2]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="5" Grid.Column="3" Content="{Binding RightDay.Periods[3]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="6" Grid.Column="3" Content="{Binding RightDay.Periods[4]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+        <ContentPresenter Grid.Row="7" Grid.Column="3" Content="{Binding RightDay.Periods[5]}" ContentTemplate="{StaticResource PeriodTemplate}"/>
+
+        <!--Period Block--><!--
+        
+        <Grid Name="Period1L" Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            
+        --><!--Period Number--><!--
+        
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.RowSpan="5"
+                Text="1"
+                TextAlignment="Center"
+                Background="#AAAAAA"
+                FontSize="60"
+                Foreground="Black"
+            />
+            
+            
+        --><!--Form Group--><!--
+        
+            <TextBlock 
+                Grid.RowSpan="12"
+                Grid.Row="5"
+                Text="FORM GROUP"
+                TextAlignment="Center"
+                Background="White"
+                FontSize="10"
+                Foreground="Black"
+            />
+
+            <ContentPresenter 
+                Grid.Row="6" 
+                Grid.Column="0" 
+                Content="{Binding LeftDay.Periods[0].ClassCode}"
+                ContentTemplate="{StaticResource TextEntryBoxTemplate}">
+            </ContentPresenter>
+
+        </Grid>-->
+
+    </Grid>
+</Window>
