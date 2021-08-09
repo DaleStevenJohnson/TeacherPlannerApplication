@@ -17,6 +17,7 @@ namespace TeacherPlanner.Models
         public string Month { get { return Date.ToString("MMMM"); } }
         public string Year { get { return Date.ToString("yyyy"); } }
         public string DisplayDate { get { return Date.ToString(TimeTable.DateHeadingFormat);  } }
+        public string FileNameDate { get { return Date.ToString("yyyyMMdd"); }  }
         public string DisplayMonthYear { get { return Date.ToString("MMMM yyyy"); } }
         public DateTime Date
         {

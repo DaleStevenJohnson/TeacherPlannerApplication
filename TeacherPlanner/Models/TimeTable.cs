@@ -14,9 +14,11 @@ namespace TeacherPlanner.Models
         private static string _currentDateLeftString;
         private static DateTime _currentDateRight;
         private static string _currentDateRightString;
+        public static DateTime[] CurrentDates;
 
         static TimeTable()
         {
+            CurrentDates = new DateTime[2];
             Today = DateTime.Today;
             CurrentDateLeft = Today;
             
@@ -46,13 +48,13 @@ namespace TeacherPlanner.Models
         public static DateTime CurrentDateLeft {
             get 
             {
-                return _currentDateLeft;
+                return CurrentDates[0];
             }
             set 
             {
-                _currentDateLeft = value;
-                _currentDateLeftString = _currentDateLeft.ToString(DateHeadingFormat);
-                if (DatesAreNeighbours) CurrentDateRight = AdvanceDate(_currentDateLeft, 1);
+                CurrentDates[0] = value;
+                _currentDateLeftString = CurrentDates[0].ToString(DateHeadingFormat);
+                if (DatesAreNeighbours) CurrentDateRight = AdvanceDate(CurrentDates[0], 1);
                 
             }
                 }
@@ -63,14 +65,14 @@ namespace TeacherPlanner.Models
         {
             get
             {
-                return _currentDateRight;
+                return CurrentDates[1];
             }
             set
             {
-                _currentDateRight = value;
-                _currentDateRightString = _currentDateRight.ToString(DateHeadingFormat);
-                if (DatesAreNeighbours && _currentDateLeftString != AdvanceDate(_currentDateRight, -1).ToString(DateHeadingFormat))
-                    CurrentDateLeft = AdvanceDate(_currentDateRight, -1);
+                CurrentDates[1] = value;
+                _currentDateRightString = CurrentDates[1].ToString(DateHeadingFormat);
+                if (DatesAreNeighbours && _currentDateLeftString != AdvanceDate(CurrentDates[1], -1).ToString(DateHeadingFormat))
+                    CurrentDateLeft = AdvanceDate(CurrentDates[1], -1);
             }
         }
 
