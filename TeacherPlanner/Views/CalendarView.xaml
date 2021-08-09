@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="TeacherPlanner.Views.CalendarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <!--Heading-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" Background="LightGray" Text="{Binding DisplayMonthYear}" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <!--Day of the Week Letters-->
+        <TextBlock Grid.Row="1" Grid.Column="0" Background="White" Text="M" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Background="White" Text="T" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <TextBlock Grid.Row="1" Grid.Column="2" Background="White" Text="W" TextAlignment="Center" FontWeight="Bold" FontSize="8"/>
+        <TextBlock Grid.Row="1" Grid.Column="3" Background="White" Text="T" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <TextBlock Grid.Row="1" Grid.Column="4" Background="White" Text="F" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <TextBlock Grid.Row="1" Grid.Column="5" Background="DarkGray" Text="S" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <TextBlock Grid.Row="1" Grid.Column="6" Background="DarkGray" Text="S" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <!--Dates-->
+
+    </Grid>
+</UserControl>

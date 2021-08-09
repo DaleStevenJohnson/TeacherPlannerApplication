@@ -5,7 +5,7 @@ namespace TeacherPlanner.Models
     public static class TimeTable
     {
         // Fields
-        private static string _dateHeadingFormat = "dddd, dd MMMM";
+        public static string DateHeadingFormat = "dddd, dd MMMM";
         private static DateTime _today;
         private static string _todayString;
         private static DateTime _tomorrow;
@@ -29,9 +29,9 @@ namespace TeacherPlanner.Models
             } 
             set { 
                 _today = value;
-                _todayString = _today.ToString(_dateHeadingFormat);
+                _todayString = _today.ToString(DateHeadingFormat);
                 _tomorrow = AdvanceDate(_today, 1);
-                _tomorrowString = _tomorrow.ToString(_dateHeadingFormat);
+                _tomorrowString = _tomorrow.ToString(DateHeadingFormat);
             } 
         }
 
@@ -51,7 +51,7 @@ namespace TeacherPlanner.Models
             set 
             {
                 _currentDateLeft = value;
-                _currentDateLeftString = _currentDateLeft.ToString(_dateHeadingFormat);
+                _currentDateLeftString = _currentDateLeft.ToString(DateHeadingFormat);
                 if (DatesAreNeighbours) CurrentDateRight = AdvanceDate(_currentDateLeft, 1);
                 
             }
@@ -68,8 +68,8 @@ namespace TeacherPlanner.Models
             set
             {
                 _currentDateRight = value;
-                _currentDateRightString = _currentDateRight.ToString(_dateHeadingFormat);
-                if (DatesAreNeighbours && _currentDateLeftString != AdvanceDate(_currentDateRight, -1).ToString(_dateHeadingFormat))
+                _currentDateRightString = _currentDateRight.ToString(DateHeadingFormat);
+                if (DatesAreNeighbours && _currentDateLeftString != AdvanceDate(_currentDateRight, -1).ToString(DateHeadingFormat))
                     CurrentDateLeft = AdvanceDate(_currentDateRight, -1);
             }
         }

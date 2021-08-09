@@ -20,6 +20,7 @@
             <RowDefinition Height="12*"/>
             <RowDefinition Height="12*"/>
             <RowDefinition Height="12*"/>
+            <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
         
         <!--Buttons-->
@@ -43,7 +44,7 @@
         <TextBlock 
             Grid.Column="1"
             Grid.Row="0"
-            Text="{Binding Date}"
+            Text="{Binding NoteSection.Calendar.DisplayDate}"
             Foreground="White"
             Background="Black"
             FontSize="20"
@@ -60,5 +61,11 @@
         <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period4}"/>
         <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period5}"/>
         <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period6}"/>
+        <!--Notes-->
+        <local:NotesView Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding NoteSection}"/>
+
+        
+
     </Grid>
+            
 </UserControl>

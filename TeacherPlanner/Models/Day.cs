@@ -9,17 +9,19 @@ namespace TeacherPlanner.Models
 {
     public class Day : ObservableObject
     {
-        
-        private string _date;
+
         
 
-        public Day(string date, PageViewModel parent)
+
+        public Day(DateTime date, PageViewModel parent)
         {
-            Date = date;
             MyParent = parent;
+            
+            NoteSection = new NoteSectionModel(date);
             PopulatePeriods();
         }
 
+        
         public PeriodModel Period1 { get; set; }
         public PeriodModel Period2 { get; set; }
         public PeriodModel Period3 { get; set; }
@@ -27,24 +29,11 @@ namespace TeacherPlanner.Models
         public PeriodModel Period5 { get; set; }
         public PeriodModel Period6 { get; set; }
 
+        public NoteSectionModel NoteSection { get; set; }
         public PageViewModel MyParent { get; }
+
+
         
-
-
-
-
-
-
-        public string Date {
-            get 
-            {
-                return _date;
-            }
-            set
-            {
-                _date = value;
-            } 
-        }
 
         
 
@@ -60,12 +49,12 @@ namespace TeacherPlanner.Models
                 int r = random.Next(0, 3);
                 forms[i] = $"{year}{formcodes[r]}";
             }
-            Period1 = new PeriodModel(1, forms[0], Date);
-            Period2 = new PeriodModel(2, forms[1], Date);
-            Period3 = new PeriodModel(3, forms[2], Date);
-            Period4 = new PeriodModel(4, forms[3], Date);
-            Period5 = new PeriodModel(5, forms[4], Date);
-            Period6 = new PeriodModel(6, forms[5], Date);
+            Period1 = new PeriodModel(1, forms[0], NoteSection.Calendar.DisplayDate);
+            Period2 = new PeriodModel(2, forms[1], NoteSection.Calendar.DisplayDate);
+            Period3 = new PeriodModel(3, forms[2], NoteSection.Calendar.DisplayDate);
+            Period4 = new PeriodModel(4, forms[3], NoteSection.Calendar.DisplayDate);
+            Period5 = new PeriodModel(5, forms[4], NoteSection.Calendar.DisplayDate);
+            Period6 = new PeriodModel(6, forms[5], NoteSection.Calendar.DisplayDate);
 
         }
     }
