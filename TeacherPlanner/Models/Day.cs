@@ -51,20 +51,7 @@ namespace TeacherPlanner.Models
 
         public NoteSectionModel NoteSection { get; set; }
         public PageViewModel MyParent { get; }
-        private void PopulateTestPeriods() 
-        {
-            Random random = new Random();
-            for (int i = 0; i < Periods.Length; i++)
-            {
-                int year = random.Next(7, 13);
-                string[] formcodes = new string[] { "A", "J", "P", "C" };
-                int r = random.Next(0, 3);
-                string form = $"{year}{formcodes[r]}";
-                Periods[i] = new PeriodModel(i + 1, form, NoteSection.Calendar.DisplayDate);
-            }
-        }
-
-        public bool Load(string username)
+        public bool TryLoad(string username)//, out string[] data)
         {
             string[] data = FileHandlingHelper.LoadDataFromFile(username, NoteSection.Calendar.FileNameDate);
             int periodRows = 7;

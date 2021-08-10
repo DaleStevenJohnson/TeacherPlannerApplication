@@ -10,54 +10,62 @@
         
         Title="Teacher Planner" Height="1080" Width="1920" Name="mainwindow">
 
-    
-
-    <Grid Name="Layout_Root">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="48*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="48*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="95*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-
-        <TextBlock 
-            Name="DEBUGGER"
-            Grid.Row="0" 
-            Grid.Column="1" 
-            Text="DEBUG"                      
-            Foreground="Black"
-            Background="White"
-            FontSize="8"
-            FontWeight="Medium"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            TextAlignment="Left"
-        />
+    <TabControl>
 
 
 
-        <!--Periods-->
-        <!--Left Day-->
-        <view:DayView 
-            Grid.Row="1" 
-            Grid.Column="1" 
-            DataContext="{Binding LeftDay}"
-        />
+        <TabItem Header="Planner">
+            <Grid Name="Layout_Root">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="48*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="48*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="95*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock 
+                    Name="DEBUGGER"
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    Text="DEBUG"                      
+                    Foreground="Black"
+                    Background="White"
+                    FontSize="8"
+                    FontWeight="Medium"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Left"
+                />
 
 
-        <!--Right Day-->
-        <view:DayView 
-            Grid.Row="1" 
-            Grid.Column="3" 
-            DataContext="{Binding RightDay}"
-        />
 
-    </Grid>
+                <!--Periods-->
+                <!--Left Day-->
+                <view:DayView 
+                    Grid.Row="1" 
+                    Grid.Column="1" 
+                    DataContext="{Binding LeftDay}"
+                />
+
+
+                <!--Right Day-->
+                <view:DayView 
+                    Grid.Row="1" 
+                    Grid.Column="3" 
+                    DataContext="{Binding RightDay}"
+                />
+
+            </Grid>
+        </TabItem>
+        <TabItem Name="Todo" Header="Todo">
+            
+        </TabItem>
+    </TabControl>
 </Window>

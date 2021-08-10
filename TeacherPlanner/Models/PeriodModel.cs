@@ -10,16 +10,12 @@ namespace TeacherPlanner.Models
     public class PeriodModel : ObservableObject
     {
         private readonly string _delimiter = "`";
-        
         public PeriodModel(int number, string classcode, string date)
         {
             Number = number;
             ClassCode = classcode;
             Date = date;
-
             Rows = new PeriodRowModel[7];
-
-            
         }
 
         public string Date;
@@ -71,39 +67,16 @@ namespace TeacherPlanner.Models
                 Rows[i] = new PeriodRowModel(rowData[0], rowData[1], rowData[2]);
             }
         }
-
-        private void CreateRandomTestData()
-        {
-            for (int i = 0; i < Rows.Length; i++)
-            {
-                string leftText = FileHandlingHelper.GetRandomWord();
-                string centerText = FileHandlingHelper.GetRandomSentence(8);
-                string rightText = FileHandlingHelper.GetRandomSentence(5);
-                Rows[i] = new PeriodRowModel(leftText, centerText, rightText);
-            }
-        }
-        private void PopulateRowModel(PeriodRowModel rowModel)
-        {
-            rowModel.LeftText = FileHandlingHelper.GetRandomWord();
-            rowModel.CenterText = FileHandlingHelper.GetRandomSentence(8);
-            rowModel.RightText = FileHandlingHelper.GetRandomSentence(3);
-        }
-
         internal string PackageSaveData()
         {
             string saveData = $"{ClassCode}";
             for (int i = 0; i < Rows.Length; i++)
             {
-
                 string[] content = FileHandlingHelper.SanitiseStrings(Rows[i].RowText);
                 string row = $"\n{content[0]}{_delimiter}{content[1]}{_delimiter}{content[2]}";
                 saveData += row;
             }
             return saveData;
         }
-        
-    }
-
-
-   
+    }  
 }

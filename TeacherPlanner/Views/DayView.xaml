@@ -67,5 +67,9 @@
         
 
     </Grid>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding MyParent.SaveCommand}"/>
+    </UserControl.InputBindings>
             
 </UserControl>

@@ -25,11 +25,13 @@ namespace TeacherPlanner.ViewModels
             _debug = DEBUGGER;
             TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
+            SaveCommand = new SimpleCommand(_ => OnSave());
         }
 
 
         public ICommand TurnPageForwardCommand { get; }
         public ICommand TurnPageBackwardCommand { get; }
+        public ICommand SaveCommand { get; }
 
         public LoadedDays Days;
 
@@ -49,7 +51,11 @@ namespace TeacherPlanner.ViewModels
             
             //_debug.Text = $"{r.Next(1, 10)}:{LeftDay.Period1.Row1.LeftText}";
         }
-
+        public void OnSave()
+        {
+            Days.SaveDays();
+            MessageBox.Show("Saved");
+        }
 
 
     }

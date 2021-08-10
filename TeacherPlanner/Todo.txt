@@ -1,0 +1,31 @@
+﻿Features
+
+Add Top Menu Bar
+
+Add Import Timetable function
+- Option selected from menu bar
+- File Picker Dialog box
+- Load and Store user provided timetable
+- Standardise how the Timetable file should be structured
+
+Add Login screen
+- Allow create user
+- Store user data sensibly - Encryption - hash passwords - Not in AppData?
+- Only access planner and todo upon successful login
+- Session? Stay logged in?
+
+Add Encryption to files
+- Appdata files
+- Could be storing sensitive student information
+
+Add Calendar
+- Display Dates under appropriate day
+- Clicking a Date takes you to that page
+
+Add / Revamp Scrolling between pages
+- Radio for Single/Dual page scrolling - Settings tab?
+- Shift Clicking a +/- button makes it scroll a week
+
+Settings Tab
+- Dark mode?
+- Log out

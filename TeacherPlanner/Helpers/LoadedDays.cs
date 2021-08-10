@@ -94,7 +94,7 @@ namespace TeacherPlanner.Helpers
         private Day LoadNewDay(DateTime date, int side)
         {
             Day newDay = new Day(date, _myParent);
-            newDay.Load(_username);
+            newDay.TryLoad(_username);// , out var data);
             AddDay(newDay);
             if (side == 0)
                 LeftDay = newDay;
