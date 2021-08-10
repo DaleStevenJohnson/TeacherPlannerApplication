@@ -18,11 +18,10 @@ namespace TeacherPlanner.ViewModels
         private TextBlock _debug;
         private string _username = "DJohnson";
 
-        public PageViewModel(TextBlock DEBUGGER)
+        public PageViewModel()
         {
             Days = new LoadedDays(_username, this);
             Days.LoadDays();
-            _debug = DEBUGGER;
             TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
             SaveCommand = new SimpleCommand(_ => OnSave());

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,26 +10,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
 using TeacherPlanner.ViewModels;
-using TeacherPlanner.Login;
 
-namespace TeacherPlanner
+namespace TeacherPlanner.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PlannerPageView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PlannerPageView : UserControl
     {
-        public MainWindow()
+        public PlannerPageView()
         {
             InitializeComponent();
-            this.Hide();
-            var Login = new LoginWindow();
-            Login.Show();
+
+            PageViewModel = new PageViewModel();
+            this.DataContext = PageViewModel.Days;
         }
 
-        
-
+        public PageViewModel PageViewModel { get; set; }
     }
 }
