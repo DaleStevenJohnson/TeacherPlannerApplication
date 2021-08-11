@@ -35,15 +35,5 @@ namespace TeacherPlanner.Helpers
             OnPropertyChanged(propertyName);
             return true;
         }
-
-        protected virtual bool RaiseAndSet<TProperty>(
-            ref TProperty field,
-            TProperty value,
-            [CallerMemberName] string propertyName = null)
-        {
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
     }
 }

@@ -13,7 +13,7 @@ namespace TeacherPlanner.Helpers
             if (!Directory.Exists(RootPath))
                 Directory.CreateDirectory(RootPath);
         }
-        private static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
+        public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
         private static string UserDataPath = Path.Combine(RootPath, "UserData");
         
         // File Path Methods
@@ -49,7 +49,33 @@ namespace TeacherPlanner.Helpers
             File.WriteAllText(path, data);
             return true;
         }
+
+        public static bool AppendTo(string path, string data)
+        {
+            if (!File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine(data);
+                }
+            }
+            else
+            {
+                // This text is always added, making the file longer over time
+                // if it is not deleted.
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(data);
+                }
+            }
+            return true;
+        }
+
+        
         // Input Sanitisation Methods
+
+
         public static string SanitiseString(string s)
         {
             return s.Trim().Replace("`", "");

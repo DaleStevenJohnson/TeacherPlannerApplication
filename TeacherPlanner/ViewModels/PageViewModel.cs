@@ -14,8 +14,6 @@ namespace TeacherPlanner.ViewModels
     
     public class PageViewModel
     {
-        
-        private TextBlock _debug;
         private string _username = "DJohnson";
 
         public PageViewModel()
@@ -46,8 +44,7 @@ namespace TeacherPlanner.ViewModels
         {
             Days.SaveDays();
             TimeTable.ChangeCurrentDate(numOfDays, "Left");
-            Days.LoadDays();
-            
+            Days.LoadDays();        
             //_debug.Text = $"{r.Next(1, 10)}:{LeftDay.Period1.Row1.LeftText}";
         }
         public void OnSave()

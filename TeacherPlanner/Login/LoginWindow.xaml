@@ -4,21 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeacherPlanner.Login"
+        xmlns:view="clr-namespace:TeacherPlanner.Login.Views"
         mc:Ignorable="d"
         Title="Teacher Planner" Height="450" Width="450"
         Icon="pack://application:,,,/Assets/icon.ico"
         ResizeMode="NoResize">
     <!--  Icon open folder by Creaticca Creative Agency from the Noun Project-->
 
-    <Window.Resources>
-        <Style TargetType="Button" x:Key="RoundButton">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="5" />
-                </Style>
-            </Style.Resources>
-        </Style>
-    </Window.Resources>
+    
     
     <Grid>
         <Grid.Background>
@@ -26,49 +19,43 @@
         </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="10*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="20*"/>
+            <RowDefinition Height="35*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
-               FontSize="30" FontFamily="Courier New"
+        <Label Grid.Row="1" Grid.Column="1" Margin="0,20,0,20"
+            FontSize="30" FontFamily="Courier New" Foreground="White"
                HorizontalAlignment="Center" VerticalContentAlignment="Center"
-               Content="Teacher Planner"/>
+               Content="Teacher Planner">
+            <Label.Background>
+                <SolidColorBrush Color="DarkGray" Opacity="0.5"/>
+            </Label.Background>
+        </Label>
 
-        <Label HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2" 
-               Content="Username:"/>
+        <TabControl Grid.Row="2" Grid.Column="1">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="Background" Value="Yellow"/>
+                </Style>
+            </TabControl.Resources>
+            <TabControl.Background>
+                <SolidColorBrush Color="Transparent"/>
+            </TabControl.Background>
+            
+            <TabItem Header="Login">
+                <view:LoginView DataContext="{Binding }"/>
+            </TabItem>
+            
+            <TabItem Header="Create Account">
+                <view:CreateAccountView DataContext="{Binding }"/>
+            </TabItem>
+        </TabControl>
         
-        <TextBox Grid.Column="2" Grid.Row="2" GotFocus="TextBox_GotFocus"  LostFocus="TextBox_LostFocus"
-                 Background="LightGray" Opacity="0.3" BorderBrush="DarkGray" BorderThickness="2"
-                 VerticalContentAlignment="Center"/>
-        
-        <Label HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="4" 
-               Content="Password:"/>
-        
-        <PasswordBox Grid.Column="2" Grid.Row="4" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"
-                     Background="LightGray" Opacity="0.3" BorderBrush="DarkGray" BorderThickness="2"
-                     VerticalContentAlignment="Center"/>
-        
-        <Button Grid.Column="2" Grid.Row="6" Margin="100,1,0,1" Content="Login!"
-                Background="LightGray" BorderBrush="Transparent" BorderThickness="2" 
-                MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                Style="{DynamicResource RoundButton}"/>
-
-        <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="7" 
-               VerticalContentAlignment="Bottom"
-               Content="Don't have an account? Create one!" FontSize="8"
-               />
     </Grid>
 </Window>

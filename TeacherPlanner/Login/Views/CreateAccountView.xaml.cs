@@ -1,30 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace TeacherPlanner.Login
+namespace TeacherPlanner.Login.Views
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for CreateAccountView.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class CreateAccountView : UserControl
     {
-        public LoginWindow()
+        public CreateAccountView()
         {
             InitializeComponent();
-            ViewModel = new LoginViewModel();
-            this.DataContext = ViewModel;
         }
-        private LoginViewModel ViewModel { get; }
-        
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
@@ -51,7 +40,5 @@ namespace TeacherPlanner.Login
             Control box = sender as Control;
             box.Background = Brushes.LightGray;
         }
-
-        
     }
 }
