@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using TeacherPlanner.ViewModels;
 using TeacherPlanner.Login.Views;
+using TeacherPlanner.Login.ViewModels;
 
 namespace TeacherPlanner
 {
@@ -12,12 +13,24 @@ namespace TeacherPlanner
         public MainWindow()
         {
             InitializeComponent();
-            this.Hide();
-            var Login = new AccountManagementWindow();
-            Login.Show();
+
+            var accountManagementViewModel = new AccountManagementViewModel();
+            var accountManagementWindow = new AccountManagementWindow
+            {
+                DataContext = accountManagementViewModel,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            
+            accountManagementWindow.ShowDialog();
+            if (!accountManagementViewModel.LoginViewModel.LoggedIn)
+            {
+                Application.Current.Shutdown();
+            }
+            DataContext = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
+            DataContextChanged += (sender, args) =>
+            {
+                DataContext = args.NewValue;
+            };
         }
-
-        
-
     }
 }

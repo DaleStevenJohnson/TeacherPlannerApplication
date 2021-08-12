@@ -10,23 +10,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TeacherPlanner.ViewModels;
 
 namespace TeacherPlanner.Views
 {
     /// <summary>
-    /// Interaction logic for PlannerPageView.xaml
+    /// Interaction logic for TodoPageView.xaml
     /// </summary>
-    public partial class PlannerPageView : UserControl
+    public partial class TodoPageView : UserControl
     {
-        public PlannerPageView()
+        public TodoPageView()
         {
             InitializeComponent();
-
-            PageViewModel = new PlannerViewModel();
-            this.DataContext = PageViewModel.Days;
         }
-
-        public PlannerViewModel PageViewModel { get; set; }
     }
 }

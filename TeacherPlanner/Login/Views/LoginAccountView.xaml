@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodel="clr-namespace:TeacherPlanner.Login.ViewModels"
+             xmlns:converter="clr-namespace:TeacherPlanner.Converters"
              xmlns:local="clr-namespace:TeacherPlanner.Login.Views"
              
              mc:Ignorable="d"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:LoginViewModel}}"
              d:DesignHeight="450" d:DesignWidth="450">
     <UserControl.Resources>
+        <converter:MultipleParameterConverter x:Key="MultipleParameterConverter"/>
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>
                 <Style TargetType="Border">
@@ -38,7 +40,20 @@
 
 
         </Grid.RowDefinitions>
-
+        
+        <Grid.InputBindings>
+            <KeyBinding Key="Return"
+                        Command="{Binding LoginButtonClickedCommand}">
+                <KeyBinding.CommandParameter>
+                    <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}"/>
+                        <Binding ElementName="Password"/>
+                    </MultiBinding>
+                </KeyBinding.CommandParameter>
+            </KeyBinding>
+        </Grid.InputBindings>
+        
+        
         <Label HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="0" 
                Content="Username:"/>
 
@@ -58,8 +73,16 @@
         <Button Grid.Column="2" Grid.Row="4" Margin="100,1,0,1" Content="Login!"
                 Background="LightGray" BorderBrush="Transparent" BorderThickness="2" 
                 MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                Command="{Binding LoginButtonClickedCommand}" CommandParameter="{Binding ElementName=Password}"
-                Style="{DynamicResource RoundButton}"/>
+                Command="{Binding LoginButtonClickedCommand}"
+                Style="{DynamicResource RoundButton}">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource MultipleParameterConverter}">
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}"/>
+                    <Binding ElementName="Password"/>
+                </MultiBinding>
+            </Button.CommandParameter>
+
+        </Button>
 
         <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" 
                VerticalContentAlignment="Bottom"

@@ -40,6 +40,12 @@
 
         </Grid.RowDefinitions>
 
+        <Grid.InputBindings>
+            <KeyBinding Key="Return"
+                            Command="{Binding Path=CreateAccountButtonClickedCommand}" 
+                            CommandParameter="{Binding ElementName=Password}"/>
+        </Grid.InputBindings>
+
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0"
             FontSize="30" FontFamily="Courier New" Foreground="Black"
                HorizontalAlignment="Center" VerticalContentAlignment="Center"
@@ -73,7 +79,9 @@
                 Background="LightGray" BorderBrush="Transparent" BorderThickness="2" 
                 MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
                 Command="{Binding Path=CreateAccountButtonClickedCommand}" CommandParameter="{Binding ElementName=Password}"
-                Style="{DynamicResource RoundButton}"/>
+                Style="{DynamicResource RoundButton}">
+            
+        </Button>
 
     </Grid>
 </UserControl>

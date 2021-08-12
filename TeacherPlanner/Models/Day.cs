@@ -4,13 +4,14 @@ using System.Text;
 using TeacherPlanner.Helpers;
 using System.Windows.Input;
 using TeacherPlanner.ViewModels;
+using System.IO;
 
 namespace TeacherPlanner.Models
 {
     public class Day : ObservableObject
     {
 
-        public Day(DateTime date, PageViewModel parent)
+        public Day(DateTime date, PlannerViewModel parent)
         {
             MyParent = parent;
             Periods = new PeriodModel[6];
@@ -50,10 +51,13 @@ namespace TeacherPlanner.Models
         }
 
         public NoteSectionModel NoteSection { get; set; }
-        public PageViewModel MyParent { get; }
+        public PlannerViewModel MyParent { get; }
         public bool TryLoad(string username)//, out string[] data)
         {
-            string[] data = FileHandlingHelper.LoadDataFromFile(username, NoteSection.Calendar.FileNameDate);
+            string date = NoteSection.Calendar.FileNameDate;
+            string filename = date + ".txt";
+            string path = Path.Combine(CreateDatedUserDirectory(username, date), filename);
+            string[] data = FileHandlingHelper.LoadDataFromFile(path);
             int periodRows = 7;
             int jump = 8;
             int position = 0;
@@ -90,6 +94,18 @@ namespace TeacherPlanner.Models
                 LoadEmpty();
             return true;
         }
+        /// <summary>
+        /// Creates a directory in the format \Username\YYYY\YYYYMM
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        private string CreateDatedUserDirectory(string username, string date)
+        {
+            string path = Path.Combine(FileHandlingHelper.UserDataPath, username);
+            string yearDirectory = date.Substring(0, 4);
+            string monthDirectory = date.Substring(0, 6);
+            return Path.Combine(path, yearDirectory, monthDirectory);
+        }
 
         private bool LoadEmpty()
         {
@@ -105,7 +121,13 @@ namespace TeacherPlanner.Models
         public bool Save(string username)
         {
             string data = PackageSaveData();
-            FileHandlingHelper.Overwrite(username, NoteSection.Calendar.FileNameDate, data);
+            
+            string date = NoteSection.Calendar.FileNameDate;
+            string filename = date + ".txt";
+
+            // Final save path looks like this, for user Bob on 15th January 1970: \Bob\1970\197001\19700115.txt
+            string path = CreateDatedUserDirectory(username, date);
+            FileHandlingHelper.TryWriteDataToFile(path, filename, data, "o", true, );
             return true;
         }
 

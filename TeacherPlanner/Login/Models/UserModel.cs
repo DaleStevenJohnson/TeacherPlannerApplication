@@ -7,15 +7,18 @@ using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Login.Models
 {
-    public class LoginModel
+    public class UserModel
     {
-        public LoginModel()
+        private string _username;
+        public UserModel()
         {
-            LoggedIn = false;
-        }       
-        public bool LoggedIn { get; set; }
-        public string Username { get; set; }
+            Username = "";
+        }
+        public string Username
+        {
+            get => _username;
+            set => Username = value;
+        }
         public string PasswordHash { get; set; }
-  
     }
 }

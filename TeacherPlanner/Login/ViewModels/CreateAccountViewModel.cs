@@ -28,7 +28,7 @@ namespace TeacherPlanner.Login.ViewModels
             get => _username;
             set 
             {
-                _username = value.Trim();
+                RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
                 ParseUsername(_username);
                 
             }
@@ -70,7 +70,7 @@ namespace TeacherPlanner.Login.ViewModels
             {
                 FeedbackForCreatePassword = "Password is Valid";
                 PasswordIsValidFormat = true;
-                PasswordHash = SecurePasswordHasher.Hash(password.Trim());
+                PasswordHash = password.Trim();//SecurePasswordHasher.Hash(password.Trim());
             }
             else
             {
@@ -86,21 +86,13 @@ namespace TeacherPlanner.Login.ViewModels
         }
         private void StoreCredentials()
         {
-            string key = PasswordHash.Substring(0,32);
-            var encryptedUsername = Cryptography.EncryptString(key, Username);
-            var encryptedPasswordHash = Cryptography.EncryptString(key, PasswordHash);
-            FileHandlingHelper.AppendTo(_path, _filename, $"{encryptedUsername} {encryptedPasswordHash}");
+            // Combine username and the hash of their entered password and store a hash of that value
+            var userHash = SecurePasswordHasher.Hash(Username + PasswordHash);
+            FileHandlingHelper.AppendTo(_path, _filename, userHash);
+
+            // Store username in separate file using symmetrical encryption to be able to keep track of registered users
             var user = Cryptography.EncryptString(_secret, Username);
             FileHandlingHelper.AppendTo(_path, "users.txt", user);
-        }
-
-        private string[] GetAccountHashes()
-        {
-            var path = Path.Combine(_path, _filename);
-            if (File.Exists(path))
-                return File.ReadAllLines(path);
-            else
-                return new string[0];
         }
 
         private bool CheckUserExists(string username)
@@ -132,6 +124,7 @@ namespace TeacherPlanner.Login.ViewModels
                 }
                 else
                 {
+                    Username = "";
                     MessageBox.Show("User already exists");
                 }
             }

@@ -11,11 +11,11 @@ namespace TeacherPlanner.Helpers
         private Day _leftDay;
         private Day _rightDay;
         private string _username;
-        private PageViewModel _myParent;
+        private PlannerViewModel _myParent;
         private int _index = 0;
         private Day[] _pageDays;
 
-        public LoadedDays(string username, PageViewModel parent)
+        public LoadedDays(string username, PlannerViewModel parent)
         {   
             List = new Day[DAYLIMIT];
             _pageDays = new Day[2];

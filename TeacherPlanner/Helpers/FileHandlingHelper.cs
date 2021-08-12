@@ -14,46 +14,27 @@ namespace TeacherPlanner.Helpers
                 Directory.CreateDirectory(RootPath);
         }
         public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
-        private static string UserDataPath = Path.Combine(RootPath, "UserData");
+        public static string UserDataPath = Path.Combine(RootPath, "UserData");
         
         // File Path Methods
-        private static bool AddDirectory(string path)
-        {
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            return true;
-        }
+       
         // Read/write Methods
-        public static string[] LoadDataFromFile(string username, string date)
+        public static string[] LoadDataFromFile(string path)
         {
-            string filename = date + ".txt";
-            string path = Path.Combine(UserDataPath, username);
-            string yearDirectory = date.Substring(0, 4);
-            string monthDirectory = date.Substring(0, 6);
-            path = Path.Combine(path, yearDirectory, monthDirectory, filename);
             if (File.Exists(path))
                 return File.ReadAllLines(path);
             else
                 return new string[0];
         }
 
-
-        public static bool Overwrite(string username, string date, string data)
-        {
-            string path = Path.Combine(UserDataPath, username);
-            string yearDirectory = date.Substring(0, 4);
-            path = Path.Combine(path, yearDirectory);
-            string monthDirectory = date.Substring(0, 6);
-            path = Path.Combine(path, monthDirectory);
-            AddDirectory(path);
-            path = Path.Combine(path, date + ".txt");
-            File.WriteAllText(path, data);
-            return true;
-        }
-
-        public static bool AppendTo(string path, string filename, string data)
+        public static bool TryWriteDataToFile(string path, string filename, string data, string mode = "a", bool dataShouldBeEncrypted = false, string key = "")
         {
             Directory.CreateDirectory(path);
             var filepath = Path.Combine(path, filename);
+            if (dataShouldBeEncrypted)
+            {
+                data = Cryptography.EncryptString(key, data);
+            }
             if (!File.Exists(filepath))
             {
                 // Create a file to write to.
@@ -62,7 +43,7 @@ namespace TeacherPlanner.Helpers
                     sw.WriteLine(data);
                 }
             }
-            else
+            else if (mode == "a")
             {
                 // This text is always added, making the file longer over time
                 // if it is not deleted.
@@ -71,9 +52,12 @@ namespace TeacherPlanner.Helpers
                     sw.WriteLine(data);
                 }
             }
+            else 
+            {
+                File.WriteAllText(path, data);
+            }
             return true;
         }
-
         
         // Input Sanitisation Methods
 

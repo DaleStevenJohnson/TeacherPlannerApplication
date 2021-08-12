@@ -14,9 +14,7 @@ namespace TeacherPlanner.Login.Views
         public AccountManagementWindow()
         {
             InitializeComponent();
-            ViewModel = new AccountManagementViewModel();
-            this.DataContext = ViewModel;
-            //Application.Current.Shutdown();
+            
         }
         private AccountManagementViewModel ViewModel { get; }
         

@@ -7,24 +7,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.Login.Models;
 using TeacherPlanner.Models;
 
 namespace TeacherPlanner.ViewModels
 {
     
-    public class PageViewModel
+    public class PlannerViewModel
     {
-        private string _username = "DJohnson";
-
-        public PageViewModel()
+        public PlannerViewModel(UserModel userModel)
         {
-            Days = new LoadedDays(_username, this);
+            UserModel = userModel;
+            Days = new LoadedDays(UserModel.Username, this);
             Days.LoadDays();
             TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
-
+        public UserModel UserModel;
 
         public ICommand TurnPageForwardCommand { get; }
         public ICommand TurnPageBackwardCommand { get; }

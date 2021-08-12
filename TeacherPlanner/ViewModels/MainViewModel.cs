@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TeacherPlanner.Login.Models;
 
 namespace TeacherPlanner.ViewModels
 {
     public class MainViewModel
     {
-        public MainViewModel()
+        public MainViewModel(UserModel userModel)
         {
-            PageViewModel = new PageViewModel();
-            ToDoViewModel = new ToDoViewModel();
+            UserModel = userModel;
+            PlannerViewModel = new PlannerViewModel(UserModel);
+            ToDoViewModel = new ToDoViewModel(UserModel);
         }
-
-        public PageViewModel PageViewModel { get; }
+        public UserModel UserModel;
+        public PlannerViewModel PlannerViewModel { get; }
         public ToDoViewModel ToDoViewModel { get; }
     }
 }
