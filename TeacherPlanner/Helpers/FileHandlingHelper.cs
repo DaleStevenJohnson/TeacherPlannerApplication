@@ -50,12 +50,14 @@ namespace TeacherPlanner.Helpers
             return true;
         }
 
-        public static bool AppendTo(string path, string data)
+        public static bool AppendTo(string path, string filename, string data)
         {
-            if (!File.Exists(path))
+            Directory.CreateDirectory(path);
+            var filepath = Path.Combine(path, filename);
+            if (!File.Exists(filepath))
             {
                 // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(path))
+                using (StreamWriter sw = File.CreateText(filepath))
                 {
                     sw.WriteLine(data);
                 }
@@ -64,7 +66,7 @@ namespace TeacherPlanner.Helpers
             {
                 // This text is always added, making the file longer over time
                 // if it is not deleted.
-                using (StreamWriter sw = File.AppendText(path))
+                using (StreamWriter sw = File.AppendText(filepath))
                 {
                     sw.WriteLine(data);
                 }

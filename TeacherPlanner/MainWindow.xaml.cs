@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
+﻿using System.Windows;
 using TeacherPlanner.ViewModels;
-using TeacherPlanner.Login;
+using TeacherPlanner.Login.Views;
 
 namespace TeacherPlanner
 {
@@ -27,7 +13,7 @@ namespace TeacherPlanner
         {
             InitializeComponent();
             this.Hide();
-            var Login = new LoginWindow();
+            var Login = new AccountManagementWindow();
             Login.Show();
         }
 

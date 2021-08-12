@@ -9,9 +9,9 @@ namespace TeacherPlanner.Login.Views
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class LoginAccountView : UserControl
     {
-        public LoginView()
+        public LoginAccountView()
         {
             InitializeComponent();
         }
@@ -41,12 +41,5 @@ namespace TeacherPlanner.Login.Views
             Control box = sender as Control;
             box.Background = Brushes.LightGray;
         }
-
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-
-        //    OnLoginButtonClicked(Username.Text, Password.Password);
-
-        //}
     }
 }

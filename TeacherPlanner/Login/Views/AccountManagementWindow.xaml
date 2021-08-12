@@ -1,14 +1,16 @@
-﻿<Window x:Class="TeacherPlanner.Login.LoginWindow"
+﻿<Window x:Class="TeacherPlanner.Login.Views.AccountManagementWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TeacherPlanner.Login"
+        xmlns:viewmodel="clr-namespace:TeacherPlanner.Login.ViewModels"
         xmlns:view="clr-namespace:TeacherPlanner.Login.Views"
+        d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:AccountManagementViewModel}}"
         mc:Ignorable="d"
         Title="Teacher Planner" Height="450" Width="450"
         Icon="pack://application:,,,/Assets/icon.ico"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <!--  Icon open folder by Creaticca Creative Agency from the Noun Project-->
 
     
@@ -49,11 +51,11 @@
             </TabControl.Background>
             
             <TabItem Header="Login">
-                <view:LoginView DataContext="{Binding }"/>
+                <view:LoginAccountView DataContext="{Binding LoginViewModel}"/>
             </TabItem>
             
             <TabItem Header="Create Account">
-                <view:CreateAccountView DataContext="{Binding }"/>
+                <view:CreateAccountView DataContext="{Binding CreateAccountViewModel}"/>
             </TabItem>
         </TabControl>
         

@@ -40,5 +40,13 @@ namespace TeacherPlanner.Login.Views
             Control box = sender as Control;
             box.Background = Brushes.LightGray;
         }
+
+        private void Password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null)
+            { 
+                ((dynamic)this.DataContext).ParsePassword(((PasswordBox)sender).Password); 
+            }
+        }
     }
 }
