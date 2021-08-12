@@ -21,12 +21,7 @@ namespace TeacherPlanner.Views
     {
         public PlannerPageView()
         {
-            InitializeComponent();
-
-            PageViewModel = new PlannerViewModel();
-            this.DataContext = PageViewModel.Days;
+            InitializeComponent(); 
         }
-
-        public PlannerViewModel PageViewModel { get; set; }
     }
 }

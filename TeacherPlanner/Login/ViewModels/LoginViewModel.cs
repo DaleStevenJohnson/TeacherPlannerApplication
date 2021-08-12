@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,7 +48,10 @@ namespace TeacherPlanner.Login.ViewModels
             LoggedIn = Authenticate(Username, passwordBox.Password.Trim());
             if (LoggedIn)
             {
-                UserModel.PasswordHash = SecurePasswordHasher.Hash(passwordBox.Password.Trim().Substring(15, 32));
+                UserModel.Key = Cryptography.EncryptString(
+                    string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(0, 4), 8)),
+                    string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(4, 4), 8))
+                    );
                 //MessageBox.Show("Success");
                 window.Close();
             }

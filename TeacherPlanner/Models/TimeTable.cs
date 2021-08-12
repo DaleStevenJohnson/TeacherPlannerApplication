@@ -78,9 +78,9 @@ namespace TeacherPlanner.Models
 
         public static string CurrentDateRightString { get { return _currentDateRightString; } }
 
-        public static void ChangeCurrentDate(int days, string side)
+        public static void ChangeCurrentDate(int days)
         {
-            if (side.ToLower() == "left") CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
+            if (days < 0) CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
             else CurrentDateRight = AdvanceDate(CurrentDateRight, days);
         }
 

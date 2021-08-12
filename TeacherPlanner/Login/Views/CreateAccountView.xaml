@@ -27,8 +27,6 @@
             <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-
-
             <RowDefinition Height="10*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="3*"/>
@@ -36,14 +34,13 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="3*"/>
-
-
         </Grid.RowDefinitions>
 
         <Grid.InputBindings>
-            <KeyBinding Key="Return"
-                            Command="{Binding Path=CreateAccountButtonClickedCommand}" 
-                            CommandParameter="{Binding ElementName=Password}"/>
+            <KeyBinding 
+                Key="Return"
+                Command="{Binding Path=CreateAccountButtonClickedCommand}" 
+                CommandParameter="{Binding ElementName=Password}"/>
         </Grid.InputBindings>
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0"

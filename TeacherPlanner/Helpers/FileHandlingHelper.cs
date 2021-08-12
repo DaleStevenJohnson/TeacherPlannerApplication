@@ -15,14 +15,34 @@ namespace TeacherPlanner.Helpers
         }
         public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
         public static string UserDataPath = Path.Combine(RootPath, "UserData");
-        
+
         // File Path Methods
-       
+        /// <summary>
+        /// Creates a directory in the format \Username\YYYY\YYYYMM
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string CreateDatedUserDirectory(string username, string date)
+        {
+            string path = Path.Combine(FileHandlingHelper.UserDataPath, username);
+            string yearDirectory = date.Substring(0, 4);
+            string monthDirectory = date.Substring(0, 6);
+            return Path.Combine(path, yearDirectory, monthDirectory);
+        }
         // Read/write Methods
-        public static string[] LoadDataFromFile(string path)
+        public static string[] LoadDataFromFile(string path, bool dataIsEncrypted = false, string key = "")
         {
             if (File.Exists(path))
-                return File.ReadAllLines(path);
+            {
+                string[] data = File.ReadAllLines(path);
+                if (dataIsEncrypted)
+                {
+                    string dataString = Cryptography.DecryptString(key, data[0]);
+                    return dataString.Split("\n");
+                }
+                else
+                    return data;
+            }
             else
                 return new string[0];
         }
@@ -54,7 +74,7 @@ namespace TeacherPlanner.Helpers
             }
             else 
             {
-                File.WriteAllText(path, data);
+                File.WriteAllText(filepath, data);
             }
             return true;
         }

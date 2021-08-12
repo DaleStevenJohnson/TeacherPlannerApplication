@@ -19,7 +19,7 @@
             <view:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
         </TabItem>
         <TabItem Name="Todo" Header="Todo">
-            <view:TodoPageView DataContext="{Binding ToDoViewModel}"
+            <view:TodoPageView DataContext="{Binding ToDoViewModel}"/>
         </TabItem>
     </TabControl>
 </Window>

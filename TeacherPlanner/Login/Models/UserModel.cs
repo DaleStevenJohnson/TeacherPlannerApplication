@@ -10,6 +10,8 @@ namespace TeacherPlanner.Login.Models
     public class UserModel
     {
         private string _username;
+        private string _key;
+
         public UserModel()
         {
             Username = "";
@@ -17,8 +19,12 @@ namespace TeacherPlanner.Login.Models
         public string Username
         {
             get => _username;
-            set => Username = value;
+            set => _username = value;
         }
-        public string PasswordHash { get; set; }
+        public string Key
+        { 
+            get => _key;
+            set => _key = value.Length > 32 ? value.Substring(0, 32) : value;
+        }
     }
 }

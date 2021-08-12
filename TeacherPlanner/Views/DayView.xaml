@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Views"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.ViewModels"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -28,7 +30,7 @@
             Content="+1"
             Grid.Column="2"
             Grid.Row="0"
-            Command="{Binding MyParent.TurnPageForwardCommand}"
+            Command="{Binding TurnPageCommand}"
             CommandParameter="1"
         />
 
@@ -36,7 +38,7 @@
             Content="-1"
             Grid.Column="0"
             Grid.Row="0"
-            Command="{Binding MyParent.TurnPageBackwardCommand}"
+            Command="{Binding TurnPageCommand}"
             CommandParameter="-1"
         />
         
@@ -44,7 +46,7 @@
         <TextBlock 
             Grid.Column="1"
             Grid.Row="0"
-            Text="{Binding NoteSection.Calendar.DisplayDate}"
+            Text="{Binding DayModel.CalendarModel.DisplayDate}"
             Foreground="White"
             Background="Black"
             FontSize="20"
@@ -55,21 +57,17 @@
         />
         
         <!--Periods-->
-        <local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period1}"/>
-        <local:PeriodView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period2}"/>
-        <local:PeriodView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period3}"/>
-        <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period4}"/>
-        <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period5}"/>
-        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding Period6}"/>
+        <local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period1}"/>
+        <local:PeriodView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period2}"/>
+        <local:PeriodView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period3}"/>
+        <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period4}"/>
+        <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period5}"/>
+        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period6}"/>
         <!--Notes-->
-        <local:NotesView Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding NoteSection}"/>
+        <local:NotesView Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.NoteSectionModel}"/>
 
         
 
     </Grid>
-
-    <UserControl.InputBindings>
-        <KeyBinding Key="S" Modifiers="Control" Command="{Binding MyParent.SaveCommand}"/>
-    </UserControl.InputBindings>
-            
+           
 </UserControl>

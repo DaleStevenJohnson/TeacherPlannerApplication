@@ -7,14 +7,14 @@ using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Models
 {
-    public class PeriodModel : ObservableObject
+    public class PeriodModel
     {
         private readonly string _delimiter = "`";
-        public PeriodModel(int number, string classcode, string date)
+        public PeriodModel(int number, string classcode)
         {
             Number = number;
             ClassCode = classcode;
-            Date = date;
+            //Date = date;
             Rows = new PeriodRowModel[7];
         }
 
@@ -59,7 +59,7 @@ namespace TeacherPlanner.Models
         public int Number { get; set; }
         public string ClassCode { get; set; }
 
-        public void Load(string[] periodData)
+        public void LoadData(string[] periodData)
         {
             for (int i = 0; i < Rows.Length; i++)
             {

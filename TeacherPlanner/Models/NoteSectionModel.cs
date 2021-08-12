@@ -7,14 +7,14 @@ namespace TeacherPlanner.Models
 {
     public class NoteSectionModel
     {
-        public NoteSectionModel(DateTime date)
+        public NoteSectionModel()
         {
             Notes = new string[6];
-            Calendar = new CalendarModel(date);
+            //Calendar = new CalendarModel(date);
         }
         public string[] Notes { get; set; }
 
-        public CalendarModel Calendar { get; }
+        //public CalendarModel Calendar { get; }
         public string Note1
         {
             get { return Notes[0]; }

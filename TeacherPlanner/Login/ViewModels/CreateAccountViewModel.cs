@@ -66,7 +66,8 @@ namespace TeacherPlanner.Login.ViewModels
 
         public void ParsePassword(string password)
         {
-            if (password.Length > 3)
+            int minimumSize = 8;
+            if (password.Length >= minimumSize)
             {
                 FeedbackForCreatePassword = "Password is Valid";
                 PasswordIsValidFormat = true;
@@ -74,7 +75,7 @@ namespace TeacherPlanner.Login.ViewModels
             }
             else
             {
-                FeedbackForCreatePassword = "Password is too short";
+                FeedbackForCreatePassword = $"Password is too short - must be at least {minimumSize} characters long";
                 PasswordIsValidFormat = false;
             }
         }
@@ -88,11 +89,11 @@ namespace TeacherPlanner.Login.ViewModels
         {
             // Combine username and the hash of their entered password and store a hash of that value
             var userHash = SecurePasswordHasher.Hash(Username + PasswordHash);
-            FileHandlingHelper.AppendTo(_path, _filename, userHash);
+            FileHandlingHelper.TryWriteDataToFile(_path, _filename, userHash);
 
             // Store username in separate file using symmetrical encryption to be able to keep track of registered users
             var user = Cryptography.EncryptString(_secret, Username);
-            FileHandlingHelper.AppendTo(_path, "users.txt", user);
+            FileHandlingHelper.TryWriteDataToFile(_path, "users.txt", user);
         }
 
         private bool CheckUserExists(string username)
