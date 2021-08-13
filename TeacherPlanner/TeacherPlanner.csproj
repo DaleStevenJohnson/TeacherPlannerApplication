@@ -17,6 +17,7 @@
     <None Remove="Assets\Icons\DeleteBinIconHovered.png" />
     <None Remove="Assets\Icons\DeleteBinIconNormal.png" />
     <None Remove="Assets\Icons\DeleteCrossIcon.png" />
+    <None Remove="Assets\Images\TimetableBackground.png" />
     <None Remove="Assets\PlannerBG.png" />
   </ItemGroup>
 
@@ -35,6 +36,7 @@
     <Resource Include="Assets\Icons\DeleteBinIconHovered.png" />
     <Resource Include="Assets\Icons\DeleteBinIconNormal.png" />
     <Resource Include="Assets\Icons\DeleteCrossIcon.png" />
+    <Resource Include="Assets\Images\TimetableBackground.png" />
     <Resource Include="Assets\PlannerBG.png" />
   </ItemGroup>
 

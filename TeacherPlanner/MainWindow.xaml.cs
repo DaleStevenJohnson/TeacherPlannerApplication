@@ -13,23 +13,23 @@ namespace TeacherPlanner
         {
             InitializeComponent();
 
-            //var accountManagementViewModel = new AccountManagementViewModel();
-            //var accountManagementWindow = new AccountManagementWindow
-            //{
-            //    DataContext = accountManagementViewModel,
-            //    WindowStartupLocation = WindowStartupLocation.CenterScreen
-            //};
-            
-            //accountManagementWindow.ShowDialog();
-            //if (!accountManagementViewModel.LoginViewModel.LoggedIn)
-            //{
-            //    Application.Current.Shutdown();
-            //}
-            //DataContext = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
-            //DataContextChanged += (sender, args) =>
-            //{
-            //    DataContext = args.NewValue;
-            //};
+            var accountManagementViewModel = new AccountManagementViewModel();
+            var accountManagementWindow = new AccountManagementWindow
+            {
+                DataContext = accountManagementViewModel,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            accountManagementWindow.ShowDialog();
+            if (!accountManagementViewModel.LoginViewModel.LoggedIn)
+            {
+                Application.Current.Shutdown();
+            }
+            DataContext = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
+            DataContextChanged += (sender, args) =>
+            {
+                DataContext = args.NewValue;
+            };
         }
 
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)

@@ -21,7 +21,7 @@
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Timetable">
-                    <MenuItem Header="Import..."/>
+                    <MenuItem Header="Import..." Command="{Binding ImportTimetableCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Planner">
                     <MenuItem Header="Weekly Scroll" IsCheckable="True"/>
@@ -30,7 +30,12 @@
             </Menu>
         </DockPanel>
         <TabControl Grid.Row="1">
-            
+            <TabControl.Resources>
+                <Style TargetType="TabPanel">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    
+                </Style>
+            </TabControl.Resources>
             <TabItem Header="Planner">
                 <plannerview:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
             </TabItem>
