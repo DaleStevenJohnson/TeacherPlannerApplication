@@ -26,34 +26,24 @@ namespace TeacherPlanner.ToDo.Views
         private void Add_Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/AddIconHovered.png"));
-            button.Background = image;
-            //button.BorderBrush = new SolidColorBrush(Colors.Black) { Opacity = 0.2 };
-            //button.BorderThickness = new Thickness(0.5);
+            button.Background = button.Background = (ImageBrush)Application.Current.FindResource("Icon.Add.Hovered");
         }
 
         private void Add_Button_MouseLeave(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/AddIconNormal.png"));
-            button.Background = image;
+            button.Background = button.Background = (ImageBrush)Application.Current.FindResource("Icon.Add.Normal");
         }
         
          private void Delete_Button_MouseEnter(object sender, MouseEventArgs e)
          {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/DeleteBinIconHovered.png"));
-            button.Background = image;
-         }
+            button.Background = button.Background = (ImageBrush)Application.Current.FindResource("Icon.DeleteBin.Hovered");
+        }
         private void Delete_Button_MouseLeave(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/DeleteBinIconNormal.png"));
-            button.Background = image;
+            button.Background = (ImageBrush)Application.Current.FindResource("Icon.DeleteBin.Normal");
         }
     }
 }

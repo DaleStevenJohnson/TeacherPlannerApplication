@@ -5,8 +5,10 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ImageBrush x:Key="Icon.DeleteBin.Normal" ImageSource="/Assets/Icons/DeleteBinIconNormal.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.DeleteBin.Hovered" ImageSource="/Assets/Icons/DeleteBinIconHovered.png" Stretch="Uniform"/>
         <!--Delete by DinosoftLab from the Noun Project-->
         <ImageBrush x:Key="Icon.Add.Normal" ImageSource="/Assets/Icons/AddIconNormal.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.Add.Hovered" ImageSource="/Assets/Icons/AddIconHovered.png" Stretch="Uniform"/>
         <!--add by Setyo Ari Wibowo from the Noun Project-->
         <ImageBrush x:Key="Icon.DeleteCross.Normal" ImageSource="/Assets/Icons/DeleteCrossIcon.png" Stretch="Uniform"/>
         <!--Delete by Ema Dimitrova from the Noun Project-->

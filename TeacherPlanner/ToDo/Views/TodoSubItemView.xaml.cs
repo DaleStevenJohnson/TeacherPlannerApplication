@@ -26,16 +26,12 @@ namespace TeacherPlanner.ToDo.Views
         private void Delete_Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/DeleteBinIconHovered.png"));
-            button.Background = image;
+            button.Background = button.Background = (ImageBrush)Application.Current.FindResource("Icon.DeleteBin.Hovered");
         }
         private void Delete_Button_MouseLeave(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
-            var image = new ImageBrush();
-            image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Assets/Icons/DeleteBinIconNormal.png"));
-            button.Background = image;
+            button.Background = button.Background = (ImageBrush)Application.Current.FindResource("Icon.DeleteBin.Normal");
         }
     }
 }
