@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="TeacherPlanner.ToDo.Views.TodoItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="960">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.Background>
+            <SolidColorBrush Color="LightBlue"/>
+        </Grid.Background>
+        <CheckBox 
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+        >
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="2.5" ScaleY="2.5" />
+            </CheckBox.LayoutTransform>
+        </CheckBox>
+        <TextBox
+            Grid.Column="1"
+            Text="Todo Item"
+            Margin="5"
+            FontSize="25"
+            VerticalContentAlignment="Center"
+        />
+        <Button 
+            Style="{DynamicResource ButtonOverride}"
+            Grid.Column="2" Margin="40,10"
+            Background="{StaticResource Icon.Add.Normal}"
+            BorderBrush="Transparent" BorderThickness="0" 
+            MouseEnter="Add_Button_MouseEnter" MouseLeave="Add_Button_MouseLeave"
+            
+            />
+        <Button 
+            Style="{DynamicResource ButtonOverride}"
+            Grid.Column="3" Margin="40,10"
+            Background="{StaticResource Icon.DeleteBin.Normal}" BorderBrush="Transparent" BorderThickness="0" 
+            MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"    
+            >
+            <!--<Image Source="/Assets/Icons/DeleteBinIcon.png"/>-->
+        </Button>
+    </Grid>
+</UserControl>

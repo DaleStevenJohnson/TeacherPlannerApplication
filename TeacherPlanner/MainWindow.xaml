@@ -3,23 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
+        xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
         xmlns:local="clr-namespace:TeacherPlanner"
-        xmlns:model="clr-namespace:TeacherPlanner.Models"
-        xmlns:viewmodel="clr-namespace:TeacherPlanner.ViewModels"
-        xmlns:view="clr-namespace:TeacherPlanner.Views"
         mc:Ignorable="d"
-        d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:MainViewModel}}"
-        Title="Teacher Planner" Height="1080" Width="1920" Name="mainwindow">
-
-    <TabControl>
-
-
-
-        <TabItem Header="Planner">
-            <view:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
-        </TabItem>
-        <TabItem Name="Todo" Header="Todo">
-            <view:TodoPageView DataContext="{Binding ToDoViewModel}"/>
-        </TabItem>
-    </TabControl>
+        d:DataContext="{Binding Source={d:DesignInstance Type=local:MainViewModel}}"
+        Title="Teacher Planner" Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" Name="mainwindow" WindowStyle="SingleBorderWindow" ResizeMode="CanResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Log Out"/>
+                    <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Timetable">
+                    <MenuItem Header="Import..."/>
+                </MenuItem>
+                <MenuItem Header="Planner">
+                    <MenuItem Header="Weekly Scroll" IsCheckable="True"/>
+                </MenuItem>
+                
+            </Menu>
+        </DockPanel>
+        <TabControl Grid.Row="1">
+            
+            <TabItem Header="Planner">
+                <plannerview:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
+            </TabItem>
+            <TabItem Name="Todo" Header="Todo">
+                <todoview:TodoPageView DataContext="{Binding ToDoViewModel}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>

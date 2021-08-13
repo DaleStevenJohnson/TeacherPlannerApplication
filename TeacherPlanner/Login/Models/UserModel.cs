@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using TeacherPlanner.Helpers;
-
-namespace TeacherPlanner.Login.Models
+﻿namespace TeacherPlanner.Login.Models
 {
     public class UserModel
     {

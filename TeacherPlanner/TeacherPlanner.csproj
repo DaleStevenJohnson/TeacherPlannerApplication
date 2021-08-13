@@ -10,16 +10,31 @@
   <ItemGroup>
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\icon.png" />
+    <None Remove="Assets\Icons\AddIcon.png" />
+    <None Remove="Assets\Icons\AddIconHovered.png" />
+    <None Remove="Assets\Icons\AddIconNormal.png" />
+    <None Remove="Assets\Icons\DeleteBinIcon.png" />
+    <None Remove="Assets\Icons\DeleteBinIconHovered.png" />
+    <None Remove="Assets\Icons\DeleteBinIconNormal.png" />
+    <None Remove="Assets\Icons\DeleteCrossIcon.png" />
     <None Remove="Assets\PlannerBG.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ToDo\Models\" />
     <Folder Include="UserData\DJohnson\2021\202108\" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\icon.ico" />
     <Resource Include="Assets\icon.png" />
+    <Resource Include="Assets\Icons\AddIcon.png" />
+    <Resource Include="Assets\Icons\AddIconHovered.png" />
+    <Resource Include="Assets\Icons\AddIconNormal.png" />
+    <Resource Include="Assets\Icons\DeleteBinIcon.png" />
+    <Resource Include="Assets\Icons\DeleteBinIconHovered.png" />
+    <Resource Include="Assets\Icons\DeleteBinIconNormal.png" />
+    <Resource Include="Assets\Icons\DeleteCrossIcon.png" />
     <Resource Include="Assets\PlannerBG.png" />
   </ItemGroup>
 
