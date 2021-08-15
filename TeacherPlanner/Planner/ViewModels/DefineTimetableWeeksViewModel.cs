@@ -11,9 +11,12 @@ namespace TeacherPlanner.Planner.ViewModels
     public class DefineTimetableWeeksViewModel
     {
         public ICommand SaveTimeTableWeeksCommand;
-
+        private string _path = FileHandlingHelper.LoggedInUserDataPath;
+        private string _filename = "TimetableWeeks.txt";
+        private string _filepath;
         public DefineTimetableWeeksViewModel()
         {
+            _filepath = Path.Combine(_path, _filename);
             SaveTimeTableWeeksCommand = new SimpleCommand(_ => OnSaveTimeTableWeeks());
 
             if (TryGetTimeTableWeeks(out var dateRows))
@@ -22,34 +25,45 @@ namespace TeacherPlanner.Planner.ViewModels
                 Rows = CreateTimeTableWeeks();
         }
 
-        public IEnumerable<DateRowModel> Rows { get; }
+        public DateRowModel[] Rows { get; }
 
-        private bool TryGetTimeTableWeeks(out List<DateRowModel> dateRows)
+        private bool TryGetTimeTableWeeks(out DateRowModel[] dateRows)
         {
             
-            dateRows = new List<DateRowModel>();
-            return false;
-#if !DEBUG
-            if (!File.Exists(Path.Combine(FileHandlingHelper.LoggedInUserDataPath, "TimetableWeeks.txt")))
+            dateRows = new DateRowModel[0];
+            if (!File.Exists(_filename))
                 return false;
-#endif
             // TODO: Replace the new List with the loaded data
-            var loadedDateRows = new List<DateRowModel>();
-            dateRows.AddRange(from row in loadedDateRows
-                              select row);
+            dateRows = LoadDateRows();
             return true;
         }
-
-        private IEnumerable<DateRowModel> CreateTimeTableWeeks()
+        private DateRowModel[] LoadDateRows()
+        {
+            string[][] weeks = FileHandlingHelper.ReadDataFromCSVFile(_filepath);
+            DateRowModel[] dateRows = new DateRowModel[weeks.Length];
+            for (int i = 0; i < weeks.Length; i++)
+            {
+                string[] week = weeks[i];
+                string[] dateString = week[0].Split("/");
+                bool week1 = week[1].ToLower() == "true";
+                bool week2 = week[2].ToLower() == "true";
+                bool holiday = week[3].ToLower() == "true";
+                
+                DateTime date = new DateTime(Int32.Parse(dateString[0]), Int32.Parse(dateString[1]), Int32.Parse(dateString[2]));
+                dateRows[i] = new DateRowModel(date, week1, week2, holiday);
+            }
+            return dateRows;
+        }
+        private DateRowModel[] CreateTimeTableWeeks()
         {
             var schoolYear = GetSchoolYear();
             DateTime date = GetFirstMonday(schoolYear);
+            int weeks = 50;
+            var rows = new DateRowModel[weeks];
 
-            var rows = new List<DateRowModel>();
-
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < weeks; i++)
             {
-                rows.Add(new DateRowModel(date.AddDays(i * 7)));
+                rows[i] = new DateRowModel(date.AddDays(i * 7));
             }
 
             return rows;
@@ -74,7 +88,16 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnSaveTimeTableWeeks()
         {
+            int length = Rows.Length;
+            string[][] weeks = new string[length][];
+
             // TODO: Write Rows property to file
+            for (int i = 0; i < length; i++)
+            {
+                string[] rowData = Rows[i].Package();
+                weeks[i] = rowData;
+            }
+            FileHandlingHelper.TryWriteDataToCSVFile(_path, _filename, weeks);
         }
     }
 }

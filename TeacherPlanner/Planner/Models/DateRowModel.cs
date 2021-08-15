@@ -18,5 +18,15 @@ namespace TeacherPlanner.Planner.Models
         public bool Week1 { get; set; }
         public bool Week2 { get; set; }
         public bool Holiday { get; set; }
+        public string[] Package()
+        {
+            return new string[]
+                {
+                    DateString,
+                    Week1.ToString(),
+                    Week2.ToString(),
+                    Holiday.ToString()
+                };
+        }      
     }
 }
