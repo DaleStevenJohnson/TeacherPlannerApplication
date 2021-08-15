@@ -10,14 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TeacherPlanner.Planner.Views
+namespace TeacherPlanner.Planner.Views.SettingsWindows
 {
     /// <summary>
-    /// Interaction logic for ImportTimetableWindow.xaml
+    /// Interaction logic for DefineTimetableWeeksWindow.xaml
     /// </summary>
-    public partial class ImportTimetableWindow : Window
+    public partial class DefineTimetableWeeksWindow : Window
     {
-        public ImportTimetableWindow()
+        public DefineTimetableWeeksWindow()
         {
             InitializeComponent();
         }

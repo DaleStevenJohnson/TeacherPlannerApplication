@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using TeacherPlanner.Helpers;
+using TeacherPlanner.Login.Models;
 
 namespace TeacherPlanner.Planner.Models
 {
@@ -15,6 +18,7 @@ namespace TeacherPlanner.Planner.Models
         private static DateTime _currentDateRight;
         private static string _currentDateRightString;
         public static DateTime[] CurrentDates;
+        private static string _timetableDirectory = "Timetables";
 
         static TimeTable()
         {
@@ -22,9 +26,12 @@ namespace TeacherPlanner.Planner.Models
             Today = DateTime.Today;
             CurrentDateLeft = Today;
 
+            DefineWeeks();
         }
 
         // Properties
+        public static TimetableModel CurrentTimetable { get; set; }
+
         public static DateTime Today
         {
             get
@@ -81,13 +88,78 @@ namespace TeacherPlanner.Planner.Models
         }
 
         public static string CurrentDateRightString { get { return _currentDateRightString; } }
+        public static bool WeeksAreDefined { get; set; }
 
+
+        // Methods
+        public static void DefineWeeks()
+        {
+            WeeksAreDefined = false;
+        }
+
+        /// <summary>
+        /// Takes a SIMS created timetable file and saves it locally for future use by the application
+        /// </summary>
+        /// <param name="timetableFilePath"></param>
+        public static bool ImportTimetable(string timetableFilePath, string name, UserModel userModel)
+        {
+            string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
+            if (TryParseTimetableFileData(rawTimetableFileData))
+            {
+                string[][] convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
+                string path = Path.Combine(FileHandlingHelper.UserDataPath, userModel.Username, _timetableDirectory);
+                FileHandlingHelper.TryWriteDataToCSVFile(path, name + ".csv", convertedTimetableData, "o", true, userModel.Key);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Takes a SIMS created timetable, strips out neccessary data and formats it in to the application's standard.
+        /// </summary>
+        /// <param name="rawTimetableData"></param>
+        /// <returns></returns>
+        private static string[][] ConvertTimetableData(string[][] rawTimetableData)
+        {
+            // This is unfinished! I have no idea what format the rawTimetableData will be in yet
+            string[][] convertedTimetableData = new string[rawTimetableData.Length][];
+            for (int row = 0; row < rawTimetableData.Length; row++)
+            {
+                string[] line = rawTimetableData[row];
+                if (line.Length != 0)
+                {
+                    convertedTimetableData[row] = line;
+                }
+            }
+
+            return convertedTimetableData;
+        }
+
+        /// <summary>
+        /// Checks that provided SIMS timetable data file is in the correct format
+        /// </summary>
+        /// <param name="timetableFileData"></param>
+        /// <returns></returns>
+        private static bool TryParseTimetableFileData(string[][] timetableFileData)
+        {
+            return true;
+        }
+        public static void TryLoadTimetable(string timetableName)
+        {
+            var filepath = Path.Combine(FileHandlingHelper.UserDataPath, _timetableDirectory, timetableName + ".csv");
+            var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filepath);
+            CurrentTimetable = new TimetableModel(timetableData, timetableName);
+        }
         public static void ChangeCurrentDate(int days)
         {
             if (days < 0) CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
             else CurrentDateRight = AdvanceDate(CurrentDateRight, days);
         }
-
+        public static string GetClassCode(DateTime date, int period)
+        {
+            return "";
+        }
         private static DateTime AdvanceDate(DateTime date, int days)
         {
             DateTime newDate = date.AddDays(days);

@@ -41,7 +41,7 @@ namespace TeacherPlanner.Planner.ViewModels
             string path = Path.Combine(FileHandlingHelper.CreateDatedUserDirectory(UserModel.Username, filenameDate), filename);
 
             // Read data from file. If file does not exist, string[] data will be an empty array
-            string[] data = FileHandlingHelper.LoadDataFromFile(path, true, UserModel.Key);
+            string[] data = FileHandlingHelper.ReadDataFromFile(path, true, UserModel.Key);
 
             // The file is saved with six periods and a notes section one after the other.
             // The numbers below define sections of that file within the loop in order to select the correct part of the file
@@ -78,6 +78,9 @@ namespace TeacherPlanner.Planner.ViewModels
                     }
 
                     // The below method call gets the day model to create a new period using the data supplied
+                    string classCode = data[classCodeIndex];
+                    if (classCode == "")
+                        classCode = TimeTable.GetClassCode(date, i);
                     newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, data[classCodeIndex], periodData);
 
                     // This keeps track of what line we are on in the data array

@@ -3,10 +3,12 @@
 Add Top Menu Bar
 
 Add Import Timetable function
-- Option selected from menu bar
-- File Picker Dialog box
++ Option selected from menu bar
++ File Picker Dialog box
 - Load and Store user provided timetable
 - Standardise how the Timetable file should be structured
+- Save user-entered timetable weeks
+- Load saved timetable weeks
 
 Add Login screen
 + Allow create user
@@ -15,7 +17,7 @@ Add Login screen
 - Session? Stay logged in?
 
 Add Encryption to files
-- Appdata files
++ Appdata files
 - Could be storing sensitive student information
 
 Add Calendar

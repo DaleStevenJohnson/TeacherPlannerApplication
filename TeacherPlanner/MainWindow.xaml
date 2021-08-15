@@ -6,9 +6,15 @@
         xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
         xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
         xmlns:local="clr-namespace:TeacherPlanner"
+        xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+        xmlns:timetableviewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{Binding Source={d:DesignInstance Type=local:MainViewModel}}"
-        Title="Teacher Planner" Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" Name="mainwindow" WindowStyle="SingleBorderWindow" ResizeMode="CanResize">
+        Title="Teacher Planner" Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" 
+        x:Name="mainwindow" WindowStyle="SingleBorderWindow" ResizeMode="CanResize">
+    <Window.Resources>
+
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,10 +27,24 @@
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Timetable">
-                    <MenuItem Header="Import..." Command="{Binding ImportTimetableCommand}"/>
+                    <MenuItem Header="Import..." Command="{Binding TimetableViewModel.ImportTimetableCommand}"/>
+                    <MenuItem Header="Manage..." Command="{Binding TimetableViewModel.ManageTimetableCommand}"/>
+                    <MenuItem Header="Define Weeks" Command="{Binding TimetableViewModel.DefineTimetableWeeksCommand}"/>
+                    <MenuItem Header="Apply" IsEnabled="{Binding TimetableViewModel.HasImportedTimetables}"
+                              ItemsSource="{Binding Path=TimetableViewModel.ImportedTimetables}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding DataContext.TimetableViewModel.ApplySelectedTimetableCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                                <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    
                 </MenuItem>
+
                 <MenuItem Header="Planner">
-                    <MenuItem Header="Weekly Scroll" IsCheckable="True"/>
+                    <MenuItem Header="Weekly Scroll?" IsCheckable="True"/>
                 </MenuItem>
                 
             </Menu>

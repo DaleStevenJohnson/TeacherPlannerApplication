@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using TeacherPlanner.Login.ViewModels;
 using TeacherPlanner.Login.Views;
+using TeacherPlanner.Planner.ViewModels;
+using TeacherPlanner.Planner.Views.SettingsWindows;
 
 namespace TeacherPlanner
 {
@@ -29,7 +31,7 @@ namespace TeacherPlanner
             DataContextChanged += (sender, args) =>
             {
                 DataContext = args.NewValue;
-            };
+            };           
         }
 
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)

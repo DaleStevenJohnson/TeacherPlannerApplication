@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
@@ -24,28 +25,35 @@ namespace TeacherPlanner.Planner.ViewModels
             TimetableFile = "";
             TimetableName = "";
         }
+
         public UserModel UserModel { get; }
+
         public string TimetableName 
         {
             get => _timetableName;
             set => RaiseAndSetIfChanged(ref _timetableName, value);
         }
+
         public string TimetableFile
         {
             get => _timetableFile;
             set => RaiseAndSetIfChanged(ref _timetableFile, value);
         }
+
         private void ChooseTimetableFile(object args)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Data files (*.csv)|*.csv";
             if (openFileDialog.ShowDialog() == true)
                 TimetableFile = openFileDialog.FileName;
         }
+        
         private void TryImportTimetable(object args)
         {
             // AND TimetableName is not already an existing Timetable name
-            if (TimetableName != "" && TimetableFile != "")
+            if (TimetableName != "" && TimetableFile != "" && TimeTable.ImportTimetable(TimetableFile, TimetableName, UserModel))
             {
+                TimeTable.TryLoadTimetable(TimetableName);
                 // Close Window
             }
             else 

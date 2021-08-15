@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Login.ViewModels
 {
@@ -28,7 +29,7 @@ namespace TeacherPlanner.Login.ViewModels
             get => UserModel.Username;
             set
             {
-                RaiseAndSetIfChanged(ref _username, value.Trim());
+                RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
                 UserModel.Username = _username;
             }
         }
@@ -49,6 +50,7 @@ namespace TeacherPlanner.Login.ViewModels
                     string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(0, 4), 8)),
                     string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(4, 4), 8))
                     );
+                FileHandlingHelper.LoggedInUserDataPath = Path.Combine(FileHandlingHelper.UserDataPath, UserModel.Username);
                 //MessageBox.Show("Success");
                 window.Close();
             }
