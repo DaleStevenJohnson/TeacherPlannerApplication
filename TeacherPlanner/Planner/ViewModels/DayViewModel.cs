@@ -13,13 +13,14 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public event EventHandler<string> TurnPageEvent;
         public ICommand TurnPageCommand { get; }
-        public DayViewModel(UserModel userModel, DateTime date)
+        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable)
         {
             UserModel = userModel;
+            Timetable = timetable;
             DayModel = LoadAndPopulateNewDay(date);
             TurnPageCommand = new SimpleCommand(numOfDays => OnTurnPage(numOfDays));
         }
-
+        private TimetableModel Timetable { get; }
         private void OnTurnPage(object v)
         {
             TurnPageEvent.Invoke(null, (string)v);
@@ -80,8 +81,15 @@ namespace TeacherPlanner.Planner.ViewModels
                     // The below method call gets the day model to create a new period using the data supplied
                     string classCode = data[classCodeIndex];
                     if (classCode == "")
-                        classCode = TimeTable.GetClassCode(date, i);
-                    newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, data[classCodeIndex], periodData);
+                    {
+                        var day = (int)date.DayOfWeek;
+                        var week = CalendarHelper.GetWeek(date);
+                        if (week == 1 || week == 2)
+                            classCode = Timetable.GetPeriod(week, day, i + 1);
+                        else if (week == 3)
+                            classCode = "Holiday";
+                    }
+                    newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, classCode, periodData);
 
                     // This keeps track of what line we are on in the data array
                     // It will be needed once we finish adding periods, but still have

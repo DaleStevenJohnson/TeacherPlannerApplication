@@ -16,7 +16,7 @@ namespace TeacherPlanner.Planner.Models
         private void Create(string[][] timetableFileData)
         {
             string[] days = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-            Timetable = new string[2][][];
+            Timetable = Initialise3DArray(2, 5, 6);
             for (int row = 1; row < timetableFileData.Length; row++)
             {
             
@@ -26,8 +26,22 @@ namespace TeacherPlanner.Planner.Models
                 int period = Int32.Parse(periodArray[2]) - 1;
                 string classcode = periodArray[6];
                 string room = periodArray[7];
-                Timetable[week][day][period] = classcode + "," + room;
+                Timetable[week][day][period] = classcode; //+ "," + room;
             }
+        }
+        private string[][][] Initialise3DArray(int rows, int columns, int items)
+        {
+            string[][][] new3D = new string[2][][];
+            for (int row = 0; row < rows; row++)
+            {
+                string[][] new2D = new string[columns][];
+                for (int column = 0; column < columns; column++)
+                {
+                    new2D[column] = new string[items];
+                }
+                new3D[row] = new2D;
+            }
+            return new3D;
         }
         public string GetPeriod(int week, int day, int period)
         {

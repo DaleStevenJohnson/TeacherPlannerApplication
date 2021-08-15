@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 
-namespace TeacherPlanner.Planner.Models
+namespace TeacherPlanner.Helpers
 {
-    public static class TimeTable
+    public static class CalendarHelper
     {
         // Fields
         public static string DateHeadingFormat = "dddd, dd MMMM";
@@ -20,17 +19,15 @@ namespace TeacherPlanner.Planner.Models
         public static DateTime[] CurrentDates;
         private static string _timetableDirectory = "Timetables";
 
-        static TimeTable()
+        static CalendarHelper()
         {
             CurrentDates = new DateTime[2];
             Today = DateTime.Today;
             CurrentDateLeft = Today;
-
-            DefineWeeks();
         }
 
         // Properties
-        public static TimetableModel CurrentTimetable { get; set; }
+        
 
         public static DateTime Today
         {
@@ -88,69 +85,7 @@ namespace TeacherPlanner.Planner.Models
         }
 
         public static string CurrentDateRightString { get { return _currentDateRightString; } }
-        public static bool WeeksAreDefined { get; set; }
-
-
-        // Methods
-        public static void DefineWeeks()
-        {
-            WeeksAreDefined = false;
-        }
-
-        /// <summary>
-        /// Takes a SIMS created timetable file and saves it locally for future use by the application
-        /// </summary>
-        /// <param name="timetableFilePath"></param>
-        public static bool ImportTimetable(string timetableFilePath, string name, UserModel userModel)
-        {
-            string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
-            if (TryParseTimetableFileData(rawTimetableFileData))
-            {
-                string[][] convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
-                string path = Path.Combine(FileHandlingHelper.UserDataPath, userModel.Username, _timetableDirectory);
-                FileHandlingHelper.TryWriteDataToCSVFile(path, name + ".csv", convertedTimetableData, "o", true, userModel.Key);
-                return true;
-            }
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Takes a SIMS created timetable, strips out neccessary data and formats it in to the application's standard.
-        /// </summary>
-        /// <param name="rawTimetableData"></param>
-        /// <returns></returns>
-        private static string[][] ConvertTimetableData(string[][] rawTimetableData)
-        {
-            // This is unfinished! I have no idea what format the rawTimetableData will be in yet
-            string[][] convertedTimetableData = new string[rawTimetableData.Length][];
-            for (int row = 0; row < rawTimetableData.Length; row++)
-            {
-                string[] line = rawTimetableData[row];
-                if (line.Length != 0)
-                {
-                    convertedTimetableData[row] = line;
-                }
-            }
-
-            return convertedTimetableData;
-        }
-
-        /// <summary>
-        /// Checks that provided SIMS timetable data file is in the correct format
-        /// </summary>
-        /// <param name="timetableFileData"></param>
-        /// <returns></returns>
-        private static bool TryParseTimetableFileData(string[][] timetableFileData)
-        {
-            return true;
-        }
-        public static void TryLoadTimetable(string timetableName)
-        {
-            var filepath = Path.Combine(FileHandlingHelper.UserDataPath, _timetableDirectory, timetableName + ".csv");
-            var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filepath);
-            CurrentTimetable = new TimetableModel(timetableData, timetableName);
-        }
+      
         public static void ChangeCurrentDate(int days)
         {
             if (days < 0) CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
@@ -159,6 +94,48 @@ namespace TeacherPlanner.Planner.Models
         public static string GetClassCode(DateTime date, int period)
         {
             return "";
+        }
+        public static int GetDayNumber(string day)
+        {
+            switch (day.ToLower())
+            {
+                case "monday":
+                    return 1;
+                case "tuesday":
+                    return 2;
+                case "wednesday":
+                    return 3;
+                case "thursday":
+                    return 4;
+                case "friday":
+                    return 5;
+                default:
+                    return 1;
+            }
+        }
+        public static int GetWeek(DateTime date)
+        {
+            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, "TimetableWeeks.csv");
+            var weekdata = FileHandlingHelper.ReadDataFromCSVFile(filepath);
+            for (int i = 0; i < weekdata.Length; i++)
+            {
+                var week = weekdata[i];
+                var weekstring = week[0].Split("/");
+                DateTime currentWeek = new DateTime(Int32.Parse(weekstring[0]), Int32.Parse(weekstring[1]), Int32.Parse(weekstring[2]));
+                DateTime nextWeek = currentWeek.AddDays(7);
+                if (date >= currentWeek && date < nextWeek)
+                {
+                    if (week[1] == "True")
+                        return 1;
+                    else if (week[2] == "True")
+                        return 2;
+                    else if (week[3] == "True")
+                        return 3;
+                    else
+                        return 0;
+                }
+            }
+            return 0;
         }
         private static DateTime AdvanceDate(DateTime date, int days)
         {

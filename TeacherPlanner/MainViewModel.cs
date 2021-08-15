@@ -10,9 +10,10 @@ namespace TeacherPlanner
         public MainViewModel(UserModel userModel)
         {
             UserModel = userModel;
-            PlannerViewModel = new PlannerViewModel(UserModel);
-            ToDoViewModel = new ToDoViewModel(UserModel);
             TimetableViewModel = new TimetableViewModel(UserModel);
+            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable);
+            ToDoViewModel = new ToDoViewModel(UserModel);
+            
         }
         public UserModel UserModel;
         public PlannerViewModel PlannerViewModel { get; }

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Planner.Models;
-using System.Linq;
-using System.Windows.Input;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
@@ -97,6 +95,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnSaveTimeTableWeeks()
         {
             SaveTimeTableWeeks();
+            // LoadNewDays - From Planner View Model
             CloseAction();
         }
         private void SaveTimeTableWeeks()

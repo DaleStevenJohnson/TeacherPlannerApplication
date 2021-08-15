@@ -1,4 +1,5 @@
 ﻿using System;
+using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Planner.Models
 {
@@ -14,7 +15,7 @@ namespace TeacherPlanner.Planner.Models
         public string Name { get { return Date.ToString("dddd"); } }
         public string Month { get { return Date.ToString("MMMM"); } }
         public string Year { get { return Date.ToString("yyyy"); } }
-        public string DisplayDate { get { return Date.ToString(TimeTable.DateHeadingFormat); } }
+        public string DisplayDate { get { return Date.ToString(CalendarHelper.DateHeadingFormat); } }
 
         public string DisplayMonthYear { get { return Date.ToString("MMMM yyyy"); } }
         public DateTime Date

@@ -17,6 +17,7 @@ namespace TeacherPlanner.Timetable.ViewModels
         private bool _hasImportedTimetables;
         private List<TimetableModel> _importedTimetables;
         private UserModel _userModel;
+        private TimetableModel _currentTimetable;
 
         public TimetableViewModel(UserModel userModel)
         {
@@ -26,12 +27,21 @@ namespace TeacherPlanner.Timetable.ViewModels
             ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
             _userModel = userModel;
             GetImportedTimetables();
+            if (ImportedTimetables.Count == 1)
+            {
+                CurrentTimetable = ImportedTimetables[0];
+            }
         }
 
-        public List<TimetableModel> ImportedTimetables 
+        public List<TimetableModel> ImportedTimetables
         { 
             get => _importedTimetables;
             set => RaiseAndSetIfChanged(ref _importedTimetables, value);  
+        }
+        public TimetableModel CurrentTimetable
+        {
+            get => _currentTimetable;
+            set => RaiseAndSetIfChanged(ref _currentTimetable, value);  
         }
 
         public ICommand DefineTimetableWeeksCommand { get; }
@@ -73,7 +83,8 @@ namespace TeacherPlanner.Timetable.ViewModels
 
             for (int i = 0; i < filenames.Length; i++)
             {
-                updatedImportedTimetables.Add(new TimetableModel(new string[0][], Path.GetFileName(filenames[i])));
+                var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filenames[i], true, _userModel.Key);
+                updatedImportedTimetables.Add(new TimetableModel(timetableData, Path.GetFileName(filenames[i])));
             }
 
             ImportedTimetables = updatedImportedTimetables;

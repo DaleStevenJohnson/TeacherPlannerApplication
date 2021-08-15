@@ -13,15 +13,16 @@ namespace TeacherPlanner.Planner.ViewModels
         private DayViewModel _leftDay;
         private DayViewModel _rightDay;
         private int _loadedDayModelsIndex = 0;
-        public PlannerViewModel(UserModel userModel)
+        public PlannerViewModel(UserModel userModel, TimetableModel timetable)
         {
             // Parameter Assignment
             UserModel = userModel;
+            Timetable = timetable;
 
             // Property Assignment
             LoadedDayModels = new DayModel[DAYLIMIT];
-            LeftDay = new DayViewModel(UserModel, TimeTable.CurrentDateLeft);
-            RightDay = new DayViewModel(UserModel, TimeTable.CurrentDateRight);
+            LeftDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateLeft, Timetable);
+            RightDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateRight, Timetable);
 
 
             LoadNewDays();
@@ -34,6 +35,7 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
+        public TimetableModel Timetable { get; set; }
         public DayModel[] LoadedDayModels { get; set; }
 
         public UserModel UserModel { get; set; }
@@ -53,7 +55,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             var numOfDays = int.Parse((string)parameter);
             SaveCurrentlyDisplayedPageDays();
-            TimeTable.ChangeCurrentDate(numOfDays);
+            CalendarHelper.ChangeCurrentDate(numOfDays);
             LoadNewDays();
             //_debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }
@@ -71,8 +73,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void LoadNewDays()
         {
-            LoadNewDay(TimeTable.CurrentDateLeft, ref _leftDay);
-            LoadNewDay(TimeTable.CurrentDateRight, ref _rightDay);
+            LoadNewDay(CalendarHelper.CurrentDateLeft, ref _leftDay);
+            LoadNewDay(CalendarHelper.CurrentDateRight, ref _rightDay);
         }
 
         private void LoadNewDay(DateTime date, ref DayViewModel dayViewModel)
