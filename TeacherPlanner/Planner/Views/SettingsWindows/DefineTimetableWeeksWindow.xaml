@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeacherPlanner.Planner.Views.SettingsWindows"
         xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
-        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels" xmlns:i1="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic"
         mc:Ignorable="d"
         d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DefineTimetableWeeksViewModel}}"
         Title="Define Weeks" Height="600" Width="500" MinHeight="600" MinWidth="500" MaxHeight="600" MaxWidth="500">
@@ -52,7 +52,9 @@
             
         </ListView>
         <Button Grid.Column="1" Grid.Row="2" Margin="350, 10,10,10"
-                Command="{Binding SaveTimetableWeeksCommand}"
-                Content="Submit"/>
+                Command="{Binding SaveTimeTableWeeksCommand}"
+                Content="Submit">
+            
+        </Button>
     </Grid>
 </Window>

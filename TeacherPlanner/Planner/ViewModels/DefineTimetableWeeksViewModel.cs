@@ -8,14 +8,18 @@ using System.Windows.Input;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
-    public class DefineTimetableWeeksViewModel
+    public class DefineTimetableWeeksViewModel : ObservableObject
     {
-        public ICommand SaveTimeTableWeeksCommand;
+        public Action CloseAction { get; }
+        public ICommand SaveTimeTableWeeksCommand { get; }
         private string _path = FileHandlingHelper.LoggedInUserDataPath;
-        private string _filename = "TimetableWeeks.txt";
+        private string _filename = "TimetableWeeks.csv";
         private string _filepath;
-        public DefineTimetableWeeksViewModel()
+        private DateRowModel[] _rows;
+
+        public DefineTimetableWeeksViewModel(Action closeWindowAction)
         {
+            CloseAction = closeWindowAction;
             _filepath = Path.Combine(_path, _filename);
             SaveTimeTableWeeksCommand = new SimpleCommand(_ => OnSaveTimeTableWeeks());
 
@@ -25,13 +29,17 @@ namespace TeacherPlanner.Planner.ViewModels
                 Rows = CreateTimeTableWeeks();
         }
 
-        public DateRowModel[] Rows { get; }
+        public DateRowModel[] Rows 
+        {
+            get => _rows;
+            set => RaiseAndSetIfChanged(ref _rows, value);
+        }
 
         private bool TryGetTimeTableWeeks(out DateRowModel[] dateRows)
         {
             
             dateRows = new DateRowModel[0];
-            if (!File.Exists(_filename))
+            if (!File.Exists(_filepath))
                 return false;
             // TODO: Replace the new List with the loaded data
             dateRows = LoadDateRows();
@@ -87,6 +95,11 @@ namespace TeacherPlanner.Planner.ViewModels
         }
 
         private void OnSaveTimeTableWeeks()
+        {
+            SaveTimeTableWeeks();
+            CloseAction();
+        }
+        private void SaveTimeTableWeeks()
         {
             int length = Rows.Length;
             string[][] weeks = new string[length][];

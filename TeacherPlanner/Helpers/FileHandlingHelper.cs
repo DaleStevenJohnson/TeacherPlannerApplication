@@ -71,18 +71,18 @@ namespace TeacherPlanner.Helpers
                 for (int row = 0; row < data.Length; row++)
                 {
                     string line = "";
-                for (int column = 0; column < data[row].Length; column++)
+                    for (int column = 0; column < data[row].Length; column++)
                     {
-                        line += data[row][column];
-                        if (column != data[row].Length - 1)
-                            line += "\n";
+                            line += data[row][column];
+                            if (column != data[row].Length - 1)
+                                line += ",";
+                        }
+                        if (dataShouldBeEncrypted)
+                        {
+                            line = Cryptography.EncryptString(key, line);
+                        }
+                        sw.WriteLine(line);
                     }
-                    if (dataShouldBeEncrypted)
-                    {
-                        line = Cryptography.EncryptString(key, line);
-                    }
-                    sw.WriteLine(line);
-                }
             }
             return true;
         }

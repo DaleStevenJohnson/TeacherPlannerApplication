@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -61,9 +62,7 @@ namespace TeacherPlanner.Timetable.ViewModels
         
         private bool? OnDefineTimetableWeeks()
         {
-            var defineTimetableWeeksViewModel = new DefineTimetableWeeksViewModel();
             var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow();
-            defineTimetableWeeksWindow.DataContext = defineTimetableWeeksViewModel;
             return defineTimetableWeeksWindow.ShowDialog();
         }
 
