@@ -80,6 +80,10 @@
                Content="Timetable File Requirements / Explanation"/>
 
         <Button Grid.Column="2" Grid.Row="10" Margin="160,2,0,2"
-                Content="Import" Command="{Binding TryImportTimetableCommand}"/>
+                Content="Import" IsDefault="True"
+                Command="{Binding TryImportTimetableCommand}"/>
+        <TextBlock Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" 
+                   Margin="20,10" Foreground="Red" FontWeight="Bold" 
+                   Text="{Binding UserFeedback}" TextWrapping="Wrap"/>
     </Grid>
 </Window>

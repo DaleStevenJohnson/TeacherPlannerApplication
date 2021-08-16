@@ -23,7 +23,7 @@ namespace TeacherPlanner.Planner.ViewModels
             LoadedDayModels = new DayModel[DAYLIMIT];
             LeftDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateLeft, Timetable);
             RightDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateRight, Timetable);
-
+            OverwriteClassCode = false;
 
             LoadNewDays();
 
@@ -37,6 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
         }
         public TimetableModel Timetable { get; set; }
         public DayModel[] LoadedDayModels { get; set; }
+        public bool OverwriteClassCode { get; set; }
 
         public UserModel UserModel { get; set; }
         public DayViewModel LeftDay
@@ -71,8 +72,12 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay.SaveDayToFile();
         }
 
-        private void LoadNewDays()
+        public void LoadNewDays(bool reload = false)
         {
+            if (reload)
+            {
+                LoadedDayModels = new DayModel[DAYLIMIT];
+            }
             LoadNewDay(CalendarHelper.CurrentDateLeft, ref _leftDay);
             LoadNewDay(CalendarHelper.CurrentDateRight, ref _rightDay);
         }
@@ -84,9 +89,19 @@ namespace TeacherPlanner.Planner.ViewModels
                 dayViewModel.DayModel = LoadedDayModels[index];
             else
             {
-                dayViewModel.DayModel = dayViewModel.LoadAndPopulateNewDay(date);
+                dayViewModel.DayModel = dayViewModel.LoadAndPopulateNewDay(date, OverwriteClassCode);
                 AddDayToLoadedDayModelList(dayViewModel.DayModel);
             }
+        }
+        private bool TryRemoveLoadedDay(DateTime date)
+        {
+            for (int i = 0; i < LoadedDayModels.Length; i++)
+            {
+                if (LoadedDayModels[i] != null && LoadedDayModels[i].CalendarModel.Date == date)
+                    LoadedDayModels[i] = null;
+                    return true;
+            }
+            return false;
         }
         private int IndexOfLoadedDay(DateTime date)
         {

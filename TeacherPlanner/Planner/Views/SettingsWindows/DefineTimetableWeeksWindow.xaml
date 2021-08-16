@@ -52,6 +52,7 @@
             
         </ListView>
         <Button Grid.Column="1" Grid.Row="2" Margin="350, 10,10,10"
+                IsDefault="True"
                 Command="{Binding SaveTimeTableWeeksCommand}"
                 Content="Submit">
             

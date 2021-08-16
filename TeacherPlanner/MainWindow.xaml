@@ -15,53 +15,7 @@
     <Window.Resources>
 
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
-            <Menu>
-                <MenuItem Header="File">
-                    <MenuItem Header="Log Out"/>
-                    <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
-                </MenuItem>
-                <MenuItem Header="Timetable">
-                    <MenuItem Header="Import..." Command="{Binding TimetableViewModel.ImportTimetableCommand}"/>
-                    <MenuItem Header="Manage..." Command="{Binding TimetableViewModel.ManageTimetableCommand}"/>
-                    <MenuItem Header="Define Weeks" Command="{Binding TimetableViewModel.DefineTimetableWeeksCommand}"/>
-                    <MenuItem Header="Apply" IsEnabled="{Binding TimetableViewModel.HasImportedTimetables}"
-                              ItemsSource="{Binding Path=TimetableViewModel.ImportedTimetables}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="Header" Value="{Binding Name}"/>
-                                <Setter Property="Command" Value="{Binding DataContext.TimetableViewModel.ApplySelectedTimetableCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                <Setter Property="CommandParameter" Value="{Binding Name}"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    
-                </MenuItem>
-
-                <MenuItem Header="Planner">
-                    <MenuItem Header="Weekly Scroll?" IsCheckable="True"/>
-                </MenuItem>
-                
-            </Menu>
-        </DockPanel>
-        <TabControl Grid.Row="1">
-            <TabControl.Resources>
-                <Style TargetType="TabPanel">
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                    
-                </Style>
-            </TabControl.Resources>
-            <TabItem Header="Planner">
-                <plannerview:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
-            </TabItem>
-            <TabItem Name="Todo" Header="Todo">
-                <todoview:TodoPageView DataContext="{Binding ToDoViewModel}"/>
-            </TabItem>
-        </TabControl>
-    </Grid>
+    
+        <plannerview:ChooseYearPage DataContext="{Binding }"/>
+    
 </Window>

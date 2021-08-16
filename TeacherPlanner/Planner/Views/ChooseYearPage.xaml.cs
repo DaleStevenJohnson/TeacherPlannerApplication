@@ -8,21 +8,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TeacherPlanner.Planner.ViewModels;
 
-namespace TeacherPlanner.Planner.Views.SettingsWindows
+namespace TeacherPlanner.Planner.Views
 {
     /// <summary>
-    /// Interaction logic for DefineTimetableWeeksWindow.xaml
+    /// Interaction logic for ChooseYearPage.xaml
     /// </summary>
-    public partial class DefineTimetableWeeksWindow : Window
+    public partial class ChooseYearPage : UserControl
     {
-        public DefineTimetableWeeksWindow()
+        public ChooseYearPage()
         {
             InitializeComponent();
-            var viewModel = new DefineTimetableWeeksViewModel(this);
-            this.DataContext = viewModel;
         }
     }
 }

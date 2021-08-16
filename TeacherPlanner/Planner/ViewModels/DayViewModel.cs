@@ -34,7 +34,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private string GetFormattedDateString(DateTime date) => date.ToString("yyyyMMdd");
 
-        public DayModel LoadAndPopulateNewDay(DateTime date)
+        public DayModel LoadAndPopulateNewDay(DateTime date, bool overwriteClassCode = false)
         {
             var filenameDate = GetFormattedDateString(date);
             // Create path for where data should be stored for the provided date
@@ -53,7 +53,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             DayModel newDayModel = new DayModel(date);
             // If this is false, it means no save file exists, and we need to just go ahead and create a completely empty DayModel
-            if (data.Length > 0)
+            if (data.Length > 0 && Timetable != null)
             {
                 // Repeat for all six periods
                 for (int i = 0; i < newDayModel.Periods.Length; i++)
@@ -80,6 +80,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
                     // The below method call gets the day model to create a new period using the data supplied
                     string classCode = data[classCodeIndex];
+                    if (overwriteClassCode)
+                        classCode = "";
                     if (classCode == "")
                     {
                         var day = (int)date.DayOfWeek;

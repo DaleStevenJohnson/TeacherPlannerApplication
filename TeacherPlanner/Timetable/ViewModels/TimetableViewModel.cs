@@ -22,7 +22,7 @@ namespace TeacherPlanner.Timetable.ViewModels
         public TimetableViewModel(UserModel userModel)
         {
             ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
-            DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
+            
             ManageTimetableCommand = new SimpleCommand(_ => OnManageTimetable());
             ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
             _userModel = userModel;
@@ -44,7 +44,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             set => RaiseAndSetIfChanged(ref _currentTimetable, value);  
         }
 
-        public ICommand DefineTimetableWeeksCommand { get; }
+        
         public ICommand ImportTimetableCommand { get; }
         public ICommand ManageTimetableCommand { get; }
         public ICommand ApplySelectedTimetableCommand { get; }
@@ -63,14 +63,15 @@ namespace TeacherPlanner.Timetable.ViewModels
         private void OnTimetableImportClick()
         {
             var importWindow = new ImportTimetableWindow();
-            var importTimetableViewModel = new ImportTimetableWindowViewModel(_userModel);
+            var importTimetableViewModel = new ImportTimetableWindowViewModel(_userModel, importWindow);
             importWindow.DataContext = importTimetableViewModel;
+            
 
-            if (importWindow.ShowDialog() == true)
+            if (importWindow.ShowDialog() ?? true)
                 GetImportedTimetables();
         }
         
-        private bool? OnDefineTimetableWeeks()
+        public bool? DefineTimetableWeeks()
         {
             var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow();
             return defineTimetableWeeksWindow.ShowDialog();
@@ -78,7 +79,9 @@ namespace TeacherPlanner.Timetable.ViewModels
 
         private void GetImportedTimetables()
         {
-            string[] filenames = Directory.GetFiles(Path.Combine(FileHandlingHelper.LoggedInUserDataPath, _timetableDirectory));
+            string directory = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, _timetableDirectory);
+            Directory.CreateDirectory(directory);
+            string[] filenames = Directory.GetFiles(directory);
             var updatedImportedTimetables = new List<TimetableModel>();
 
             for (int i = 0; i < filenames.Length; i++)

@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="TeacherPlanner.Planner.Views.PlannerYearPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
+      xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
+      xmlns:local="clr-namespace:TeacherPlanner"
+      xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+      xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+      xmlns:timetableviewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
+      mc:Ignorable="d"
+      d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:PlannerYearViewModel}}"
+      Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" 
+      x:Name="plannerYearPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Log Out"/>
+                    <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Timetable">
+                    <MenuItem Header="Import..." Command="{Binding TimetableViewModel.ImportTimetableCommand}"/>
+                    <MenuItem Header="Manage..." Command="{Binding TimetableViewModel.ManageTimetableCommand}"/>
+                    <MenuItem Header="Define Weeks" Command="{Binding DefineTimetableWeeksCommand}"/>
+                    <MenuItem Header="Apply" IsEnabled="{Binding TimetableViewModel.HasImportedTimetables}"
+                              ItemsSource="{Binding Path=TimetableViewModel.ImportedTimetables}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding DataContext.TimetableViewModel.ApplySelectedTimetableCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                                <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Planner">
+                    <MenuItem Header="Weekly Scroll?" IsCheckable="True"/>
+                </MenuItem>
+
+            </Menu>
+        </DockPanel>
+        <TabControl Grid.Row="1">
+            <TabControl.Resources>
+                <Style TargetType="TabPanel">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Planner">
+                <plannerview:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
+            </TabItem>
+            <TabItem Name="Todo" Header="Todo">
+                <todoview:TodoPageView DataContext="{Binding ToDoViewModel}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

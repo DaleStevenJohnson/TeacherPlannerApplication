@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Planner.Models;
@@ -15,9 +16,10 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _filepath;
         private DateRowModel[] _rows;
 
-        public DefineTimetableWeeksViewModel(Action closeWindowAction)
+        public DefineTimetableWeeksViewModel(Window window)
         {
-            CloseAction = closeWindowAction;
+            Window = window;
+            CloseAction = new Action(window.Close);
             _filepath = Path.Combine(_path, _filename);
             SaveTimeTableWeeksCommand = new SimpleCommand(_ => OnSaveTimeTableWeeks());
 
@@ -26,7 +28,7 @@ namespace TeacherPlanner.Planner.ViewModels
             else
                 Rows = CreateTimeTableWeeks();
         }
-
+        private Window Window { get; }
         public DateRowModel[] Rows 
         {
             get => _rows;
@@ -96,7 +98,8 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             SaveTimeTableWeeks();
             // LoadNewDays - From Planner View Model
-            CloseAction();
+            Window.DialogResult = true;
+            Window.Close();
         }
         private void SaveTimeTableWeeks()
         {

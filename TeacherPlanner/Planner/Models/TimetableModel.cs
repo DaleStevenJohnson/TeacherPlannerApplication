@@ -19,13 +19,12 @@ namespace TeacherPlanner.Planner.Models
             Timetable = Initialise3DArray(2, 5, 6);
             for (int row = 1; row < timetableFileData.Length; row++)
             {
-            
                 string[] periodArray = timetableFileData[row];
                 int week = Int32.Parse(periodArray[0]) - 1;
                 int day = Array.IndexOf(days, periodArray[1]);
                 int period = Int32.Parse(periodArray[2]) - 1;
-                string classcode = periodArray[6];
-                string room = periodArray[7];
+                string classcode = periodArray[4];
+                string room = periodArray[5];
                 Timetable[week][day][period] = classcode; //+ "," + room;
             }
         }
