@@ -1,23 +1,31 @@
-﻿namespace TeacherPlanner.Login.Models
+﻿using System;
+using System.Linq;
+using TeacherPlanner.Helpers;
+
+namespace TeacherPlanner.Login.Models
 {
     public class UserModel
     {
         private string _username;
-        private string _key;
 
-        public UserModel()
+        public UserModel(string username, string password)
         {
-            Username = "";
+            Username = username;
+            Key = GetShortHash(password, 32);
+            UsernameHash = GetShortHash(username, 20);
         }
-        public string Username
+        public string Username { get; }
+        public string UsernameHash { get; }
+        public string Key { get; }
+        private string GetShortHash(string input, int length)
         {
-            get => _username;
-            set => _username = value;
-        }
-        public string Key
-        { 
-            get => _key;
-            set => _key = value.Length > 32 ? value.Substring(0, 32) : value;
+            length = length > 32 ? 32 : length;
+            string hash = SecurePasswordHasher.Hash(input);
+            int index = ((int)(char)value[0]) % 10;
+            string key = hash.Substring(index, index + length);
+            char[] characters = key.ToArray();
+            Array.Sort(characters);
+            return new string(characters);
         }
     }
 }

@@ -17,7 +17,6 @@ namespace TeacherPlanner.Login.ViewModels
 
         public LoginViewModel(string accountFile, string filename)
         {
-            UserModel = new UserModel();
             LoginButtonClickedCommand = new SimpleCommand(password => OnLoginButtonClicked(password));
             _path = accountFile;
             _filename = filename;
@@ -26,12 +25,8 @@ namespace TeacherPlanner.Login.ViewModels
         public bool LoggedIn { get; set; }
         public string Username 
         {
-            get => UserModel.Username;
-            set
-            {
-                RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
-                UserModel.Username = _username;
-            }
+            get => _username;
+            set => RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
         }
         public UserModel UserModel { get; set; }
         public UserControl CurrentPage { get; set; }
@@ -46,10 +41,7 @@ namespace TeacherPlanner.Login.ViewModels
             LoggedIn = Authenticate(Username, passwordBox.Password.Trim());
             if (LoggedIn)
             {
-                UserModel.Key = Cryptography.EncryptString(
-                    string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(0, 4), 8)),
-                    string.Concat(Enumerable.Repeat(passwordBox.Password.Trim().Substring(4, 4), 8))
-                    );
+                UserModel = new UserModel(Username, passwordBox.Password.Trim())
                 FileHandlingHelper.LoggedInUserDataPath = Path.Combine(FileHandlingHelper.UserDataPath, UserModel.Username);
                 //MessageBox.Show("Success");
                 window.Close();
