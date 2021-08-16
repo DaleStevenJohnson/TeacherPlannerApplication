@@ -6,8 +6,6 @@ namespace TeacherPlanner.Login.Models
 {
     public class UserModel
     {
-        private string _username;
-
         public UserModel(string username, string password)
         {
             Username = username;
