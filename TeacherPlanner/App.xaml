@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:TeacherPlanner"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <FontFamily x:Key="TitleHandwritten">pack://application:,,,/Assets/Fonts/#Nothing You Could Do</FontFamily>
+        <FontFamily x:Key="BodyText">pack://application:,,,/Assets/Fonts/#Montserrat</FontFamily>
         <ImageBrush x:Key="Icon.DeleteBin.Normal" ImageSource="/Assets/Icons/DeleteBinIconNormal.png" Stretch="Uniform"/>
         <ImageBrush x:Key="Icon.DeleteBin.Hovered" ImageSource="/Assets/Icons/DeleteBinIconHovered.png" Stretch="Uniform"/>
         <!--Delete by DinosoftLab from the Noun Project-->
