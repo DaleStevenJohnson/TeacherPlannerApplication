@@ -13,17 +13,17 @@
         public string LeftText
         {
             get { return RowText[0]; }
-            set => RowText[0] = value.Trim('\r', '\n').Replace("`", "");
+            set => RowText[0] = value.Trim('\r', '\n').Replace("`", string.Empty);
         }
         public string CenterText
         {
             get { return RowText[1]; }
-            set => RowText[1] = value.Trim('\r', '\n').Replace("`", "");
+            set => RowText[1] = value.Trim('\r', '\n').Replace("`", string.Empty);
         }
         public string RightText
         {
             get { return RowText[2]; }
-            set => RowText[2] = value.Trim('\r', '\n').Replace("`", "");
+            set => RowText[2] = value.Trim('\r', '\n').Replace("`", string.Empty);
         }
     }
 

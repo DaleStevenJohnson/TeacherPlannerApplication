@@ -20,8 +20,8 @@ namespace TeacherPlanner.Login.ViewModels
             OnPasswordChangeCommand = new SimpleCommand(password => OnPasswordChange(password));
             _path = path;
             _filename = filename;
-            FeedbackForCreateUsername = "";
-            FeedbackForCreatePassword = "";
+            FeedbackForCreateUsername = string.Empty;
+            FeedbackForCreatePassword = string.Empty;
         }
         public string Username 
         { 
@@ -125,7 +125,7 @@ namespace TeacherPlanner.Login.ViewModels
                 }
                 else
                 {
-                    Username = "";
+                    Username = string.Empty;
                     MessageBox.Show("User already exists");
                 }
             }

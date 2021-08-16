@@ -19,7 +19,7 @@ namespace TeacherPlanner.Login.Models
         {
             length = length > 32 ? 32 : length;
             string hash = SecurePasswordHasher.Hash(input);
-            int index = ((int)(char)value[0]) % 10;
+            int index = ((int)(char)input[0]) % 10;
             string key = hash.Substring(index, index + length);
             char[] characters = key.ToArray();
             Array.Sort(characters);

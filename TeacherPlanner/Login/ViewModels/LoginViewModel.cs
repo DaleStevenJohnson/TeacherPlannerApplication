@@ -41,7 +41,7 @@ namespace TeacherPlanner.Login.ViewModels
             LoggedIn = Authenticate(Username, passwordBox.Password.Trim());
             if (LoggedIn)
             {
-                UserModel = new UserModel(Username, passwordBox.Password.Trim())
+                UserModel = new UserModel(Username, passwordBox.Password.Trim());
                 FileHandlingHelper.LoggedInUserDataPath = Path.Combine(FileHandlingHelper.UserDataPath, UserModel.Username);
                 //MessageBox.Show("Success");
                 window.Close();

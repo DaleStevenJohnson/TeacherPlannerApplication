@@ -78,7 +78,7 @@ namespace TeacherPlanner.Helpers
             }
 
             // Extract iteration and Base64 string
-            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
+            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", string.Empty).Split('$');
             var iterations = int.Parse(splittedHashString[0]);
             var base64Hash = splittedHashString[1];
 

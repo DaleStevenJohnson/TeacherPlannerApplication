@@ -29,9 +29,9 @@ namespace TeacherPlanner.Planner.ViewModels
             // Property Initialisation
             ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
             TryImportTimetableCommand = new SimpleCommand(_ => TryImportTimetable(_));
-            TimetableFile = "";
-            TimetableName = "";
-            UserFeedback = "";
+            TimetableFile = string.Empty;
+            TimetableName = string.Empty;
+            UserFeedback = string.Empty;
         }
         public Window Window;
         public UserModel UserModel { get; }
@@ -68,18 +68,18 @@ namespace TeacherPlanner.Planner.ViewModels
             string[] forbiddenCharacters = new string[] { "/", ".", "`", @"\", "~", "#", "*", "\"", "'", ":", ";", ",", "?", "%", "$", "£", "=","+" };
             for (int i = 0; i < forbiddenCharacters.Length; i++)
             {
-                name = name.Replace(forbiddenCharacters[i], "");
+                name = name.Replace(forbiddenCharacters[i], string.Empty);
             }
             return name;
         }
         private void TryImportTimetable(object args)
         {
             // AND TimetableName is not already an existing Timetable name
-            if (TimetableName == "")
+            if (TimetableName == string.Empty)
             {
                 UserFeedback = "You have not given your timetable a name";
             }
-            else if (TimetableFile == "")
+            else if (TimetableFile == string.Empty)
             {
                 UserFeedback = "You have not selected a Timetable File";
             }
@@ -162,15 +162,15 @@ namespace TeacherPlanner.Planner.ViewModels
             // of the csv data, so arguably is okay? right?
             bool firstline = ParseEmptyStringArray(timetableFileData[0]);
             bool secondline = timetableFileData[1][0].Contains("Timetable");
-            bool thirdline = timetableFileData[2][0] != "";
+            bool thirdline = timetableFileData[2][0] != string.Empty;
             bool fourthline = ParseEmptyStringArray(timetableFileData[3]);
             bool fifthline = timetableFileData[4][1] == "1Mon";
             bool sixthline = timetableFileData[5][0] == "R";
-            bool seventhline = timetableFileData[6][0] == "" && timetableFileData[6][1] != "";
+            bool seventhline = timetableFileData[6][0] == string.Empty && timetableFileData[6][1] != string.Empty;
             bool eigthline = timetableFileData[7][0] == "1";
-            bool ninthline = timetableFileData[8][0] == "" && timetableFileData[8][1] != "";
+            bool ninthline = timetableFileData[8][0] == string.Empty && timetableFileData[8][1] != string.Empty;
             bool tenthline = timetableFileData[9][0] == "2";
-            bool eleventhline = timetableFileData[10][0] == "" && timetableFileData[10][1] != "";
+            bool eleventhline = timetableFileData[10][0] == string.Empty && timetableFileData[10][1] != string.Empty;
             bool twentiethline = timetableFileData[19][0] == "T";
             bool twentyfirstline = ParseEmptyStringArray(timetableFileData[20]);
             bool twentysecondline = ParseEmptyStringArray(timetableFileData[21]);
@@ -184,7 +184,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             for (int i = 0; i < stringArray.Length; i++)
             {
-                if (stringArray[i] != "")
+                if (stringArray[i] != string.Empty)
                     return false;
             }
             return true;

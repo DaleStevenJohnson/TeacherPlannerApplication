@@ -81,8 +81,8 @@ namespace TeacherPlanner.Planner.ViewModels
                     // The below method call gets the day model to create a new period using the data supplied
                     string classCode = data[classCodeIndex];
                     if (overwriteClassCode)
-                        classCode = "";
-                    if (classCode == "")
+                        classCode = string.Empty;
+                    if (classCode == string.Empty)
                     {
                         var day = (int)date.DayOfWeek;
                         var week = CalendarHelper.GetWeek(date);

@@ -70,7 +70,7 @@ namespace TeacherPlanner.Helpers
             {
                 for (int row = 0; row < data.Length; row++)
                 {
-                    string line = "";
+                    string line = string.Empty;
                     for (int column = 0; column < data[row].Length; column++)
                     {
                             line += data[row][column];
@@ -122,7 +122,7 @@ namespace TeacherPlanner.Helpers
         // Input Sanitisation Methods
         public static string SanitiseString(string s)
         {
-            return s.Trim().Replace("`", "");
+            return s.Trim().Replace("`", string.Empty);
         }
         public static string[] SanitiseStrings(string[] strings)
         {

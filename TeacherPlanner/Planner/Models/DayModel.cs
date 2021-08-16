@@ -53,7 +53,7 @@ namespace TeacherPlanner.Planner.Models
         }
         private PeriodModel LoadEmptyIntoNewPeriod(int periodNumber)
         {
-            PeriodModel newEmptyPeriodModel = new PeriodModel(periodNumber, "");
+            PeriodModel newEmptyPeriodModel = new PeriodModel(periodNumber, string.Empty);
             newEmptyPeriodModel.LoadData(new string[] { " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` " });
             return newEmptyPeriodModel;
         }
@@ -70,7 +70,7 @@ namespace TeacherPlanner.Planner.Models
         }
         public string PackageSaveData()
         {
-            string saveData = "";
+            string saveData = string.Empty;
 
             for (int i = 0; i < Periods.Length; i++)
             {

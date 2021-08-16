@@ -52,30 +52,9 @@ namespace TeacherPlanner.Planner.Models
             }
         }
 
-        private void LoadTestNotes()
-        {
-            string[] words = new string[] { "this", "is", "random", "text", "hello", "goodbye", "and", "just", "is", "not", "could", "be", "Marjorie", "angry", "hornets" };
-            Random r = new Random();
-
-            for (int i = 0; i < Notes.Length; i++)
-            {
-                int sentenceLength = r.Next(3, 7);
-                string sentence = "";
-                for (int j = 0; j < sentenceLength; j++)
-                {
-                    int wordIndex = r.Next(0, words.Length);
-                    string word = words[wordIndex];
-                    sentence += word;
-                    if (j != sentenceLength - 1)
-                        sentence += " ";
-                }
-                Notes[i] = sentence;
-            }
-        }
-
         internal string PackageSaveData()
         {
-            string saveData = "";
+            string saveData = string.Empty;
             string[] cleanNotes = FileHandlingHelper.SanitiseStrings(Notes);
             for (int i = 0; i < cleanNotes.Length; i++)
             {
