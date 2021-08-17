@@ -10,10 +10,17 @@ namespace TeacherPlanner.Helpers
             if (!Directory.Exists(RootPath))
                 Directory.CreateDirectory(RootPath);
         }
-        public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
-        public static string UserDataPath = Path.Combine(RootPath, "UserData");
-        public static string LoggedInUserDataPath { get; set; }
 
+        public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
+        public static string UserDataPath = Path.Combine(RootPath, "userdata");
+        public static string LoggedInUserDataPath { get; set; }
+        public static string LoggedInUserConfigPath { get; set; }
+        public static void SetDirectories(string username, string year)
+        {
+            //TODO - Encrypt all directory names (or just port it all to a SQL DB...)
+            LoggedInUserDataPath = Path.Combine(UserDataPath, username, year);
+            LoggedInUserConfigPath = Path.Combine(LoggedInUserDataPath, "config");
+        }
         // File Path Methods
         /// <summary>
         /// Creates a directory in the format \Username\YYYY\YYYYMM

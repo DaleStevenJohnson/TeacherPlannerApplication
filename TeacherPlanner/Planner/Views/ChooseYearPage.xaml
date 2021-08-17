@@ -8,15 +8,17 @@
       xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
       xmlns:global="clr-namespace:TeacherPlanner"
       mc:Ignorable="d" 
-      d:DataContext="{Binding Source={d:DesignInstance Type=global:MainViewModel}}"
-      Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" >
+      d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ChooseYearViewModel}}"
+      d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         <DataTemplate x:Key="YearSelectTemplate" DataType="{x:Type model:YearSelectModel}">
             <StackPanel Orientation="Horizontal">
-                <Label Width="240" Background="Transparent" BorderBrush="Transparent"
-                        Content="{Binding Path=AcademicYear}">
-                    
-                </Label>
+                <TextBlock HorizontalAlignment="Center" Background="Transparent" 
+                           FontSize="50" FontWeight="Bold" FontFamily="{StaticResource BodyText}"
+                        Text="{Binding Path=AcademicYear}">
+                        <!--Command="{Binding DataContext.YearSelectedCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        CommandParameter="{Binding AcademicYear}">-->
+                </TextBlock>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -44,22 +46,28 @@
         <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
             Content="Choose Your Academic Year:" FontSize="40" FontWeight="Thin" FontFamily="{StaticResource BodyText}"
             VerticalAlignment="Center"/>
-        <ListView Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="200,50"
+        <ListView Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="600,50,500,50"
                   Name="Listbox" 
+                  BorderBrush="Transparent" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   ItemsSource="{Binding Path=YearSelectModels}" 
                   ItemTemplate="{StaticResource YearSelectTemplate}">
-            
-            <Label Width="240" Background="Transparent" BorderBrush="Transparent"
-                        Content="Testing"/>
-            
-
-
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseUp" Handler="ListViewItem_MouseUp" />
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
+        <Button Grid.Column="2" Grid.Row="4" Margin="600, 10,50,10"
+                Background="Transparent" BorderBrush="Transparent"
+                FontFamily="{StaticResource TitleHandwritten}" FontSize="70"
+                Content="Add +" Cursor="Hand"
+                Command="{Binding AddYearCommand}"/>
     </Grid>
     
 </UserControl>

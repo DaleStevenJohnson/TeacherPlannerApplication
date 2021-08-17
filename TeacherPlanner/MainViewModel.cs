@@ -9,20 +9,36 @@ using TeacherPlanner.ToDo.ViewModels;
 
 namespace TeacherPlanner
 {
-    public class MainViewModel
+    public class MainViewModel : ObservableObject
     {
+        private int _currentView;
         public ICommand ChoosePlannerYearCommand { get; }
         public MainViewModel(UserModel userModel)
         {
             UserModel = userModel;
+            CurrentView = 1;
             ChoosePlannerYearCommand = new SimpleCommand(yearString => OnChoosePlannerYear((string)yearString));
+            ChooseYearViewModel = new ChooseYearViewModel(UserModel);
+            ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
         }
-        public PlannerYearViewModel PlannerYearViewModel { get; set; }
-        public List<YearSelectModel> YearSelectModels { get; set; }
-        public UserModel UserModel;
-        private void OnChoosePlannerYear(string yearString)
+        public int CurrentView 
         {
-            PlannerYearViewModel = new PlannerYearViewModel(UserModel, yearString);
+            get => _currentView;
+            set => RaiseAndSetIfChanged(ref _currentView, value);
         }
+        public ChooseYearViewModel ChooseYearViewModel { get; set; }
+        public PlannerYearViewModel PlannerYearViewModel { get; set; }
+        public UserModel UserModel;
+        private void OnChoosePlannerYear(object parameter)
+        {
+            var yearString = (string)parameter;
+            PlannerYearViewModel = new PlannerYearViewModel(UserModel, yearString);
+            SwitchView();
+        }
+        public void SwitchView()
+        {
+            CurrentView = CurrentView == 1 ? 2 : 1;
+        }
+        
     }
 }

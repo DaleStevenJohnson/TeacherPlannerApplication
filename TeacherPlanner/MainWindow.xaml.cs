@@ -3,6 +3,8 @@ using TeacherPlanner.Login.ViewModels;
 using TeacherPlanner.Login.Views;
 using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.Planner.Views.SettingsWindows;
+using TeacherPlanner.Planner.Views;
+using System.Windows.Controls;
 
 namespace TeacherPlanner
 {
@@ -27,11 +29,17 @@ namespace TeacherPlanner
             {
                 Application.Current.Shutdown();
             }
-            DataContext = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
-            DataContextChanged += (sender, args) =>
+            var mainViewModel = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
+            this.DataContext = mainViewModel;
+            this.DataContextChanged += (sender, args) =>
             {
-                DataContext = args.NewValue;
-            };           
+                this.DataContext = args.NewValue;
+            };
+
+            
+            //var chooseYearViewModel = new ChooseYearViewModel();
+            //UserControl chooseYearPage = new ChooseYearPage() { DataContext = chooseYearViewModel};
+            //this.AddLogicalChild(chooseYearPage);
         }
 
         

@@ -12,15 +12,16 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand DefineTimetableWeeksCommand { get; }
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
-            Year = Int32.Parse(yearString);
+            Year = yearString;
             UserModel = userModel;
+            FileHandlingHelper.SetDirectories(UserModel.UsernameHash, Year);
             TimetableViewModel = new TimetableViewModel(UserModel);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable);
             ToDoViewModel = new ToDoViewModel(UserModel);
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
-
+            
         }
-        public int Year { get; }
+        public string Year { get; }
         public UserModel UserModel;
         public PlannerViewModel PlannerViewModel { get; }
         public ToDoViewModel ToDoViewModel { get; }

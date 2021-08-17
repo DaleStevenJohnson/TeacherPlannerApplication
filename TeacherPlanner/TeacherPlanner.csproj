@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\Montserrat-Bold.ttf" />
     <None Remove="Assets\Fonts\Montserrat-Light.ttf" />
     <None Remove="Assets\Fonts\NothingYouCouldDo-Regular.ttf" />
     <None Remove="Assets\icon.ico" />
@@ -29,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Fonts\Montserrat-Bold.ttf" />
     <Resource Include="Assets\Fonts\Montserrat-Light.ttf" />
     <Resource Include="Assets\Fonts\NothingYouCouldDo-Regular.ttf" />
     <Resource Include="Assets\icon.ico" />

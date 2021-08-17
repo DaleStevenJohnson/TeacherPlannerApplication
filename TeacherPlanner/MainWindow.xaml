@@ -10,12 +10,52 @@
         xmlns:timetableviewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{Binding Source={d:DesignInstance Type=local:MainViewModel}}"
-        Title="Teacher Planner" Height="1080" Width="1920" MinHeight="1070" MinWidth="1910" 
+        Title="Teacher Planner" Height="1080" Width="1920" MinHeight="1080" MinWidth="1920" MaxHeight="1920" MaxWidth="1080" 
         x:Name="mainwindow" WindowStyle="SingleBorderWindow" ResizeMode="CanResize">
-    <Window.Resources>
 
+    <Window.Resources>
+        <DataTemplate x:Key="ChooseYearViewTemplate" DataType="{x:Type local:MainViewModel}">
+            <plannerview:ChooseYearPage DataContext="{Binding ChooseYearViewModel}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlannerViewTemplate" DataType="{x:Type local:MainViewModel}">
+            <plannerview:PlannerYearPage DataContext="{Binding PlannerYearViewModel}"/>
+        </DataTemplate>
     </Window.Resources>
-    
-        <plannerview:ChooseYearPage DataContext="{Binding }"/>
-    
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <UserControl Grid.Column="0" Grid.Row="0">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static local:MainViewState.State1}">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+            <plannerview:ChooseYearPage DataContext="{Binding ChooseYearViewModel}"/>
+        </UserControl>
+        <UserControl Grid.Column="0" Grid.Row="0">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static local:MainViewState.State2}">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+            <plannerview:PlannerYearPage DataContext="{Binding PlannerYearViewModel}"/>
+        </UserControl>
+    </Grid>
+
 </Window>
