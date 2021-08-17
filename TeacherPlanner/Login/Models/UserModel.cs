@@ -22,10 +22,10 @@ namespace TeacherPlanner.Login.Models
                     string.Concat(Enumerable.Repeat(input.Substring(4, 4), 8))
                     );
             length = length > 32 ? 32 : length;
-            if (length < 32)
+            if (length <= 32)
             {
                 int index = ((int)(char)input[0]) % 10;
-                string key = encrypted.Substring(index, index + length);
+                string key = encrypted.Substring(index, length);
                 char[] characters = key.ToArray();
                 Array.Sort(characters);
                 return new string(characters);

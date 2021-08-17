@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.Login.Models;
 
 namespace TeacherPlanner.Login.ViewModels
 {
@@ -121,6 +122,9 @@ namespace TeacherPlanner.Login.ViewModels
                 if (!CheckUserExists(Username))
                 {
                     StoreCredentials();
+                    PasswordBox passwordBox = (PasswordBox)password;
+                    UserModel user = new UserModel(Username, passwordBox.Password.Trim());
+                    Directory.CreateDirectory(Path.Combine(FileHandlingHelper.UserDataPath, user.UsernameHash));
                     MessageBox.Show("Account Created Successfully");
                 }
                 else
