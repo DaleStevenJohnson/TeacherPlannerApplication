@@ -14,19 +14,21 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand SwitchViewCommand { get; }
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
-            Year = yearString;
             UserModel = userModel;
-            FileHandlingHelper.SetDirectories(UserModel.UsernameHash, Year);
-            
+            FileHandlingHelper.SetDirectories(UserModel.UsernameHash, yearString);
+
+            CalendarManager = new CalendarManager(yearString);
+
             TimetableViewModel = new TimetableViewModel(UserModel);
-            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable);
+            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager);
             ToDoViewModel = new ToDoViewModel(UserModel);
             
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             
         }
-        public string Year { get; }
+
+        public CalendarManager CalendarManager { get; private set; }
         public UserModel UserModel;
         public PlannerViewModel PlannerViewModel { get; }
         public ToDoViewModel ToDoViewModel { get; }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
@@ -11,20 +12,20 @@ namespace TeacherPlanner
 {
     public class MainViewModel : ObservableObject
     {
-        private int _currentView;
+        private MainViewState _currentView;
         PlannerYearViewModel _plannerYearViewModel;
         public ICommand ChoosePlannerYearCommand { get; }
         public ICommand SwitchViewCommand { get;  }
         public MainViewModel(UserModel userModel)
         {
             UserModel = userModel;
-            CurrentView = 1;
+            CurrentView = MainViewState.ChooseYearPage;
             ChoosePlannerYearCommand = new SimpleCommand(yearString => OnChoosePlannerYear((string)yearString));
             SwitchViewCommand = new SimpleCommand(_ => SwitchView());
             ChooseYearViewModel = new ChooseYearViewModel(UserModel);
             ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
         }
-        public int CurrentView 
+        public MainViewState CurrentView 
         {
             get => _currentView;
             set => RaiseAndSetIfChanged(ref _currentView, value);
@@ -45,7 +46,8 @@ namespace TeacherPlanner
         }
         public void SwitchView()
         {
-            CurrentView = CurrentView == 1 ? 2 : 1;
+            //TODO update this if any other states are added
+            CurrentView = CurrentView == MainViewState.ChooseYearPage ? MainViewState.PlannerPage : MainViewState.ChooseYearPage;
         }
         
     }

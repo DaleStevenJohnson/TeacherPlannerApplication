@@ -20,6 +20,14 @@
     <None Remove="Assets\Icons\DeleteBinIconHovered.png" />
     <None Remove="Assets\Icons\DeleteBinIconNormal.png" />
     <None Remove="Assets\Icons\DeleteCrossIcon.png" />
+    <None Remove="Assets\Icons\NextArrowIcon.png" />
+    <None Remove="Assets\Icons\NextArrowIconClicked.png" />
+    <None Remove="Assets\Icons\NextArrowIconHovered.png" />
+    <None Remove="Assets\Icons\NextArrowIconNormal.png" />
+    <None Remove="Assets\Icons\PreviousArrowIcon.png" />
+    <None Remove="Assets\Icons\PreviousArrowIconClicked.png" />
+    <None Remove="Assets\Icons\PreviousArrowIconHovered.png" />
+    <None Remove="Assets\Icons\PreviousArrowIconNormal.png" />
     <None Remove="Assets\Images\TimetableBackground.png" />
     <None Remove="Assets\PlannerBG.png" />
   </ItemGroup>
@@ -27,6 +35,10 @@
   <ItemGroup>
     <Folder Include="ToDo\Models\" />
     <Folder Include="UserData\DJohnson\2021\202108\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +54,14 @@
     <Resource Include="Assets\Icons\DeleteBinIconHovered.png" />
     <Resource Include="Assets\Icons\DeleteBinIconNormal.png" />
     <Resource Include="Assets\Icons\DeleteCrossIcon.png" />
+    <Resource Include="Assets\Icons\NextArrowIcon.png" />
+    <Resource Include="Assets\Icons\NextArrowIconClicked.png" />
+    <Resource Include="Assets\Icons\NextArrowIconHovered.png" />
+    <Resource Include="Assets\Icons\NextArrowIconNormal.png" />
+    <Resource Include="Assets\Icons\PreviousArrowIcon.png" />
+    <Resource Include="Assets\Icons\PreviousArrowIconClicked.png" />
+    <Resource Include="Assets\Icons\PreviousArrowIconHovered.png" />
+    <Resource Include="Assets\Icons\PreviousArrowIconNormal.png" />
     <Resource Include="Assets\Images\TimetableBackground.png" />
     <Resource Include="Assets\PlannerBG.png" />
   </ItemGroup>

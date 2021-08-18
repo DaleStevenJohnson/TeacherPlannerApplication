@@ -9,11 +9,21 @@
         <ImageBrush x:Key="Icon.DeleteBin.Normal" ImageSource="/Assets/Icons/DeleteBinIconNormal.png" Stretch="Uniform"/>
         <ImageBrush x:Key="Icon.DeleteBin.Hovered" ImageSource="/Assets/Icons/DeleteBinIconHovered.png" Stretch="Uniform"/>
         <!--Delete by DinosoftLab from the Noun Project-->
+        
         <ImageBrush x:Key="Icon.Add.Normal" ImageSource="/Assets/Icons/AddIconNormal.png" Stretch="Uniform"/>
         <ImageBrush x:Key="Icon.Add.Hovered" ImageSource="/Assets/Icons/AddIconHovered.png" Stretch="Uniform"/>
         <!--add by Setyo Ari Wibowo from the Noun Project-->
+        
         <ImageBrush x:Key="Icon.DeleteCross.Normal" ImageSource="/Assets/Icons/DeleteCrossIcon.png" Stretch="Uniform"/>
         <!--Delete by Ema Dimitrova from the Noun Project-->
+        
+        <ImageBrush x:Key="Icon.NextArrow.Normal" ImageSource="/Assets/Icons/NextArrowIconNormal.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.PreviousArrow.Normal" ImageSource="/Assets/Icons/PreviousArrowIconNormal.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.NextArrow.Hovered" ImageSource="/Assets/Icons/NextArrowIconHovered.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.PreviousArrow.Hovered" ImageSource="/Assets/Icons/PreviousArrowIconHovered.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.NextArrow.Clicked" ImageSource="/Assets/Icons/NextArrowIconClicked.png" Stretch="Uniform"/>
+        <ImageBrush x:Key="Icon.PreviousArrow.Clicked" ImageSource="/Assets/Icons/PreviousArrowIconClicked.png" Stretch="Uniform"/>
+        <!--Next by SAS37 ICON from the Noun Project-->
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>

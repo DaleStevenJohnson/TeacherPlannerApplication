@@ -6,6 +6,7 @@
         xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
         xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
         xmlns:local="clr-namespace:TeacherPlanner"
+        xmlns:constant="clr-namespace:TeacherPlanner.Constants"
         xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
         xmlns:timetableviewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
         mc:Ignorable="d"
@@ -30,32 +31,42 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
+        
+        
         <UserControl Grid.Column="0" Grid.Row="0">
             <UserControl.Style>
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static local:MainViewState.State1}">
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static constant:MainViewState.ChooseYearPage}">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </UserControl.Style>
+            
             <plannerview:ChooseYearPage DataContext="{Binding ChooseYearViewModel}"/>
+            
         </UserControl>
+        
+        
         <UserControl Grid.Column="0" Grid.Row="0">
             <UserControl.Style>
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static local:MainViewState.State2}">
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static constant:MainViewState.PlannerPage}">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </UserControl.Style>
+            
             <plannerview:PlannerYearPage DataContext="{Binding PlannerYearViewModel}"/>
+            
         </UserControl>
+        
+        
     </Grid>
 
 </Window>

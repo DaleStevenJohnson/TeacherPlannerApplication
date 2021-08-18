@@ -8,9 +8,9 @@ namespace TeacherPlanner.Planner.Models
         {
             Periods = new PeriodModel[6];
             NoteSectionModel = new NoteSectionModel();
-            CalendarModel = new CalendarModel(date);
+            Date = date;
         }
-
+        public DateTime Date { get; }
         public PeriodModel[] Periods;
         public PeriodModel Period1
         {
@@ -44,7 +44,7 @@ namespace TeacherPlanner.Planner.Models
         }
 
         public NoteSectionModel NoteSectionModel { get; set; }
-        public CalendarModel CalendarModel { get; set; }
+        
         public void LoadPeriodDataIntoNewPeriod(int periodNumber, string classCode, string[] periodData)
         {
             PeriodModel newPeriodModel = new PeriodModel(periodNumber, classCode);

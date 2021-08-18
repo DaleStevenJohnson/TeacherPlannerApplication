@@ -5,10 +5,10 @@ Add Top Menu Bar
 Add Import Timetable function
 + Option selected from menu bar
 + File Picker Dialog box
-- Load and Store user provided timetable
-- Standardise how the Timetable file should be structured
-- Save user-entered timetable weeks
-- Load saved timetable weeks
++ Load and Store user provided timetable
++ Standardise how the Timetable file should be structured - SIMS Export to excel, save as CSV
++ Save user-entered timetable weeks
++ Load saved timetable weeks
 
 Add Login screen
 + Allow create user
@@ -18,7 +18,7 @@ Add Login screen
 
 Add Encryption to files
 + Appdata files
-- Could be storing sensitive student information
++ Could be storing sensitive student information
 
 Add Calendar
 - Display Dates under appropriate day

@@ -41,7 +41,6 @@ namespace TeacherPlanner.Planner.ViewModels
                 return (year - 1).ToString();
             else
                 return year.ToString();
-            
         }
         private void GetYears()
         {
@@ -50,7 +49,7 @@ namespace TeacherPlanner.Planner.ViewModels
             string[] currentYears = Directory.GetDirectories(path);
             if (currentYears.Length == 0)
             {
-                YearSelectModel newYear = new YearSelectModel(GetCurrentYear());
+                YearSelectModel newYear = new YearSelectModel(CalendarManager.GetStartingYearOfAcademicYear(DateTime.Today));
                 yearSelectModels.Add(newYear);
                 Directory.CreateDirectory(Path.Combine(path, newYear.AcademicYear));
             }
@@ -77,7 +76,7 @@ namespace TeacherPlanner.Planner.ViewModels
             YearSelectModel newYear;
             if (currentYears.Length == 0)
             {
-                newYear = new YearSelectModel(GetCurrentYear());
+                newYear = new YearSelectModel(CalendarManager.GetStartingYearOfAcademicYear(DateTime.Today));
                 yearSelectModels.Add(newYear);
             }
             else
