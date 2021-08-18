@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
-using TeacherPlanner.Constants;
+using static TeacherPlanner.Constants.Formats;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Constants;
 
 namespace TeacherPlanner.Helpers
 {
@@ -9,8 +10,6 @@ namespace TeacherPlanner.Helpers
     {
         // Fields
         private DateTime _today;
-        private string _currentDateLeftString;
-        private string _currentDateRightString;
         private bool _datesAreNeighbours = true;
 
         public CalendarManager(string academicYear)
@@ -26,6 +25,7 @@ namespace TeacherPlanner.Helpers
             Today = DateTime.Today;
 
             CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? Today : startOfYearDate;
+            CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : CurrentDateLeft.AddDays(1);
         }
 
         // Properties
@@ -43,9 +43,9 @@ namespace TeacherPlanner.Helpers
                     _today = EndOfYearDateLimit;
                 else
                     _today = value;
-                TodayString = _today.ToString(Formats.DateHeadingFormat);
+                TodayString = _today.ToString(DateHeadingFormat);
                 Tomorrow = AdvanceDate(_today, 1);
-                TomorrowString = Tomorrow.ToString(Formats.DateHeadingFormat);
+                TomorrowString = Tomorrow.ToString(DateHeadingFormat);
             }
         }
 
@@ -67,9 +67,6 @@ namespace TeacherPlanner.Helpers
             set
             {
                 CurrentDates[0] = value;
-                _currentDateLeftString = CurrentDates[0].ToString(Formats.DateHeadingFormat);
-                if (DatesAreNeighbours) CurrentDateRight = AdvanceDate(CurrentDates[0], 1);
-
             }
         }
 
@@ -79,9 +76,6 @@ namespace TeacherPlanner.Helpers
             set
             {
                 CurrentDates[1] = value;
-                _currentDateRightString = CurrentDates[1].ToString(Formats.DateHeadingFormat);
-                if (DatesAreNeighbours && _currentDateLeftString != AdvanceDate(CurrentDates[1], -1).ToString(Formats.DateHeadingFormat))
-                    CurrentDateLeft = AdvanceDate(CurrentDates[1], -1);
             }
         }
 
@@ -102,7 +96,7 @@ namespace TeacherPlanner.Helpers
 
         public static int GetWeek(DateTime date)
         {
-            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, Filenames.TimetableWeeks);
+            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserConfigPath, FilesAndDirectories.TimetableWeeksFileName);
             var weekdata = FileHandlingHelper.ReadDataFromCSVFile(filepath);
             for (var i = 0; i < weekdata.Length; i++)
             {
@@ -159,15 +153,66 @@ namespace TeacherPlanner.Helpers
         }
 
         // Non-Static Methods
-        public void ChangeCurrentDate(int days)
+        public void ChangeCurrentDate(AdvancePageState advancePageState)
         {
-            if (days < 0) CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
-            else CurrentDateRight = AdvanceDate(CurrentDateRight, days);
+            var days = CalculateDaysToAdvance(advancePageState);
+            if (DatesAreNeighbours)
+            {
+                CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
+                CurrentDateRight = AdvanceDate(CurrentDateRight, days);
+            }
+            else
+            {
+                var side = CalculateSideToAdvance(advancePageState);
+                if (side == "left")
+                    CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
+                else
+                    CurrentDateRight = AdvanceDate(CurrentDateRight, days);
+            }
         }
-        
+        private string CalculateSideToAdvance(AdvancePageState advancePageState)
+        {
+            switch (advancePageState)
+            {
+                case AdvancePageState.LeftForward1:
+                case AdvancePageState.LeftForward7:
+                case AdvancePageState.LeftBackward1:
+                case AdvancePageState.LeftBackward7:
+                    return "left";
+
+                case AdvancePageState.RightForward1:
+                case AdvancePageState.RightForward7:
+                case AdvancePageState.RightBackward1:
+                case AdvancePageState.RightBackward7:
+                    return "right";
+                default:
+                    return string.Empty;
+            }
+        }
+        private int CalculateDaysToAdvance(AdvancePageState advancePageState)
+        {
+            switch (advancePageState)
+            {
+                case AdvancePageState.LeftForward1:
+                case AdvancePageState.RightForward1:
+                    return 1;
+                case AdvancePageState.LeftForward7:
+                case AdvancePageState.RightForward7:
+                    return 7;
+                case AdvancePageState.LeftBackward1:
+                case AdvancePageState.RightBackward1:
+                    return -1;
+                case AdvancePageState.LeftBackward7:
+                case AdvancePageState.RightBackward7:
+                    return -7;
+                default:
+                    return 0;
+            }
+        }
         
         private DateTime AdvanceDate(DateTime date, int days)
         {
+            //DateTime oldDate = date.AddDays(0);
             DateTime newDate = date.AddDays(days);
             var extraDays = 0;
             if (newDate.DayOfWeek == DayOfWeek.Saturday)
@@ -179,8 +224,13 @@ namespace TeacherPlanner.Helpers
                 extraDays = days < 0 ? -2 : 1;
             }
             newDate = newDate.AddDays(extraDays);
-            return newDate > StartOfYearDateLimit.AddDays(-1) && newDate < EndOfYearDateLimit.AddDays(1) ? newDate : date;
             
+            if (newDate < StartOfYearDateLimit)
+                return StartOfYearDateLimit;
+            else if (newDate > EndOfYearDateLimit)
+                return EndOfYearDateLimit;
+
+            return newDate;
         }
     }
 }

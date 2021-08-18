@@ -3,41 +3,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
 using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.Planner.Views.SettingsWindows;
+using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Timetable.ViewModels
 {
     public class TimetableViewModel : ObservableObject
     {
-        private static string _timetableDirectory = "Timetables";
-        private bool _hasImportedTimetables;
-        private List<TimetableModel> _importedTimetables;
-        private UserModel _userModel;
         private TimetableModel _currentTimetable;
+        private int _selectedWeek;
 
         public TimetableViewModel(UserModel userModel)
         {
             ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
-            
-            ManageTimetableCommand = new SimpleCommand(_ => OnManageTimetable());
             ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
-            _userModel = userModel;
-            GetImportedTimetables();
-            if (ImportedTimetables.Count == 1)
-            {
-                CurrentTimetable = ImportedTimetables[0];
-            }
-        }
 
-        public List<TimetableModel> ImportedTimetables
-        { 
-            get => _importedTimetables;
-            set => RaiseAndSetIfChanged(ref _importedTimetables, value);  
+            UserModel = userModel;
+            SelectedWeek = 1;
+
+            TryGetImportedTimetable();
         }
+        public int SelectedWeek 
+        {
+            get => _selectedWeek;
+            set => RaiseAndSetIfChanged(ref _selectedWeek, value);
+        }
+        public UserModel UserModel { get; }
         public TimetableModel CurrentTimetable
         {
             get => _currentTimetable;
@@ -49,48 +45,46 @@ namespace TeacherPlanner.Timetable.ViewModels
         public ICommand ManageTimetableCommand { get; }
         public ICommand ApplySelectedTimetableCommand { get; }
 
-        public bool HasImportedTimetables
+        //TODO implement timetable shift - add button to view
+        //TODO Add total Occurances for periods - move dict count to import
+        
+        private void ChangeWeek()
         {
-            get => ImportedTimetables.Count > 0;
-            set => RaiseAndSetIfChanged(ref _hasImportedTimetables, value);
+            SelectedWeek = SelectedWeek == 1 ? 2 : 1;
         }
-
-        private void OnManageTimetable()
-        { 
-        
-        }
-        
         private void OnTimetableImportClick()
         {
             var importWindow = new ImportTimetableWindow();
-            var importTimetableViewModel = new ImportTimetableWindowViewModel(_userModel, importWindow);
+            var importTimetableViewModel = new ImportTimetableWindowViewModel(UserModel, importWindow);
             importWindow.DataContext = importTimetableViewModel;
-            
 
             if (importWindow.ShowDialog() ?? true)
-                GetImportedTimetables();
+                TryGetImportedTimetable();
         }
         
-        public bool? DefineTimetableWeeks()
+        public bool? DefineTimetableWeeks(UserModel userModel)
         {
-            var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow();
+            var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow(userModel);
             return defineTimetableWeeksWindow.ShowDialog();
         }
 
-        private void GetImportedTimetables()
+        private bool TryGetImportedTimetable()
         {
-            string directory = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, _timetableDirectory);
+            var directory = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.TimetableDirectory, UserModel.Key));
             Directory.CreateDirectory(directory);
-            string[] filenames = Directory.GetFiles(directory);
-            var updatedImportedTimetables = new List<TimetableModel>();
+            var filenames = Directory.GetFiles(directory);
 
-            for (int i = 0; i < filenames.Length; i++)
+            for (var i = 0; i < filenames.Length; i++)
             {
-                var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filenames[i], true, _userModel.Key);
-                updatedImportedTimetables.Add(new TimetableModel(timetableData, Path.GetFileName(filenames[i])));
+                var filename = Path.GetFileName(filenames[i]);
+                if (filename == FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.SavedTimetableFileName, UserModel.Key))
+                {
+                    var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filenames[i], true, UserModel.Key);
+                    CurrentTimetable = new TimetableModel(timetableData);
+                    return true;
+                }
             }
-
-            ImportedTimetables = updatedImportedTimetables;
+            return false;
         }
 
         private void ApplySelectedTimetable(string filename)

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 
@@ -12,15 +13,10 @@ namespace TeacherPlanner.Login.ViewModels
         private string _username;
         private string _feedbackForCreateUsername;
         private string _feedbackForCreatePassword;
-        private readonly string _path;
-        private readonly string _filename;
-        private readonly string _secret = "password12345678password12345678";
-        public CreateAccountViewModel(string path, string filename)
+        public CreateAccountViewModel()
         {
             CreateAccountButtonClickedCommand = new SimpleCommand(password => OnCreateAccountButtonClicked(password));
             OnPasswordChangeCommand = new SimpleCommand(password => OnPasswordChange(password));
-            _path = path;
-            _filename = filename;
             FeedbackForCreateUsername = string.Empty;
             FeedbackForCreatePassword = string.Empty;
         }
@@ -31,7 +27,6 @@ namespace TeacherPlanner.Login.ViewModels
             {
                 RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
                 ParseUsername(_username);
-                
             }
         }
         
@@ -67,7 +62,7 @@ namespace TeacherPlanner.Login.ViewModels
 
         public void ParsePassword(string password)
         {
-            int minimumSize = 8;
+            var minimumSize = 8;
             if (password.Length >= minimumSize)
             {
                 FeedbackForCreatePassword = "Password is Valid";
@@ -90,16 +85,15 @@ namespace TeacherPlanner.Login.ViewModels
         {
             // Combine username and the hash of their entered password and store a hash of that value
             var userHash = SecurePasswordHasher.Hash(Username + PasswordHash);
-            FileHandlingHelper.TryWriteDataToFile(_path, _filename, userHash);
+            FileHandlingHelper.TryWriteDataToFile(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountDataFileName, userHash);
 
             // Store username in separate file using symmetrical encryption to be able to keep track of registered users
-            var user = Cryptography.EncryptString(_secret, Username);
-            FileHandlingHelper.TryWriteDataToFile(_path, "users.txt", user);
+            FileHandlingHelper.TryWriteDataToFile(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountManagementUsersFileName, Username, "a", true, FileHandlingHelper.Secret);
         }
 
         private bool CheckUserExists(string username)
         {
-            var path = Path.Combine(_path, "users.txt");
+            var path = Path.Combine(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountManagementUsersFileName);
             if (!File.Exists(path))
             {
                 return false;
@@ -107,7 +101,7 @@ namespace TeacherPlanner.Login.ViewModels
             var users = File.ReadAllLines(path);
             for (int i = 0; i < users.Length; i++)
             {
-                if (username == Cryptography.DecryptString(_secret, users[i].Trim()))
+                if (username == Cryptography.DecryptString(FileHandlingHelper.Secret, users[i].Trim()))
                 {
                     return true;
                 }
@@ -124,7 +118,7 @@ namespace TeacherPlanner.Login.ViewModels
                     StoreCredentials();
                     PasswordBox passwordBox = (PasswordBox)password;
                     UserModel user = new UserModel(Username, passwordBox.Password.Trim());
-                    Directory.CreateDirectory(Path.Combine(FileHandlingHelper.UserDataPath, user.UsernameHash));
+                    Directory.CreateDirectory(Path.Combine(FileHandlingHelper.UserDataPath, FileHandlingHelper.EncryptFileOrDirectory(Username)));
                     MessageBox.Show("Account Created Successfully");
                 }
                 else
@@ -138,6 +132,5 @@ namespace TeacherPlanner.Login.ViewModels
                 MessageBox.Show($"Username:{UsernameIsValidFormat}, Password:{PasswordIsValidFormat}");
             }
         }
-
     }
 }

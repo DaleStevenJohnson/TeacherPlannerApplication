@@ -1,38 +1,42 @@
 ﻿using System;
 using System.IO;
+using TeacherPlanner.Constants;
+using TeacherPlanner.Login.Models;
 
 namespace TeacherPlanner.Helpers
 {
     public class FileHandlingHelper
     {
+        private const bool ENCRYPTING_DIRECTORIES = false; 
         static FileHandlingHelper()
         {
             if (!Directory.Exists(RootPath))
                 Directory.CreateDirectory(RootPath);
         }
-
+        public static string Secret = "password12345678password12345678";
         public static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeacherPlanner");
-        public static string UserDataPath = Path.Combine(RootPath, "userdata");
+        public static string UserDataPath = Path.Combine(RootPath, EncryptFileOrDirectory("userdata"));
+        public static string ApplicationConfigPath = Path.Combine(RootPath, EncryptFileOrDirectory("config"));
+        public static string LoggedInUserPath { get; set; }
         public static string LoggedInUserDataPath { get; set; }
         public static string LoggedInUserConfigPath { get; set; }
-        public static void SetDirectories(string username, string year)
+        public static void SetDirectories(UserModel userModel, string year = "")
         {
             //TODO - Encrypt all directory names (or just port it all to a SQL DB...)
-            LoggedInUserDataPath = Path.Combine(UserDataPath, username, year);
-            LoggedInUserConfigPath = Path.Combine(LoggedInUserDataPath, "config");
+            var username = EncryptFileOrDirectory(userModel.Username, userModel.Key);
+            LoggedInUserPath = Path.Combine(UserDataPath, username);
+            if (year != string.Empty)
+            {
+                year = EncryptFileOrDirectory(year, userModel.Key);
+                LoggedInUserDataPath = Path.Combine(UserDataPath, username, year);
+                LoggedInUserConfigPath = Path.Combine(LoggedInUserDataPath, EncryptFileOrDirectory("config", userModel.Key));
+            }
         }
-        // File Path Methods
-        /// <summary>
-        /// Creates a directory in the format \Username\YYYY\YYYYMM
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string CreateDatedUserDirectory(string username, string date)
+        
+        public static string CreateMonthlyUserDataDirectory(string date, string key)
         {
-            string path = Path.Combine(UserDataPath, username);
-            string yearDirectory = date.Substring(0, 4);
-            string monthDirectory = date.Substring(0, 6);
-            return Path.Combine(path, yearDirectory, monthDirectory);
+            string monthDirectory = EncryptFileOrDirectory(date.Substring(0, 6), key);
+            return Path.Combine(LoggedInUserDataPath, monthDirectory);
         }
         // Read/write Methods
         public static string[] ReadDataFromFile(string path, bool dataIsEncrypted = false, string key = "")
@@ -125,7 +129,35 @@ namespace TeacherPlanner.Helpers
             }
             return true;
         }
-        
+
+        // Encryption Methods
+
+        /// <summary>
+        /// Takes a given directory name or filename and safely encrypts it.
+        /// </summary>
+        /// <param name="name">Name of the file or directory you wish to encrypt</param>
+        /// <param name="userkey">User provided key for encryption. If not provided, will use system defined key</param>
+        /// <returns>Encrypted string which is safe to be used as a filename or directory</returns>
+        public static string EncryptFileOrDirectory(string name, string userkey = "")
+        {
+            var key = userkey == "" ? Secret : userkey;
+            var IsFilename = name.Contains(".");
+            var plaintext = IsFilename ? name.Split(".")[0] : name;
+            
+            // Encrypting Directories is a private const used as a global switch for
+            // turning off and on encryption of directories and filenames.
+            // As it is a const, the IDE complains a bit about unreachable code. Please ignore that for now.
+            if (ENCRYPTING_DIRECTORIES)
+            {
+                var ciphertext = Cryptography.EncryptString(key, plaintext);
+                ciphertext = ciphertext.Replace(@"\", string.Empty);
+                ciphertext = ciphertext.Replace(@"/", string.Empty);
+                ciphertext = IsFilename ? ciphertext + name.Split(".")[1] : ciphertext;
+                return ciphertext;
+            }
+            return name;
+        }
+
         // Input Sanitisation Methods
         public static string SanitiseString(string s)
         {

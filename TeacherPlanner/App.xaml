@@ -42,7 +42,13 @@
         <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
         <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
-
+        <Style x:Key="DefaultLabelBody" TargetType="{x:Type Label}">
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
         <Style x:Key="TodoTabStyle" TargetType="{x:Type TabItem}">
                 <Setter Property="Template">
                     <Setter.Value>

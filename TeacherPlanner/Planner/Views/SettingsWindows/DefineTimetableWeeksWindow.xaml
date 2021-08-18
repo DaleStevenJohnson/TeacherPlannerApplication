@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeacherPlanner.Planner.Views.SettingsWindows"
+        xmlns:view="clr-namespace:TeacherPlanner.Planner.Views"
         xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
-        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels" xmlns:i1="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic"
+        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels" 
         mc:Ignorable="d"
         d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DefineTimetableWeeksViewModel}}"
+        WindowStartupLocation="CenterOwner" 
         Title="Define Weeks" Height="600" Width="500" MinHeight="600" MinWidth="500" MaxHeight="600" MaxWidth="500">
     <Window.Resources>
         <DataTemplate x:Key="DateRowTemplate" DataType="{x:Type model:DateRowModel}">

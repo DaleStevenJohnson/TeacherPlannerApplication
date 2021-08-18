@@ -20,9 +20,12 @@ namespace TeacherPlanner
         {
             UserModel = userModel;
             CurrentView = MainViewState.ChooseYearPage;
+
+            ChooseYearViewModel = new ChooseYearViewModel(UserModel);
+
             ChoosePlannerYearCommand = new SimpleCommand(yearString => OnChoosePlannerYear((string)yearString));
             SwitchViewCommand = new SimpleCommand(_ => SwitchView());
-            ChooseYearViewModel = new ChooseYearViewModel(UserModel);
+            
             ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
         }
         public MainViewState CurrentView 
@@ -36,7 +39,7 @@ namespace TeacherPlanner
             get => _plannerYearViewModel;
             set => RaiseAndSetIfChanged(ref _plannerYearViewModel, value);
         }
-        public UserModel UserModel;
+        public UserModel UserModel { get; }
         private void OnChoosePlannerYear(object parameter)
         {
             var yearString = (string)parameter;

@@ -31,3 +31,11 @@ Add / Revamp Scrolling between pages
 Settings Tab
 - Dark mode?
 - Log out
+
+Fixes
+- Get Scrolling working
+- Remove Debug
+- Add Timetable Scrolling
+- Change where period counts are being calculated + add in total occurances
+- Timetable weeks import updating timetable
+- Add bookend end of academic year / start of academic year

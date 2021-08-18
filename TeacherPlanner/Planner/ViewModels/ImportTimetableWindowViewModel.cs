@@ -3,18 +3,19 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
+using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
     public class ImportTimetableWindowViewModel : ObservableObject
     {
-        
+
         private string _timetableName;
-        private string _timetableFile;
-        private string _timetableDirectory = "Timetables";
+        private string _timetableFile;// = FilesAndDirectories.SavedTimetableFileName;
         private string _userFeedback;
 
         public ICommand ChooseTimetableFileCommand { get; }
@@ -25,6 +26,7 @@ namespace TeacherPlanner.Planner.ViewModels
             // Parameter Assignment
             UserModel = userModel;
             Window = window;
+            
 
             // Property Initialisation
             ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
@@ -33,7 +35,7 @@ namespace TeacherPlanner.Planner.ViewModels
             TimetableName = string.Empty;
             UserFeedback = string.Empty;
         }
-        public Window Window;
+        public Window Window { get; }
         public UserModel UserModel { get; }
         public static TimetableModel CurrentTimetable { get; set; }
         public string TimetableName
@@ -41,7 +43,7 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _timetableName;
             set
             {
-                value = ParseTimetableName(value);
+                //value = ParseTimetableName(value);
                 RaiseAndSetIfChanged(ref _timetableName, value);
             }
         }
@@ -61,11 +63,15 @@ namespace TeacherPlanner.Planner.ViewModels
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Data files (*.csv)|*.csv";
             if (openFileDialog.ShowDialog() == true)
+            {
                 TimetableFile = openFileDialog.FileName;
+                TimetableName = FilesAndDirectories.SavedTimetableFileName;
+                //TimetableName = Path.GetFileName(openFileDialog.FileName);
+            }
         }
         private string ParseTimetableName(string name)
         {
-            string[] forbiddenCharacters = new string[] { "/", ".", "`", @"\", "~", "#", "*", "\"", "'", ":", ";", ",", "?", "%", "$", "£", "=","+" };
+            string[] forbiddenCharacters = new string[] { "/", "`", @"\", "~", "#", "*", "\"", "'", ":", ";", ",", "?", "%", "$", "£", "=","+" };
             for (int i = 0; i < forbiddenCharacters.Length; i++)
             {
                 name = name.Replace(forbiddenCharacters[i], string.Empty);
@@ -83,7 +89,7 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 UserFeedback = "You have not selected a Timetable File";
             }
-            else if (ImportTimetable(TimetableFile, TimetableName, UserModel))
+            else if (TryImportTimetable(TimetableFile, TimetableName, UserModel))
             {
                 TryLoadTimetable(TimetableName);
                 Window.DialogResult = true;
@@ -96,17 +102,18 @@ namespace TeacherPlanner.Planner.ViewModels
             }
         }
         /// <summary>
-        /// Takes a SIMS created timetable file and saves it locally for future use by the application
+        /// Takes a SIMS created timetable file, parses it, converts it 
+        /// and if both are successful, it saves the file locally for future use by the application
         /// </summary>
         /// <param name="timetableFilePath"></param>
-        public bool ImportTimetable(string timetableFilePath, string name, UserModel userModel)
+        public bool TryImportTimetable(string timetableFilePath, string name, UserModel userModel)
         {
             string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
             if (TryParseTimetableFileData(rawTimetableFileData))
             {
                 string[][] convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
-                string path = Path.Combine(FileHandlingHelper.UserDataPath, userModel.Username, _timetableDirectory);
-                FileHandlingHelper.TryWriteDataToCSVFile(path, name + ".csv", convertedTimetableData, "o", true, userModel.Key);
+                string path = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FilesAndDirectories.TimetableDirectory);
+                FileHandlingHelper.TryWriteDataToCSVFile(path, FilesAndDirectories.SavedTimetableFileName, convertedTimetableData, "o", true, userModel.Key);
                 return true;
             }
             else
@@ -119,14 +126,14 @@ namespace TeacherPlanner.Planner.ViewModels
         /// <returns></returns>
         private string[][] ConvertTimetableData(string[][] rawTimetableData)
         {
-            // This is unfinished! I have no idea what format the rawTimetableData will be in yet
-            string[][] convertedTimetableData = new string[(2*5*5)+1][];
+            // 2 weeks, 5 days, 9 periods + 1 header row
+            string[][] convertedTimetableData = new string[(2*5*9)+1][];
             int row = 0;
             convertedTimetableData[row] = new string[] { "Week", "Day", "Period", "Code", "Class", "Room"};
             int column = 0;
             int weeks = 2;
             string[] days = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-            int[] periodLocations = new int[] { 7, 9, 12, 15, 17 };
+            int[] periodLocations = new int[] {5, 7, 9,11, 12,14, 15, 17,19 };
             for (int week = 1; week <= weeks; week++)
             {
                 for (int day = 0; day < days.Length; day++)
@@ -135,19 +142,26 @@ namespace TeacherPlanner.Planner.ViewModels
                     for (int period = 0; period < periodLocations.Length; period++)
                     {
                         row += 1;
-                        string weekString = week.ToString();
-                        string dayString = days[day];
-                        string periodString = (period + 1).ToString();
-                        string codeString = weekString + dayString + periodString;
-                        string classCode = rawTimetableData[periodLocations[period]][column];
-                        string roomNumber = rawTimetableData[periodLocations[period] + 1][column];
-                        convertedTimetableData[row] = new string[] {weekString, dayString, periodString, codeString, classCode, roomNumber};
+                        var periodLocation = periodLocations[period];
+
+                        var weekString = week.ToString();
+                        var dayString = days[day];
+                        var periodString = rawTimetableData[periodLocation][0];
+                        var codeString = weekString + dayString + periodString;
                         
+                        
+                        var classCode = rawTimetableData[periodLocation][column];
+                        if (classCode.Length > 0)
+                            classCode = classCode.Substring(0, classCode.Length - 1);
+
+                        var roomNumber = periodLocation != 11 && periodLocation != 14 ? rawTimetableData[periodLocation + 1][column] : "";
+                        if (roomNumber.Length > 0)
+                            roomNumber = roomNumber.Substring(0, roomNumber.Length - 1);
+                        
+                        convertedTimetableData[row] = new string[] {weekString, dayString, periodString, codeString, classCode, roomNumber};
                     }
                 }
-                
             }
-
             return convertedTimetableData;
         }
 
@@ -191,9 +205,9 @@ namespace TeacherPlanner.Planner.ViewModels
         }
         private void TryLoadTimetable(string timetableName)
         {
-            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, _timetableDirectory, timetableName + ".csv");
+            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FilesAndDirectories.TimetableDirectory, timetableName);
             var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filepath, true, UserModel.Key);
-            CurrentTimetable = new TimetableModel(timetableData, timetableName);
+            CurrentTimetable = new TimetableModel(timetableData);
         }
     }
 

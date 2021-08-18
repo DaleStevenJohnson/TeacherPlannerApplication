@@ -7,15 +7,17 @@ using TeacherPlanner.ToDo.ViewModels;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
-    public class PlannerYearViewModel
+    public class PlannerYearViewModel : ObservableObject
     {
+        private TimetableViewModel _timetableViewModel;
+
         public ICommand DefineTimetableWeeksCommand { get; }
         public event EventHandler<string> SwitchViewEvent;
         public ICommand SwitchViewCommand { get; }
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
             UserModel = userModel;
-            FileHandlingHelper.SetDirectories(UserModel.UsernameHash, yearString);
+            FileHandlingHelper.SetDirectories(UserModel, yearString);
 
             CalendarManager = new CalendarManager(yearString);
 
@@ -29,13 +31,17 @@ namespace TeacherPlanner.Planner.ViewModels
         }
 
         public CalendarManager CalendarManager { get; private set; }
-        public UserModel UserModel;
+        public UserModel UserModel { get; }
         public PlannerViewModel PlannerViewModel { get; }
         public ToDoViewModel ToDoViewModel { get; }
-        public TimetableViewModel TimetableViewModel { get; }
+        public TimetableViewModel TimetableViewModel 
+        {
+            get => _timetableViewModel;
+            set => RaiseAndSetIfChanged(ref _timetableViewModel, value);
+        }
         private void OnDefineTimetableWeeks()
         {
-            if (TimetableViewModel.DefineTimetableWeeks() ?? true)
+            if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
                 PlannerViewModel.LoadNewDays(true);
         }
         private void OnSwitchView(object v)

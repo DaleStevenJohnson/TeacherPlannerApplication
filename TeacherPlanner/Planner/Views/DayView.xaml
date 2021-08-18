@@ -32,10 +32,13 @@
             BorderBrush="Transparent" BorderThickness="0"
             Grid.Column="2"
             Grid.Row="0"
-            Command="{Binding TurnPageCommand}"
-            CommandParameter="1"
-            MouseEnter="NextArrow_MouseEnter"  MouseLeave="NextArrow_MouseLeave"
-        />
+            ToolTip="Pssst! Hold shift and click to advance 7 days"
+            MouseEnter="NextArrow_MouseEnter"  MouseLeave="NextArrow_MouseLeave">
+            <Button.InputBindings>
+                <MouseBinding Gesture="Shift+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Forward7}"/>
+                <MouseBinding Gesture="LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Forward1}"/>
+            </Button.InputBindings>
+        </Button>
 
         <Button
             Style="{DynamicResource ButtonOverride}"
@@ -43,11 +46,14 @@
             BorderBrush="Transparent" BorderThickness="0"
             Grid.Column="0"
             Grid.Row="0"
-            Command="{Binding TurnPageCommand}"
-            CommandParameter="-1"
-            MouseEnter="PreviousArrow_MouseEnter"  MouseLeave="PreviousArrow_MouseLeave"
-        />
-        
+            ToolTip="Pssst! Hold shift and click to go back 7 days"
+            MouseEnter="PreviousArrow_MouseEnter"  MouseLeave="PreviousArrow_MouseLeave">
+            <Button.InputBindings>
+                <MouseBinding Gesture="Shift+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Backward7}"/>
+                <MouseBinding Gesture="LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Backward1}"/>
+            </Button.InputBindings>
+        </Button>
+
         <!--Date-->
         <Label
             Grid.Column="1"

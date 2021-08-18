@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="TeacherPlanner.Timetable.Views.TimetableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.Timetable.Views"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TimetableViewModel}}"
+             d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <SolidColorBrush Color="White"/>
+        </Grid.Background>
+        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" HorizontalContentAlignment="Center"
+               FontFamily="{StaticResource TitleHandwritten}"
+               Content="Timetable" FontSize="80"/>
+
+        <UserControl Grid.Column="1" Grid.Row="2">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=SelectedWeek}" Value="1">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <local:TimetableWeekView DataContext="{Binding Path=CurrentTimetable.Week1}"/>
+
+        </UserControl>
+        <UserControl Grid.Column="1" Grid.Row="2">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=SelectedWeek}" Value="2">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <local:TimetableWeekView DataContext="{Binding Path=CurrentTimetable.Week2}"/>
+
+        </UserControl>
+       
+    </Grid>
+</UserControl>

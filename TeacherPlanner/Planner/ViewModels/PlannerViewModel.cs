@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
+using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
@@ -23,8 +25,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
             // Property Assignment
             LoadedDayModels = new DayModel[DAYLIMIT];
-            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable);
-            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable);
+            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left");
+            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right");
             OverwriteClassCode = false;
 
             LoadNewDays();
@@ -64,9 +66,10 @@ namespace TeacherPlanner.Planner.ViewModels
         // the CalendarManager is advancing day
         public void OnTurnPage(object parameter)
         {
-            var numOfDays = int.Parse((string)parameter);
+            var advancePageState = (AdvancePageState)parameter;
+
             SaveCurrentlyDisplayedPageDays();
-            CalendarManager.ChangeCurrentDate(numOfDays);
+            CalendarManager.ChangeCurrentDate(advancePageState);
             LoadNewDays();
             //_debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }

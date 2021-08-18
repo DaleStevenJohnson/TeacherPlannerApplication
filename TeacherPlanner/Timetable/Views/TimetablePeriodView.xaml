@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="TeacherPlanner.Timetable.Views.TimetablePeriodView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.Timetable.Views"
+             xmlns:model="clr-namespace:TeacherPlanner.Timetable.Models"
+             mc:Ignorable="d" 
+             d:DataContext="{Binding Source={d:DesignInstance Type=model:TimetablePeriodModel}}"
+             d:DesignHeight="50" d:DesignWidth="100" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style x:Key="ClassCode" TargetType="{x:Type Label}" BasedOn="{StaticResource DefaultLabelBody}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style x:Key="PeriodText" TargetType="{x:Type Label}" BasedOn="{StaticResource DefaultLabelBody}">
+                <Setter Property="FontSize" Value="10"/>
+            </Style>
+        </Grid.Resources>
+        <Label Grid.Row="0" Grid.Column="1"
+               Content="{Binding ClassCode}"
+               Style="{StaticResource ClassCode}"/>
+        
+        <Label Grid.Row="0" Grid.Column="0"
+               Content="{Binding Room}"
+               Style="{StaticResource PeriodText}"/>
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0"
+                   Content="{Binding Occurance}"
+               Style="{StaticResource PeriodText}"/>
+            <Label Grid.Column="1"
+                   Content="/"
+               Style="{StaticResource PeriodText}"/>
+            <Label Grid.Column="2"
+                   Content="{Binding Occurances}"
+               Style="{StaticResource PeriodText}"/>
+        </Grid>
+    </Grid>
+</UserControl>

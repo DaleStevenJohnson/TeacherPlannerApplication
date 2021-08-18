@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.ViewModels;
 
 namespace TeacherPlanner.Planner.Views.SettingsWindows
@@ -18,10 +19,10 @@ namespace TeacherPlanner.Planner.Views.SettingsWindows
     /// </summary>
     public partial class DefineTimetableWeeksWindow : Window
     {
-        public DefineTimetableWeeksWindow()
+        public DefineTimetableWeeksWindow(UserModel userModel)
         {
             InitializeComponent();
-            var viewModel = new DefineTimetableWeeksViewModel(this);
+            var viewModel = new DefineTimetableWeeksViewModel(this, userModel);
             this.DataContext = viewModel;
         }
     }

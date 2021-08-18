@@ -2,7 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
@@ -11,16 +13,23 @@ namespace TeacherPlanner.Planner.ViewModels
     {
         public Action CloseAction { get; }
         public ICommand SaveTimeTableWeeksCommand { get; }
-        private string _path = FileHandlingHelper.LoggedInUserDataPath;
-        private string _filename = "TimetableWeeks.csv";
+        private string _rootpath;
+        private string _filename;
         private string _filepath;
         private DateRowModel[] _rows;
 
-        public DefineTimetableWeeksViewModel(Window window)
+        public DefineTimetableWeeksViewModel(Window window, UserModel userModel)
         {
+            // Parameter Assignment
             Window = window;
+            UserModel = userModel;
             CloseAction = new Action(window.Close);
-            _filepath = Path.Combine(_path, _filename);
+
+            // Any potential Encyption of filenames and directories happens here in the constructor only
+            _rootpath = FileHandlingHelper.LoggedInUserConfigPath;
+            _filename = FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.TimetableWeeksFileName, UserModel.Key);
+            _filepath = Path.Combine(_rootpath, _filename);
+
             SaveTimeTableWeeksCommand = new SimpleCommand(_ => OnSaveTimeTableWeeks());
 
             if (TryGetTimeTableWeeks(out var dateRows))
@@ -28,6 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
             else
                 Rows = CreateTimeTableWeeks();
         }
+        private UserModel UserModel { get; }
         private Window Window { get; }
         public DateRowModel[] Rows 
         {
@@ -37,7 +47,6 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private bool TryGetTimeTableWeeks(out DateRowModel[] dateRows)
         {
-            
             dateRows = new DateRowModel[0];
             if (!File.Exists(_filepath))
                 return false;
@@ -112,7 +121,7 @@ namespace TeacherPlanner.Planner.ViewModels
                 string[] rowData = Rows[i].Package();
                 weeks[i] = rowData;
             }
-            FileHandlingHelper.TryWriteDataToCSVFile(_path, _filename, weeks);
+            FileHandlingHelper.TryWriteDataToCSVFile(_rootpath, _filename, weeks);
         }
     }
 }

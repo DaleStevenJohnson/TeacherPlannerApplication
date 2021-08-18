@@ -5,6 +5,7 @@ using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
+using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
@@ -13,21 +14,40 @@ namespace TeacherPlanner.Planner.ViewModels
         private DayModel _dayModel;
         private CalendarModel _calendarModel;
 
-        public event EventHandler<string> TurnPageEvent;
+        public event EventHandler<AdvancePageState> TurnPageEvent;
         public ICommand TurnPageCommand { get; }
-        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable)
+        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side)
         {
             UserModel = userModel;
             Timetable = timetable;
             DayModel = LoadAndPopulateNewDay(date);
             TurnPageCommand = new SimpleCommand(numOfDays => OnTurnPage(numOfDays));
+
+            if (side == "left")
+            {
+                Forward1 = AdvancePageState.LeftForward1;
+                Forward7 = AdvancePageState.LeftForward7;
+                Backward1 = AdvancePageState.LeftBackward1;
+                Backward7 = AdvancePageState.LeftBackward7;
+            }
+            else
+            {
+                Forward1 = AdvancePageState.RightForward1;
+                Forward7 = AdvancePageState.RightForward7;
+                Backward1 = AdvancePageState.RightBackward1;
+                Backward7 = AdvancePageState.RightBackward7;
+            }
         }
         private TimetableModel Timetable { get; }
         private void OnTurnPage(object v)
         {
-            TurnPageEvent.Invoke(null, (string)v);
+            TurnPageEvent.Invoke(null, (AdvancePageState)v);
         }
         public UserModel UserModel { get; }
+        public AdvancePageState Forward1 { get; }
+        public AdvancePageState Forward7 { get; }
+        public AdvancePageState Backward1 { get; }
+        public AdvancePageState Backward7 { get; }
         public CalendarModel CalendarModel 
         {
             get => _calendarModel;
@@ -43,8 +63,8 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             var filenameDate = date.ToString(Formats.FullDateFormat);
             // Create path for where data should be stored for the provided date
-            var filename = filenameDate + ".txt";
-            var path = Path.Combine(FileHandlingHelper.CreateDatedUserDirectory(UserModel.Username, filenameDate), filename);
+            var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt");
+            var path = Path.Combine(FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key), filename);
 
             // Read data from file. If file does not exist, string[] data will be an empty array
             var data = FileHandlingHelper.ReadDataFromFile(path, true, UserModel.Key);
@@ -85,19 +105,21 @@ namespace TeacherPlanner.Planner.ViewModels
                         periodIndex++;
                     }
 
-                    // The below method call gets the day model to create a new period using the data supplied
-                    var classCode = data[classCodeIndex];
-                    
-                    classCode = overwriteClassCode ? string.Empty : classCode;
+                    var classCode = overwriteClassCode ? string.Empty : data[classCodeIndex];
+
                     if (classCode == string.Empty)
                     {
                         var day = (int)date.DayOfWeek;
                         var week = CalendarManager.GetWeek(date);
                         if (week == 1 || week == 2)
-                            classCode = Timetable.GetPeriod(week, day, i + 1);
+                        {
+                            var timetablePeriodModel = Timetable.GetPeriod(week, day, (i + 1).ToString());
+                            classCode = timetablePeriodModel.ClassCode;
+                        }
                         else if (week == 3)
                             classCode = "Holiday";
                     }
+                    // The below method call gets the day model to create a new period using the data supplied
                     newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, classCode, periodData);
 
                     // This keeps track of what line we are on in the data array
@@ -133,10 +155,10 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             var filenameDate = DayModel.Date.ToString(Formats.FullDateFormat);
             var saveData = DayModel.PackageSaveData();
-            var filename = filenameDate + ".txt";
+            var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt", UserModel.Key);
 
             // Final save path looks like this, for user Bob on 15th January 1970: \Bob\1970\197001\19700115.txt
-            var path = FileHandlingHelper.CreateDatedUserDirectory(UserModel.Username, filenameDate);
+            var path = FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key);
             FileHandlingHelper.TryWriteDataToFile(path, filename, saveData, "o", true, UserModel.Key);
         }
     }

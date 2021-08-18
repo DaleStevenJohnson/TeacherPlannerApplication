@@ -48,8 +48,8 @@
 
         <TextBox 
             Grid.Row="3" Grid.Column="2" VerticalContentAlignment="Center"
-            Margin="0,10" Text="{Binding UserModel.Username}" IsEnabled="False"
-            Background="Gray"/>
+            Margin="0,10" Text="{Binding Path=UserModel.Username, Mode=Oneway}" IsEnabled="False"
+            Background="LightGray"/>
 
         <Label
             Grid.Row="5" Grid.Column="1"
@@ -60,7 +60,7 @@
         <TextBox 
             Grid.Row="5" Grid.Column="2" VerticalContentAlignment="Center"
             Margin="0,10" Text="{Binding TimetableName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-            Background="White"/>
+            IsEnabled="False" Background="LightGray"/>
         
         <Label
             Grid.Row="7" Grid.Column="1"

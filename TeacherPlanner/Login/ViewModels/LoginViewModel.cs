@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
@@ -11,15 +12,11 @@ namespace TeacherPlanner.Login.ViewModels
 {
     public class LoginViewModel : ObservableObject
     {
-        private readonly string _path;
-        private readonly string _filename;
         private string _username;
 
-        public LoginViewModel(string accountFile, string filename)
+        public LoginViewModel()
         {
             LoginButtonClickedCommand = new SimpleCommand(password => OnLoginButtonClicked(password));
-            _path = accountFile;
-            _filename = filename;
             LoggedIn = false;
         }
         public bool LoggedIn { get; set; }
@@ -54,7 +51,7 @@ namespace TeacherPlanner.Login.ViewModels
 
         private string[] GetAccountHashes()
         {
-            var path = Path.Combine(_path, _filename);
+            var path = Path.Combine(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountDataFileName);
             if (File.Exists(path))
                 return File.ReadAllLines(path);
             else
