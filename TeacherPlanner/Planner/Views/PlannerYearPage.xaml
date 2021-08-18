@@ -42,7 +42,7 @@
                 </MenuItem>
 
                 <MenuItem Header="Planner">
-                    <MenuItem Header="Weekly Scroll?" IsCheckable="True"/>
+                    <MenuItem Header="Single Page Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
                 </MenuItem>
 
             </Menu>

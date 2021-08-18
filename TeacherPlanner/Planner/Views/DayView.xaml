@@ -7,7 +7,7 @@
              xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1080" d:DesignWidth="960">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
@@ -26,34 +26,40 @@
         </Grid.RowDefinitions>
         
         <!--Buttons-->
-        <Button 
-            Content="+1"
+        <Button
+            Style="{DynamicResource ButtonOverride}"
+            Background="{StaticResource Icon.NextArrow.Normal}"
+            BorderBrush="Transparent" BorderThickness="0"
             Grid.Column="2"
             Grid.Row="0"
             Command="{Binding TurnPageCommand}"
             CommandParameter="1"
+            MouseEnter="NextArrow_MouseEnter"  MouseLeave="NextArrow_MouseLeave"
         />
 
-        <Button 
-            Content="-1"
+        <Button
+            Style="{DynamicResource ButtonOverride}"
+            Background="{StaticResource Icon.PreviousArrow.Normal}"
+            BorderBrush="Transparent" BorderThickness="0"
             Grid.Column="0"
             Grid.Row="0"
             Command="{Binding TurnPageCommand}"
             CommandParameter="-1"
+            MouseEnter="PreviousArrow_MouseEnter"  MouseLeave="PreviousArrow_MouseLeave"
         />
         
         <!--Date-->
-        <TextBlock 
+        <Label
             Grid.Column="1"
             Grid.Row="0"
-            Text="{Binding DayModel.CalendarModel.DisplayDate}"
+            Content="{Binding CalendarModel.DisplayDate}"
             Foreground="White"
             Background="Black"
-            FontSize="20"
+            FontSize="18"
+           FontFamily="{StaticResource BodyText}"
             FontWeight="Medium"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            TextAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
         />
         
         <!--Periods-->
@@ -64,9 +70,19 @@
         <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period5}"/>
         <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period6}"/>
         <!--Notes-->
-        <local:NotesView Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.NoteSectionModel}"/>
+        <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1,1,1,1">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
 
-        
+                <local:NotesView Grid.Row="7" Grid.Column="0" DataContext="{Binding DayModel.NoteSectionModel}"/>
+                <local:CalendarView Grid.Row="7" Grid.Column="1" Margin="0,20,20,20"
+                                    DataContext="{Binding CalendarModel}"/>
+            </Grid>
+        </Border>
+
 
     </Grid>
            

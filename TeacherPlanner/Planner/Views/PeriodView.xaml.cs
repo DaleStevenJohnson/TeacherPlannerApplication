@@ -26,7 +26,7 @@ namespace TeacherPlanner.Planner.Views
         public void TextBoxOutOfFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
-            //textBox.Background = Brushes.White;
+            textBox.Background = Brushes.White;
             //DEBUGGER.Text = $"{PageViewModel.LeftDay.Periods[0].MarginFields[0]}";
             textBox.BorderBrush = Brushes.Transparent;
             textBox.IsReadOnly = true;

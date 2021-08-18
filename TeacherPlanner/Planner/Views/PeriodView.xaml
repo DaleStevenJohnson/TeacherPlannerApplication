@@ -31,43 +31,51 @@
 
             <!--Period Number-->
 
-            <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.RowSpan="5"
-                        Text="{Binding Path=Number}"
-                        TextAlignment="Center"
-                        Background="#AAAAAA"
-                        FontSize="60"
-                        Foreground="Black"
-                    />
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.RowSpan="5"
+                Content="{Binding Path=Number}"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="#AAAAAA"
+                FontFamily="{StaticResource BodyText}"
+                FontSize="60"
+                Foreground="Black"
+            />
 
 
             <!--TEXT: Form Group-->
             <Border Grid.Row="5" BorderThickness="0,0,1,0" BorderBrush="Gray">
-                <TextBlock 
-                        Text="Form Group"
-                        TextAlignment="Center"
-                        Background="White"
-                        FontSize="10"
-                        Foreground="Black"
-                    />
+                <Label 
+                    Content="Form Group"
+                    Margin="0" Padding="0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="White"
+                    FontFamily="{StaticResource BodyText}"
+                    FontSize="8"
+                    Foreground="Black"
+                 />
             </Border>
 
 
             <!--Class Code / Form Group-->
             <Border  Grid.Row="6" Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Gray">
                 <TextBox 
-                        Text="{Binding Path=ClassCode}"
-                        GotFocus="TextBoxMouseOver"
-                        LostFocus="TextBoxOutOfFocus"
-                        SelectionChanged="TextBoxSelectionChanged"
-                        AcceptsReturn="True"
-                        TextWrapping="Wrap"
-                        IsReadOnly="True"
-                        TextAlignment="Center"
-                        BorderBrush="Transparent"
-                    />
+                    Text="{Binding Path=ClassCode}"
+                    GotFocus="TextBoxMouseOver"
+                    LostFocus="TextBoxOutOfFocus"
+                    SelectionChanged="TextBoxSelectionChanged"
+                    AcceptsReturn="True"
+                    TextWrapping="Wrap"
+                    IsReadOnly="True"
+                    TextAlignment="Center"
+                    BorderBrush="Transparent"
+                    FontFamily="{StaticResource BodyText}"
+                    FontWeight="Bold"
+                    FontSize="10"
+                />
             </Border>
 
             <!--Margin Text Boxes-->

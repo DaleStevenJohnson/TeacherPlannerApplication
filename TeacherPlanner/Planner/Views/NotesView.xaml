@@ -5,18 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
              mc:Ignorable="d" 
-             xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
-             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
+             xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+             d:DataContext="{Binding Source={d:DesignInstance Type=model:NoteSectionModel}}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border BorderBrush="Black" BorderThickness="1,1,1,1">
+    
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="23*"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="1*"/>
-                
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
@@ -30,17 +27,18 @@
             </Grid.RowDefinitions>
 
             
-            <TextBlock  
+            <Label  
                 Margin="0,10,0,0"
                 Grid.Row="0" Grid.Column="1"
-                Text="Other Activities / Personal Notes"
+                Content="Other Activities / Personal Notes"
+                FontFamily="{StaticResource BodyText}"
                 FontSize="20"
                 Background="White"
                 Foreground="Black"/>
             
             <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -55,7 +53,7 @@
 
             <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -70,7 +68,7 @@
 
             <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -85,7 +83,7 @@
 
             <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -100,7 +98,7 @@
 
             <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -114,7 +112,7 @@
             </Border>
             <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=DayModel.NoteSectionModel.Note6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    Text="{Binding Path=Note6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
@@ -126,8 +124,7 @@
                     BorderBrush="Transparent"
                 />
             </Border>
-            <local:CalendarView Grid.Row="1" Grid.Column="3" Grid.RowSpan="6" DataContext="{Binding DayModel.CalendarModel}"/>
+            
 
         </Grid>
-    </Border>
 </UserControl>

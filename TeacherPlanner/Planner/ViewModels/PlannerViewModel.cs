@@ -7,22 +7,24 @@ using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
-    public class PlannerViewModel
+    public class PlannerViewModel : ObservableObject
     {
         private const int DAYLIMIT = 14;
         private DayViewModel _leftDay;
         private DayViewModel _rightDay;
         private int _loadedDayModelsIndex = 0;
-        public PlannerViewModel(UserModel userModel, TimetableModel timetable)
+        private bool _singlePageScrolling = false;
+        public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager)
         {
             // Parameter Assignment
             UserModel = userModel;
             Timetable = timetable;
+            CalendarManager = calendarManager;
 
             // Property Assignment
             LoadedDayModels = new DayModel[DAYLIMIT];
-            LeftDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateLeft, Timetable);
-            RightDay = new DayViewModel(UserModel, CalendarHelper.CurrentDateRight, Timetable);
+            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable);
+            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable);
             OverwriteClassCode = false;
 
             LoadNewDays();
@@ -35,9 +37,15 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
+        public CalendarManager CalendarManager { get; }
         public TimetableModel Timetable { get; set; }
         public DayModel[] LoadedDayModels { get; set; }
         public bool OverwriteClassCode { get; set; }
+        public bool SinglePageScrolling 
+        {
+            get => _singlePageScrolling;
+            set => RaiseAndSetIfChanged(ref _singlePageScrolling, value);
+        }
 
         public UserModel UserModel { get; set; }
         public DayViewModel LeftDay
@@ -56,7 +64,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             var numOfDays = int.Parse((string)parameter);
             SaveCurrentlyDisplayedPageDays();
-            CalendarHelper.ChangeCurrentDate(numOfDays);
+            CalendarManager.ChangeCurrentDate(numOfDays);
             LoadNewDays();
             //_debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }
@@ -78,11 +86,11 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 LoadedDayModels = new DayModel[DAYLIMIT];
             }
-            LoadNewDay(CalendarHelper.CurrentDateLeft, ref _leftDay);
-            LoadNewDay(CalendarHelper.CurrentDateRight, ref _rightDay);
+            LoadNewDay(CalendarManager.CurrentDateLeft, LeftDay);
+            LoadNewDay(CalendarManager.CurrentDateRight, RightDay);
         }
 
-        private void LoadNewDay(DateTime date, ref DayViewModel dayViewModel)
+        private void LoadNewDay(DateTime date, DayViewModel dayViewModel)
         {
             int index = IndexOfLoadedDay(date);
             if (index != -1)
@@ -97,7 +105,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             for (int i = 0; i < LoadedDayModels.Length; i++)
             {
-                if (LoadedDayModels[i] != null && LoadedDayModels[i].CalendarModel.Date == date)
+                if (LoadedDayModels[i] != null && LoadedDayModels[i].Date == date)
                     LoadedDayModels[i] = null;
                     return true;
             }
@@ -107,7 +115,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             for (int i = 0; i < LoadedDayModels.Length; i++)
             {
-                if (LoadedDayModels[i] != null && LoadedDayModels[i].CalendarModel.Date == date)
+                if (LoadedDayModels[i] != null && LoadedDayModels[i].Date == date)
                     return i;
             }
             return -1;

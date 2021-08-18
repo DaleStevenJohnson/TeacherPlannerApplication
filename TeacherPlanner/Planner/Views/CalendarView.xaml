@@ -4,11 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
-             xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
-             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
+             xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+             d:DataContext="{Binding Source={d:DesignInstance Type=model:CalendarModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="200" d:DesignWidth="200">
     <Grid>
+        <Grid.Resources>
+            <Style x:Key="WeekdayLetterHeader" TargetType="Label">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="9"/>
+            </Style>
+            <Style x:Key="WeekendLetterHeader" TargetType="Label">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="9"/>
+            </Style>
+            <Style x:Key="WeekdayNumberSpace" TargetType="Label">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="FontSize" Value="8"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Style>
+            <Style x:Key="WeekendNumberSpace" TargetType="Label">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="FontSize" Value="8"/>
+            </Style>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
@@ -30,16 +65,64 @@
         </Grid.RowDefinitions>
         
         <!--Heading-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" Background="LightGray" Text="{Binding Calendar.DisplayMonthYear}" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" Background="LightGray" Content="{Binding DisplayMonthYear}" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="8" />
         <!--Day of the Week Letters-->
-        <TextBlock Grid.Row="1" Grid.Column="0" Background="White" Text="M" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
-        <TextBlock Grid.Row="1" Grid.Column="1" Background="White" Text="T" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
-        <TextBlock Grid.Row="1" Grid.Column="2" Background="White" Text="W" TextAlignment="Center" FontWeight="Bold" FontSize="8"/>
-        <TextBlock Grid.Row="1" Grid.Column="3" Background="White" Text="T" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
-        <TextBlock Grid.Row="1" Grid.Column="4" Background="White" Text="F" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
-        <TextBlock Grid.Row="1" Grid.Column="5" Background="DarkGray" Text="S" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
-        <TextBlock Grid.Row="1" Grid.Column="6" Background="DarkGray" Text="S" TextAlignment="Center" FontWeight="Bold" FontSize="8" />
+        <Label Grid.Row="1" Grid.Column="0" Content="M" Style="{StaticResource WeekdayLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="1" Content="T" Style="{StaticResource WeekdayLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="2" Content="W" Style="{StaticResource WeekdayLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="3" Content="T" Style="{StaticResource WeekdayLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="4" Content="F" Style="{StaticResource WeekdayLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="5" Content="S" Style="{StaticResource WeekendLetterHeader}"/>
+        <Label Grid.Row="1" Grid.Column="6" Content="S" Style="{StaticResource WeekendLetterHeader}"/>
         <!--Dates-->
-
+        <!--Week 1-->
+        <Label Grid.Row="2" Grid.Column="0" Content="{Binding Dates[0]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="1" Content="{Binding Dates[1]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="2" Content="{Binding Dates[2]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="3" Content="{Binding Dates[3]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="4" Content="{Binding Dates[4]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="5" Content="{Binding Dates[5]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="6" Content="{Binding Dates[6]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <!--Week 2-->
+        <Label Grid.Row="3" Grid.Column="0" Content="{Binding Dates[7]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="1" Content="{Binding Dates[8]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="2" Content="{Binding Dates[9]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="3" Content="{Binding Dates[10]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="4" Content="{Binding Dates[11]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="5" Content="{Binding Dates[12]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="6" Content="{Binding Dates[13]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <!--Week 3-->
+        <Label Grid.Row="4" Grid.Column="0" Content="{Binding Dates[14]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="1" Content="{Binding Dates[15]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="2" Content="{Binding Dates[16]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="3" Content="{Binding Dates[17]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="4" Content="{Binding Dates[18]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="5" Content="{Binding Dates[19]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="6" Content="{Binding Dates[20]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <!--Week 4-->
+        <Label Grid.Row="5" Grid.Column="0" Content="{Binding Dates[21]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="1" Content="{Binding Dates[22]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="2" Content="{Binding Dates[23]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="3" Content="{Binding Dates[24]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="4" Content="{Binding Dates[25]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="5" Content="{Binding Dates[26]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="6" Content="{Binding Dates[27]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <!--Week 5-->
+        <Label Grid.Row="6" Grid.Column="0" Content="{Binding Dates[28]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="1" Content="{Binding Dates[29]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="2" Content="{Binding Dates[30]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="3" Content="{Binding Dates[31]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="4" Content="{Binding Dates[32]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="5" Content="{Binding Dates[33]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="6" Content="{Binding Dates[34]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <!--Week 6-->
+        <Label Grid.Row="7" Grid.Column="0" Content="{Binding Dates[35]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="1" Content="{Binding Dates[36]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="2" Content="{Binding Dates[37]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="3" Content="{Binding Dates[38]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="4" Content="{Binding Dates[39]}" Style="{StaticResource WeekdayNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="5" Content="{Binding Dates[40]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="6" Content="{Binding Dates[41]}" Style="{StaticResource WeekendNumberSpace}"/>
     </Grid>
 </UserControl>
