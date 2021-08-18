@@ -6,7 +6,6 @@ namespace TeacherPlanner.Constants
 {
     public static class Formats
     {
-        //TODO merge all formats into this class
         public static string DateHeadingFormat { get; } = "dddd, dd MMMM";
         public static string FullDateFormat { get; } = "yyyyMMdd";
         public static string FullDayNameFormat { get; } = "dddd";

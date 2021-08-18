@@ -60,6 +60,8 @@ namespace TeacherPlanner.Planner.ViewModels
         }
 
         public ICommand SaveCommand { get; }
+        // TODO - Fix page turning Bug - most likely a fault on how
+        // the CalendarManager is advancing day
         public void OnTurnPage(object parameter)
         {
             var numOfDays = int.Parse((string)parameter);

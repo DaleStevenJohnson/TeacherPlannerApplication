@@ -76,6 +76,7 @@
         <Label Grid.Row="1" Grid.Column="5" Content="S" Style="{StaticResource WeekendLetterHeader}"/>
         <Label Grid.Row="1" Grid.Column="6" Content="S" Style="{StaticResource WeekendLetterHeader}"/>
         <!--Dates-->
+        <!--TODO Add a command to jump changed page to clicked date-->
         <!--Week 1-->
         <Label Grid.Row="2" Grid.Column="0" Content="{Binding Dates[0]}" Style="{StaticResource WeekdayNumberSpace}"/>
         <Label Grid.Row="2" Grid.Column="1" Content="{Binding Dates[1]}" Style="{StaticResource WeekdayNumberSpace}"/>
