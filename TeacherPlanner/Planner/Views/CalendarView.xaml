@@ -26,15 +26,7 @@
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="FontSize" Value="9"/>
             </Style>
-            <Style x:Key="WeekdayNumberSpace" TargetType="Label">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
-                <Setter Property="FontWeight" Value="Normal"/>
-                <Setter Property="FontSize" Value="8"/>
-                <Setter Property="Cursor" Value="Hand"/>
-            </Style>
+            
             <Style x:Key="WeekendNumberSpace" TargetType="Label">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -78,52 +70,52 @@
         <!--Dates-->
         <!--TODO Add a command to jump changed page to clicked date-->
         <!--Week 1-->
-        <Label Grid.Row="2" Grid.Column="0" Content="{Binding Dates[0]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="1" Content="{Binding Dates[1]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="2" Content="{Binding Dates[2]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="3" Content="{Binding Dates[3]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="4" Content="{Binding Dates[4]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="5" Content="{Binding Dates[5]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="2" Grid.Column="6" Content="{Binding Dates[6]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="2" Grid.Column="0" DataContext="{Binding Dates[0]}"/>
+        <local:CalendarDateView Grid.Row="2" Grid.Column="1" DataContext="{Binding Dates[1]}"/>
+        <local:CalendarDateView Grid.Row="2" Grid.Column="2" DataContext="{Binding Dates[2]}"/>
+        <local:CalendarDateView Grid.Row="2" Grid.Column="3" DataContext="{Binding Dates[3]}"/>
+        <local:CalendarDateView Grid.Row="2" Grid.Column="4" DataContext="{Binding Dates[4]}"/>
+        <Label Grid.Row="2" Grid.Column="5" Content="{Binding Dates[5].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="2" Grid.Column="6" Content="{Binding Dates[6].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
         <!--Week 2-->
-        <Label Grid.Row="3" Grid.Column="0" Content="{Binding Dates[7]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="1" Content="{Binding Dates[8]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="2" Content="{Binding Dates[9]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="3" Content="{Binding Dates[10]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="4" Content="{Binding Dates[11]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="5" Content="{Binding Dates[12]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="3" Grid.Column="6" Content="{Binding Dates[13]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="3" Grid.Column="0" DataContext="{Binding Dates[7]}"/>
+        <local:CalendarDateView Grid.Row="3" Grid.Column="1" DataContext="{Binding Dates[8]}"/>
+        <local:CalendarDateView Grid.Row="3" Grid.Column="2" DataContext="{Binding Dates[9]}"/>
+        <local:CalendarDateView Grid.Row="3" Grid.Column="3" DataContext="{Binding Dates[10]}"/>
+        <local:CalendarDateView Grid.Row="3" Grid.Column="4" DataContext="{Binding Dates[11]}"/>
+        <Label Grid.Row="3" Grid.Column="5" Content="{Binding Dates[12].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="3" Grid.Column="6" Content="{Binding Dates[13].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
         <!--Week 3-->
-        <Label Grid.Row="4" Grid.Column="0" Content="{Binding Dates[14]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="1" Content="{Binding Dates[15]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="2" Content="{Binding Dates[16]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="3" Content="{Binding Dates[17]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="4" Content="{Binding Dates[18]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="5" Content="{Binding Dates[19]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="4" Grid.Column="6" Content="{Binding Dates[20]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="4" Grid.Column="0" DataContext="{Binding Dates[14]}"/>
+        <local:CalendarDateView Grid.Row="4" Grid.Column="1" DataContext="{Binding Dates[15]}"/>
+        <local:CalendarDateView Grid.Row="4" Grid.Column="2" DataContext="{Binding Dates[16]}"/>
+        <local:CalendarDateView Grid.Row="4" Grid.Column="3" DataContext="{Binding Dates[17]}"/>
+        <local:CalendarDateView Grid.Row="4" Grid.Column="4" DataContext="{Binding Dates[18]}"/>
+        <Label Grid.Row="4" Grid.Column="5" Content="{Binding Dates[19].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="4" Grid.Column="6" Content="{Binding Dates[20].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
         <!--Week 4-->
-        <Label Grid.Row="5" Grid.Column="0" Content="{Binding Dates[21]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="1" Content="{Binding Dates[22]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="2" Content="{Binding Dates[23]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="3" Content="{Binding Dates[24]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="4" Content="{Binding Dates[25]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="5" Content="{Binding Dates[26]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="5" Grid.Column="6" Content="{Binding Dates[27]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="5" Grid.Column="0" DataContext="{Binding Dates[21]}"/>
+        <local:CalendarDateView Grid.Row="5" Grid.Column="1" DataContext="{Binding Dates[22]}"/>
+        <local:CalendarDateView Grid.Row="5" Grid.Column="2" DataContext="{Binding Dates[23]}"/>
+        <local:CalendarDateView Grid.Row="5" Grid.Column="3" DataContext="{Binding Dates[24]}"/>
+        <local:CalendarDateView Grid.Row="5" Grid.Column="4" DataContext="{Binding Dates[25]}"/>
+        <Label Grid.Row="5" Grid.Column="5" Content="{Binding Dates[26].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="5" Grid.Column="6" Content="{Binding Dates[27].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
         <!--Week 5-->
-        <Label Grid.Row="6" Grid.Column="0" Content="{Binding Dates[28]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="1" Content="{Binding Dates[29]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="2" Content="{Binding Dates[30]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="3" Content="{Binding Dates[31]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="4" Content="{Binding Dates[32]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="5" Content="{Binding Dates[33]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="6" Grid.Column="6" Content="{Binding Dates[34]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="6" Grid.Column="0" DataContext="{Binding Dates[28]}"/>
+        <local:CalendarDateView Grid.Row="6" Grid.Column="1" DataContext="{Binding Dates[29]}"/>
+        <local:CalendarDateView Grid.Row="6" Grid.Column="2" DataContext="{Binding Dates[30]}"/>
+        <local:CalendarDateView Grid.Row="6" Grid.Column="3" DataContext="{Binding Dates[31]}"/>
+        <local:CalendarDateView Grid.Row="6" Grid.Column="4" DataContext="{Binding Dates[32]}"/>
+        <Label Grid.Row="6" Grid.Column="5" Content="{Binding Dates[33].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="6" Grid.Column="6" Content="{Binding Dates[34].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
         <!--Week 6-->
-        <Label Grid.Row="7" Grid.Column="0" Content="{Binding Dates[35]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="1" Content="{Binding Dates[36]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="2" Content="{Binding Dates[37]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="3" Content="{Binding Dates[38]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="4" Content="{Binding Dates[39]}" Style="{StaticResource WeekdayNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="5" Content="{Binding Dates[40]}" Style="{StaticResource WeekendNumberSpace}"/>
-        <Label Grid.Row="7" Grid.Column="6" Content="{Binding Dates[41]}" Style="{StaticResource WeekendNumberSpace}"/>
+        <local:CalendarDateView Grid.Row="7" Grid.Column="0" DataContext="{Binding Dates[35]}"/>
+        <local:CalendarDateView Grid.Row="7" Grid.Column="1" DataContext="{Binding Dates[36]}"/>
+        <local:CalendarDateView Grid.Row="7" Grid.Column="2" DataContext="{Binding Dates[37]}"/>
+        <local:CalendarDateView Grid.Row="7" Grid.Column="3" DataContext="{Binding Dates[38]}"/>
+        <local:CalendarDateView Grid.Row="7" Grid.Column="4" DataContext="{Binding Dates[39]}"/>
+        <Label Grid.Row="7" Grid.Column="5" Content="{Binding Dates[40].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
+        <Label Grid.Row="7" Grid.Column="6" Content="{Binding Dates[41].DayDate}" Style="{StaticResource WeekendNumberSpace}"/>
     </Grid>
 </UserControl>

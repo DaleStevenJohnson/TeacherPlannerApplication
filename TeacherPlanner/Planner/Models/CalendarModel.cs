@@ -10,10 +10,10 @@ namespace TeacherPlanner.Planner.Models
         public CalendarModel(DateTime date)
         {
             Date = date;
-            Dates = new string[CALENDARSPACES];
+            Dates = new CalendarDateModel[CALENDARSPACES];
             PopulateDates();
         }
-        public string[] Dates { get; set; }
+        public CalendarDateModel[] Dates { get; set; }
         public string Name => Date.ToString(Formats.FullDayNameFormat); 
         public string Month => Date.ToString(Formats.FullMonthNameFormat);
         public string Year => Date.ToString(Formats.FullYearNumberFormat);
@@ -24,20 +24,27 @@ namespace TeacherPlanner.Planner.Models
         {
             var yearInt = Int32.Parse(Date.ToString(Formats.FullYearNumberFormat));
             var monthInt = Int32.Parse(Date.ToString(Formats.FullMonthNumberFormat));
-            var days = DateTime.DaysInMonth(yearInt, monthInt);
+            var daysInMonth = DateTime.DaysInMonth(yearInt, monthInt);
             var firstDate = new DateTime(yearInt, monthInt, 1);
             var firstDay = (int)firstDate.DayOfWeek;
             firstDay = firstDay == 0 ? 6 : firstDay - 1;
-            var day = 1;
-            for (int i = 0; i < CALENDARSPACES; i++)
+            var date = new DateTime(yearInt, monthInt, 1);
+            for (int i = 0, currentDayOfMonth = 1; i < CALENDARSPACES; i++)
             {
-                if (i >= firstDay && i <= days)
+                var week = CalendarManager.GetWeek(date);
+                if (i >= firstDay && i < firstDay + daysInMonth)
                 {
-                    Dates[i] = day.ToString();
-                    day += 1;
+                    var calendarDateModel = new CalendarDateModel(currentDayOfMonth.ToString(), week);
+                    if (date == Date)
+                        calendarDateModel.IsDisplayedDate = true;
+                    Dates[i] = calendarDateModel;
+                    currentDayOfMonth++;
+                    date = date.AddDays(1);
                 }
                 else
-                    Dates[i] = "";
+                    // Setting week to 99 as is is a blank week and do not want it to inherit any formatting
+                    Dates[i] = new CalendarDateModel("", 99);
+                
             }
             
         }

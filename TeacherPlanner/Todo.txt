@@ -25,8 +25,8 @@ Add Calendar
 - Clicking a Date takes you to that page
 
 Add / Revamp Scrolling between pages
-- Radio for Single/Dual page scrolling - Settings tab?
-- Shift Clicking a +/- button makes it scroll a week
++ Radio for Single/Dual page scrolling - Settings tab?
++ Shift Clicking a +/- button makes it scroll a week
 
 Settings Tab
 - Dark mode?
@@ -35,7 +35,11 @@ Settings Tab
 Fixes
 + Get Scrolling working
 + Remove Debug
+- Add prompt for timetable and weeks import on startup of year selection
+- Add Today button - set left day to today
 - Add Timetable Scrolling
 - Change where period counts are being calculated + add in total occurances
 - Timetable weeks import updating timetable
-- Add bookend end of academic year / start of academic year
++ Add bookend end of academic year / start of academic year
+
+- Add faint end of last month dates to calendar
