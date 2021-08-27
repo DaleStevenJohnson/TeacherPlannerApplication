@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="TeacherPlanner.Planner.Views.StartOfYearView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="960">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            
+        </Grid.RowDefinitions>
+
+
+        <Border BorderThickness="10">
+            <Border.BorderBrush>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Rectangle StrokeDashArray="5, 5" Stroke="Gray" StrokeThickness="5"
+                          Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                          Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Border.BorderBrush>
+            
+            <Label 
+                Content="Start of Year"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="70"
+                FontFamily="{StaticResource TitleHandwritten}"
+            
+            >
+                
+                
+                <Label.LayoutTransform>
+                    <RotateTransform Angle="20"/>
+                </Label.LayoutTransform>
+            </Label>
+
+        </Border>
+
+    </Grid>
+           
+</UserControl>

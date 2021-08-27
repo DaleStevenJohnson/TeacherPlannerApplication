@@ -23,38 +23,76 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock 
-                    Name="DEBUGGER"
-                    Grid.Row="0" 
-                    Grid.Column="1" 
-                    Text="DEBUG"                      
-                    Foreground="Black"
-                    Background="White"
-                    FontSize="8"
-                    FontWeight="Medium"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    TextAlignment="Left"
-                />
-
-
-
-        <!--Periods-->
+          <!--Periods-->
         <!--Left Day-->
-        <view:DayView 
-                    Grid.Row="1" 
-                    Grid.Column="1" 
-                    DataContext="{Binding LeftDay}"
-                />
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=AtStartOfYear}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <view:DayView DataContext="{Binding LeftDay}"/>
+
+        </UserControl>
+
+       
+        
+        <UserControl Grid.Column="1" Grid.Row="1">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=AtStartOfYear}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <view:StartOfYearView/>
+
+        </UserControl>
+        
 
 
         <!--Right Day-->
-        <view:DayView 
-                    Grid.Row="1" 
-                    Grid.Column="3" 
-                    DataContext="{Binding RightDay}"
-                />
+        <UserControl Grid.Column="3" Grid.Row="1">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=AtEndOfYear}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
 
+            <view:DayView DataContext="{Binding RightDay}"/>
+
+        </UserControl>
+
+        <UserControl Grid.Column="3" Grid.Row="1">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=AtEndOfYear}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <view:EndOfYearView/>
+
+        </UserControl>
     </Grid>
     <UserControl.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>

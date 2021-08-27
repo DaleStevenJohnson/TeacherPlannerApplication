@@ -16,6 +16,9 @@ namespace TeacherPlanner.Planner.ViewModels
         private DayViewModel _rightDay;
         private int _loadedDayModelsIndex = 0;
         private bool _singlePageScrolling = false;
+        private bool _atEndOfYear = false;
+        private bool _atStartOfYear = false;
+
         public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager)
         {
             // Parameter Assignment
@@ -41,6 +44,16 @@ namespace TeacherPlanner.Planner.ViewModels
         public CalendarManager CalendarManager { get; }
         public TimetableModel Timetable { get; set; }
         public DayModel[] LoadedDayModels { get; set; }
+        public bool AtEndOfYear
+        {
+            get => _atEndOfYear;
+            set => RaiseAndSetIfChanged(ref _atEndOfYear, value);
+        }
+        public bool AtStartOfYear
+        {
+            get => _atStartOfYear;
+            set => RaiseAndSetIfChanged(ref _atStartOfYear, value);
+        }
         public bool OverwriteClassCode { get; set; }
         public bool SinglePageScrolling 
         {
@@ -90,6 +103,8 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right");
             LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
+            AtStartOfYear = RightDay.CalendarModel.Date == CalendarManager.StartOfYearDateLimit;
+            AtEndOfYear = LeftDay.CalendarModel.Date == CalendarManager.EndOfYearDateLimit;
         }
 
         private void LoadNewDay(DateTime date, DayViewModel dayViewModel)

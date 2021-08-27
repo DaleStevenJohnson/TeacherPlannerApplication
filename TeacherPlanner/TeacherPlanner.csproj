@@ -66,4 +66,24 @@
     <Resource Include="Assets\PlannerBG.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Planner\Views\StartOfYearView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Planner\Views\EndOfYearView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Planner\Views\StartOfYearView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Planner\Views\EndOfYearView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>
