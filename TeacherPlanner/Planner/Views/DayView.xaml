@@ -35,6 +35,7 @@
             ToolTip="Pssst! Hold shift and click to advance 7 days"
             MouseEnter="NextArrow_MouseEnter"  MouseLeave="NextArrow_MouseLeave" Cursor="Hand">
             <Button.InputBindings>
+                <MouseBinding Gesture="CTRL+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding ForwardMonth}"/>
                 <MouseBinding Gesture="Shift+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Forward7}"/>
                 <MouseBinding Gesture="LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Forward1}"/>
             </Button.InputBindings>
@@ -49,7 +50,7 @@
             ToolTip="Pssst! Hold shift and click to go back 7 days"
             MouseEnter="PreviousArrow_MouseEnter"  MouseLeave="PreviousArrow_MouseLeave" Cursor="Hand">
             <Button.InputBindings>
-                <MouseBinding Gesture="CTRL+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Backward7}"/>
+                <MouseBinding Gesture="CTRL+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding BackwardMonth}"/>
                 <MouseBinding Gesture="Shift+LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Backward7}"/>
                 <MouseBinding Gesture="LeftClick" Command="{Binding TurnPageCommand}" CommandParameter="{Binding Backward1}"/>
             </Button.InputBindings>

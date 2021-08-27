@@ -27,15 +27,19 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 Forward1 = AdvancePageState.LeftForward1;
                 Forward7 = AdvancePageState.LeftForward7;
+                ForwardMonth = AdvancePageState.LeftForwardMonth;
                 Backward1 = AdvancePageState.LeftBackward1;
                 Backward7 = AdvancePageState.LeftBackward7;
+                BackwardMonth = AdvancePageState.LeftBackwardMonth;
             }
             else
             {
                 Forward1 = AdvancePageState.RightForward1;
                 Forward7 = AdvancePageState.RightForward7;
+                ForwardMonth = AdvancePageState.RightForwardMonth;
                 Backward1 = AdvancePageState.RightBackward1;
                 Backward7 = AdvancePageState.RightBackward7;
+                BackwardMonth = AdvancePageState.RightBackwardMonth;
             }
         }
         private TimetableModel Timetable { get; }
@@ -46,8 +50,10 @@ namespace TeacherPlanner.Planner.ViewModels
         public UserModel UserModel { get; }
         public AdvancePageState Forward1 { get; }
         public AdvancePageState Forward7 { get; }
+        public AdvancePageState ForwardMonth { get; }
         public AdvancePageState Backward1 { get; }
         public AdvancePageState Backward7 { get; }
+        public AdvancePageState BackwardMonth { get; }
         public CalendarModel CalendarModel 
         {
             get => _calendarModel;

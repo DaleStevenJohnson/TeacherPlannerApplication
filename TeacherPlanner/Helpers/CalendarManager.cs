@@ -168,7 +168,7 @@ namespace TeacherPlanner.Helpers
             if (DatesAreNeighbours)
             {
                 CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
-                CurrentDateRight = AdvanceDate(CurrentDateRight, days);
+                CurrentDateRight = AdvanceDate(CurrentDateLeft, 1);
             }
             else
             {
@@ -185,14 +185,18 @@ namespace TeacherPlanner.Helpers
             {
                 case AdvancePageState.LeftForward1:
                 case AdvancePageState.LeftForward7:
+                case AdvancePageState.LeftForwardMonth:
                 case AdvancePageState.LeftBackward1:
                 case AdvancePageState.LeftBackward7:
+                case AdvancePageState.LeftBackwardMonth:
                     return "left";
 
                 case AdvancePageState.RightForward1:
                 case AdvancePageState.RightForward7:
+                case AdvancePageState.RightForwardMonth:
                 case AdvancePageState.RightBackward1:
                 case AdvancePageState.RightBackward7:
+                case AdvancePageState.RightBackwardMonth:
                     return "right";
                 default:
                     return string.Empty;
@@ -214,6 +218,12 @@ namespace TeacherPlanner.Helpers
                 case AdvancePageState.LeftBackward7:
                 case AdvancePageState.RightBackward7:
                     return -7;
+                case AdvancePageState.LeftForwardMonth:
+                case AdvancePageState.RightForwardMonth:
+                    return 999;
+                case AdvancePageState.LeftBackwardMonth:
+                case AdvancePageState.RightBackwardMonth:
+                    return -999;
                 default:
                     return 0;
             }
@@ -221,8 +231,20 @@ namespace TeacherPlanner.Helpers
         
         private DateTime AdvanceDate(DateTime date, int days)
         {
-            //DateTime oldDate = date.AddDays(0);
-            DateTime newDate = date.AddDays(days);
+            DateTime newDate;
+            switch (days)
+            {
+                case 999:
+                    newDate = date.AddMonths(1);
+                    break;
+                case -999:
+                    newDate = date.AddMonths(-1);
+                    break;
+                default:
+                    newDate = date.AddDays(days);
+                    break;
+            }
+            
             var extraDays = 0;
             if (newDate.DayOfWeek == DayOfWeek.Saturday)
             {
