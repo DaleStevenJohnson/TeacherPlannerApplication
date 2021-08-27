@@ -25,7 +25,7 @@ namespace TeacherPlanner.Helpers
             Today = DateTime.Today;
 
             CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? Today : startOfYearDate;
-            CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : CurrentDateLeft.AddDays(1);
+            CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : AdvanceDate(CurrentDateLeft, 1);
         }
 
         // Properties
