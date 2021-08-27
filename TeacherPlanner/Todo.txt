@@ -33,8 +33,8 @@ Settings Tab
 - Log out
 
 Fixes
-- Get Scrolling working
-- Remove Debug
++ Get Scrolling working
++ Remove Debug
 - Add Timetable Scrolling
 - Change where period counts are being calculated + add in total occurances
 - Timetable weeks import updating timetable

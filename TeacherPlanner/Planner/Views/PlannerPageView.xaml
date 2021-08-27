@@ -30,7 +30,7 @@
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Visible" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=AtStartOfYear}" Value="True">
+                        <DataTrigger Binding="{Binding Path=IsAtStartOfYear}" Value="True">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -48,7 +48,7 @@
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=AtStartOfYear}" Value="True">
+                        <DataTrigger Binding="{Binding Path=IsAtStartOfYear}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -67,7 +67,7 @@
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Visible" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=AtEndOfYear}" Value="True">
+                        <DataTrigger Binding="{Binding Path=IsAtEndOfYear}" Value="True">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -83,7 +83,7 @@
                 <Style TargetType="UserControl">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=AtEndOfYear}" Value="True">
+                        <DataTrigger Binding="{Binding Path=IsAtEndOfYear}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>

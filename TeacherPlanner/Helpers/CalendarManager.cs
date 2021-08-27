@@ -24,8 +24,8 @@ namespace TeacherPlanner.Helpers
             // MUST be delcared After setting the StartOfYearDateLimit and EndOfYearDateLimit
             Today = DateTime.Today;
 
-            CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? AdvanceDate(Today, 0) : startOfYearDate;
-            CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : AdvanceDate(CurrentDateLeft, 1);
+            CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? GetAdvancedDate(Today, 0) : startOfYearDate;
+            CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : GetAdvancedDate(CurrentDateLeft, 1);
         }
 
         // Properties
@@ -44,7 +44,7 @@ namespace TeacherPlanner.Helpers
                 else
                     _today = value;
                 TodayString = _today.ToString(DateHeadingFormat);
-                Tomorrow = AdvanceDate(_today, 1);
+                Tomorrow = GetAdvancedDate(_today, 1);
                 TomorrowString = Tomorrow.ToString(DateHeadingFormat);
             }
         }
@@ -165,20 +165,48 @@ namespace TeacherPlanner.Helpers
         public void ChangeCurrentDate(AdvancePageState advancePageState)
         {
             var days = CalculateDaysToAdvance(advancePageState);
+            
             if (DatesAreNeighbours)
             {
-                CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
-                CurrentDateRight = AdvanceDate(CurrentDateLeft, 1);
+                
+                if (CurrentDateLeft == StartOfYearDateLimit)
+                {
+                    HandleStartOfYearDayChange(days);
+                }
+                else
+                {
+                    CurrentDateLeft = GetAdvancedDate(CurrentDateLeft, days);
+                    CurrentDateRight = GetAdvancedDate(CurrentDateLeft, 1);
+                }
             }
             else
             {
                 var side = CalculateSideToAdvance(advancePageState);
                 if (side == "left")
-                    CurrentDateLeft = AdvanceDate(CurrentDateLeft, days);
+                {
+                    CurrentDateLeft = GetAdvancedDate(CurrentDateLeft, days);
+                    if (CurrentDateLeft >= CurrentDateRight)
+                        CurrentDateRight = GetAdvancedDate(CurrentDateLeft, 1);
+                }
                 else
-                    CurrentDateRight = AdvanceDate(CurrentDateRight, days);
+                {
+                    CurrentDateRight = GetAdvancedDate(CurrentDateRight, days);
+                    if (CurrentDateLeft >= CurrentDateRight)
+                        CurrentDateLeft = GetAdvancedDate(CurrentDateRight, -1);
+                }
             }
         }
+
+        private void HandleStartOfYearDayChange(int days)
+        {
+            // If the right hand page is at the limit and the user is trying
+            // to go backwards, do nothing
+            if (CurrentDateRight == StartOfYearDateLimit && days < 0)
+                return;
+            
+            CurrentDateRight = GetAdvancedDate(CurrentDateRight, days);
+        }
+
         private string CalculateSideToAdvance(AdvancePageState advancePageState)
         {
             switch (advancePageState)
@@ -229,7 +257,7 @@ namespace TeacherPlanner.Helpers
             }
         }
         
-        private DateTime AdvanceDate(DateTime date, int days)
+        private DateTime GetAdvancedDate(DateTime date, int days)
         {
             DateTime newDate;
             switch (days)
