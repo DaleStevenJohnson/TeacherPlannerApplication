@@ -97,6 +97,10 @@ namespace TeacherPlanner.Helpers
         public static int GetWeek(DateTime date)
         {
             var filepath = Path.Combine(FileHandlingHelper.LoggedInUserConfigPath, FilesAndDirectories.TimetableWeeksFileName);
+            
+            if (!File.Exists(filepath))
+                return 0;
+
             var weekdata = FileHandlingHelper.ReadDataFromCSVFile(filepath);
             for (var i = 0; i < weekdata.Length; i++)
             {
@@ -106,16 +110,21 @@ namespace TeacherPlanner.Helpers
                 DateTime nextWeek = currentWeek.AddDays(7);
                 if (date >= currentWeek && date < nextWeek)
                 {
+                    // Week 1
                     if (week[1] == "True")
                         return 1;
+                    // Week 2
                     else if (week[2] == "True")
                         return 2;
+                    // Holiday
                     else if (week[3] == "True")
                         return 3;
+                    // No week assigned
                     else
                         return 0;
                 }
             }
+            // No week assigned
             return 0;
         }
         public static bool IsAcademicYearNow(string year)

@@ -42,7 +42,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnDefineTimetableWeeks()
         {
             if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
-                PlannerViewModel.LoadNewDays(true);
+                PlannerViewModel.LoadNewDays();
         }
         private void OnSwitchView(object v)
         {

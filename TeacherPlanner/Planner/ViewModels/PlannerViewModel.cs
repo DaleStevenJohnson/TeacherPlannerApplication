@@ -24,9 +24,9 @@ namespace TeacherPlanner.Planner.ViewModels
             CalendarManager = calendarManager;
 
             // Property Assignment
-            LoadedDayModels = new DayModel[DAYLIMIT];
-            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left");
-            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right");
+            //LoadedDayModels = new DayModel[DAYLIMIT];
+
+            
             OverwriteClassCode = false;
 
             LoadNewDays();
@@ -35,8 +35,7 @@ namespace TeacherPlanner.Planner.ViewModels
             //TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             //TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
 
-            LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
-            RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
+            
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
         public CalendarManager CalendarManager { get; }
@@ -53,12 +52,12 @@ namespace TeacherPlanner.Planner.ViewModels
         public DayViewModel LeftDay
         {
             get => _leftDay;
-            set => _leftDay = value;
+            set => RaiseAndSetIfChanged(ref _leftDay, value);
         }
         public DayViewModel RightDay
         {
             get => _rightDay;
-            set => _rightDay = value;
+            set => RaiseAndSetIfChanged(ref _rightDay, value);
         }
 
         public ICommand SaveCommand { get; }
@@ -85,14 +84,12 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay.SaveDayToFile();
         }
 
-        public void LoadNewDays(bool reload = false)
+        public void LoadNewDays()
         {
-            if (reload)
-            {
-                LoadedDayModels = new DayModel[DAYLIMIT];
-            }
-            LoadNewDay(CalendarManager.CurrentDateLeft, LeftDay);
-            LoadNewDay(CalendarManager.CurrentDateRight, RightDay);
+            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left");
+            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right");
+            LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
+            RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
         }
 
         private void LoadNewDay(DateTime date, DayViewModel dayViewModel)
