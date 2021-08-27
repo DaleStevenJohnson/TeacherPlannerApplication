@@ -24,7 +24,7 @@ namespace TeacherPlanner.Helpers
             // MUST be delcared After setting the StartOfYearDateLimit and EndOfYearDateLimit
             Today = DateTime.Today;
 
-            CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? Today : startOfYearDate;
+            CurrentDateLeft = IsAcademicYearNow(CurrentAcademicYear) ? AdvanceDate(Today, 0) : startOfYearDate;
             CurrentDateRight = CurrentDateLeft == EndOfYearDateLimit ? CurrentDateLeft.AddDays(0) : AdvanceDate(CurrentDateLeft, 1);
         }
 
