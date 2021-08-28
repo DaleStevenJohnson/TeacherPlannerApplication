@@ -17,7 +17,7 @@ namespace TeacherPlanner.Timetable.Models
         {
             string[] days = new string[] {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
 
-            Dictionary<string, int> classCodeCounts = new Dictionary<string, int>();
+            //Dictionary<string, int> classCodeCounts = new Dictionary<string, int>();
             // 5 Days
             // 8 Periods - 5 teaching, two breaks + registration
             // 4 items of data per period
@@ -31,16 +31,12 @@ namespace TeacherPlanner.Timetable.Models
                 var day = Array.IndexOf(days, periodArray[1]);
                 var period = periodArray[2];
                 
+                // Setting period by reference
                 TimetablePeriodModel periodModel = GetPeriod(week, day, period);
                 periodModel.ClassCode = periodArray[4];
                 periodModel.Room = periodArray[5];
-
-                if (classCodeCounts.ContainsKey(periodModel.ClassCode))
-                    classCodeCounts[periodModel.ClassCode] += 1;
-                else
-                    classCodeCounts.Add(periodModel.ClassCode, 1);
-
-                periodModel.Occurance = classCodeCounts[periodModel.ClassCode].ToString();
+                periodModel.Occurance = periodArray[6];
+                periodModel.Occurances = periodArray[7];
 
             }
         }

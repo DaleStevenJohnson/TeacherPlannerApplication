@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _userFeedback;
 
         public ICommand ChooseTimetableFileCommand { get; }
-        public ICommand TryImportTimetableCommand { get;  }
+        public ICommand ImportTimetableCommand { get;  }
 
         public ImportTimetableWindowViewModel(UserModel userModel, Window window)
         {
@@ -30,7 +31,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             // Property Initialisation
             ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
-            TryImportTimetableCommand = new SimpleCommand(_ => TryImportTimetable(_));
+            ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable(_));
             TimetableFile = string.Empty;
             TimetableName = string.Empty;
             UserFeedback = string.Empty;
@@ -78,7 +79,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             return name;
         }
-        private void TryImportTimetable(object args)
+        private void OnImportTimetable(object args)
         {
             // AND TimetableName is not already an existing Timetable name
             if (TimetableName == string.Empty)
@@ -134,6 +135,10 @@ namespace TeacherPlanner.Planner.ViewModels
             int weeks = 2;
             string[] days = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
             int[] periodLocations = new int[] {5, 7, 9,11, 12,14, 15, 17,19 };
+
+            Dictionary<string, int> classCodeCounts = new Dictionary<string, int>();
+
+            // Loop through and populate 2d array with array describing each period of the week
             for (int week = 1; week <= weeks; week++)
             {
                 for (int day = 0; day < days.Length; day++)
@@ -157,11 +162,23 @@ namespace TeacherPlanner.Planner.ViewModels
                         var roomNumber = periodLocation != 11 && periodLocation != 14 ? rawTimetableData[periodLocation + 1][column] : "";
                         if (roomNumber.Length > 0)
                             roomNumber = roomNumber.Substring(0, roomNumber.Length - 1);
-                        
-                        convertedTimetableData[row] = new string[] {weekString, dayString, periodString, codeString, classCode, roomNumber};
+
+                        // Count which specific occurance this particular period is
+                        if (classCodeCounts.ContainsKey(classCode))
+                            classCodeCounts[classCode] += 1;
+                        else
+                            classCodeCounts.Add(classCode, 1);
+
+                        convertedTimetableData[row] = new string[] {weekString, dayString, periodString, codeString, classCode, roomNumber, classCodeCounts[classCode].ToString(), ""};
                     }
                 }
             }
+            // Add total occurance to each period
+            for (int i = 1; i < convertedTimetableData.Length; i++)
+            {
+                convertedTimetableData[i][7] = classCodeCounts[convertedTimetableData[i][4]].ToString();
+            }
+
             return convertedTimetableData;
         }
 

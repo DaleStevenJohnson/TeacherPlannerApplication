@@ -24,6 +24,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             TimetableViewModel = new TimetableViewModel(UserModel);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager);
+            TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
             ToDoViewModel = new ToDoViewModel(UserModel);
             
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());

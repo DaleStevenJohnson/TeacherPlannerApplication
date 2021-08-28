@@ -19,6 +19,10 @@ namespace TeacherPlanner.Timetable.ViewModels
         private TimetableModel _currentTimetable;
         private int _selectedWeek;
         public ICommand SwitchTimetableWeekCommand { get; }
+        public ICommand ImportTimetableCommand { get; }
+        public ICommand ManageTimetableCommand { get; }
+        public ICommand ApplySelectedTimetableCommand { get; }
+        public event EventHandler<TimetableModel> TimetableChangedEvent;
         public TimetableViewModel(UserModel userModel)
         {
             ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
@@ -29,8 +33,8 @@ namespace TeacherPlanner.Timetable.ViewModels
             UserModel = userModel;
             SelectedWeek = 1;
 
-            TryGetImportedTimetable();
-            UpdateCurrentlyDisplayedTimetableWeek();
+            if (TryGetImportedTimetable())
+                UpdateCurrentlyDisplayedTimetableWeek();
 
         }
         public int SelectedWeek 
@@ -50,9 +54,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             set => RaiseAndSetIfChanged(ref _currentlyDisplayedTimetableWeek, value);
         }
 
-        public ICommand ImportTimetableCommand { get; }
-        public ICommand ManageTimetableCommand { get; }
-        public ICommand ApplySelectedTimetableCommand { get; }
+        
 
         //TODO implement timetable shift - add button to view
         //TODO Add total Occurances for periods - move dict count to import
@@ -73,7 +75,11 @@ namespace TeacherPlanner.Timetable.ViewModels
             importWindow.DataContext = importTimetableViewModel;
 
             if (importWindow.ShowDialog() ?? true)
+            {
                 TryGetImportedTimetable();
+                UpdateCurrentlyDisplayedTimetableWeek();
+                TimetableChangedEvent.Invoke(null, CurrentTimetable);
+            }
         }
         
         public bool? DefineTimetableWeeks(UserModel userModel)

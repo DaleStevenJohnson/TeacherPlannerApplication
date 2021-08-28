@@ -41,7 +41,14 @@ namespace TeacherPlanner.Planner.ViewModels
             GoToTodayCommand = new SimpleCommand(_ => OnGoToToday());
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
-        public CalendarManager CalendarManager { get; }
+
+		public void UpdateCurrentTimetable(TimetableModel timetable)
+		{
+            Timetable = timetable;
+            LoadNewDays();
+		}
+
+		public CalendarManager CalendarManager { get; }
         public TimetableModel Timetable { get; set; }
         public DayModel[] LoadedDayModels { get; set; }
         public bool IsAtEndOfYear
