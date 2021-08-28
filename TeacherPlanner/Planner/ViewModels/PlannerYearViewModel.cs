@@ -14,6 +14,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand DefineTimetableWeeksCommand { get; }
         public event EventHandler<string> SwitchViewEvent;
         public ICommand SwitchViewCommand { get; }
+        
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
             UserModel = userModel;

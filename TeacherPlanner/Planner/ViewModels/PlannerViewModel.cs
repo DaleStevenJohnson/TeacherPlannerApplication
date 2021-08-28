@@ -19,6 +19,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private bool _isAtEndOfYear = false;
         private bool _isAtStartOfYear = false;
 
+        public ICommand GoToTodayCommand { get; }
         public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager)
         {
             // Parameter Assignment
@@ -38,7 +39,7 @@ namespace TeacherPlanner.Planner.ViewModels
             //TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             //TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
 
-            
+            GoToTodayCommand = new SimpleCommand(_ => OnGoToToday());
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
         public CalendarManager CalendarManager { get; }
@@ -95,6 +96,14 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             LeftDay.SaveDayToFile();
             RightDay.SaveDayToFile();
+        }
+
+        private void OnGoToToday()
+        {
+            CalendarManager.CurrentDateLeft = CalendarManager.Today;
+            //if (CalendarManager.DatesAreNeighbours)
+            CalendarManager.CurrentDateRight = CalendarManager.Tomorrow;
+            LoadNewDays();
         }
 
         public void LoadNewDays()

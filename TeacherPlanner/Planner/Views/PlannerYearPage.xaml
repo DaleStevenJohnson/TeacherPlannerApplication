@@ -43,6 +43,7 @@
 
                 <MenuItem Header="Planner">
                     <MenuItem Header="Locked Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
+                    <MenuItem Header="Go to Today" InputGestureText="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
                 </MenuItem>
 
             </Menu>

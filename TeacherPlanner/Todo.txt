@@ -42,4 +42,6 @@ Fixes
 - Timetable weeks import updating timetable
 + Add bookend end of academic year / start of academic year
 
+- Add Calendar Viewmodel
+- Investigate how to handle subscribe and unsubscribing to events
 - Add faint end of last month dates to calendar

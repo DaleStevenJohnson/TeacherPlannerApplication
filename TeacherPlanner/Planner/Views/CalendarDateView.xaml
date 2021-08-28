@@ -31,8 +31,8 @@
                 </GeometryDrawing>
             </DrawingBrush.Drawing>
         </DrawingBrush>
-        
-        <Style x:Key="WeekdayNumberSpace" TargetType="Label">
+
+        <Style x:Key="WeekdayNumberSpace" TargetType="Button" BasedOn="{StaticResource ButtonOverride}"> 
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="White"/>
@@ -56,8 +56,8 @@
     </UserControl.Resources>
 
 
-    <Label Content="{Binding DayDate}" Style="{StaticResource WeekdayNumberSpace}">
+    <Button Content="{Binding DayDate}" Style="{StaticResource WeekdayNumberSpace}" Command="">
         
-    </Label>
+    </Button>
 
 </UserControl>
