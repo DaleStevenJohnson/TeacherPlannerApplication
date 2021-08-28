@@ -27,36 +27,13 @@
                FontFamily="{StaticResource TitleHandwritten}"
                Content="Timetable" FontSize="80"/>
 
-        <UserControl Grid.Column="1" Grid.Row="2">
-            <UserControl.Style>
-                <Style TargetType="UserControl">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=SelectedWeek}" Value="1">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </UserControl.Style>
+        
 
-            <local:TimetableWeekView DataContext="{Binding Path=CurrentTimetable.Week1}"/>
+		<local:TimetableWeekView Grid.Column="1" Grid.Row="2" DataContext="{Binding }"/>
 
-        </UserControl>
-        <UserControl Grid.Column="1" Grid.Row="2">
-            <UserControl.Style>
-                <Style TargetType="UserControl">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=SelectedWeek}" Value="2">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </UserControl.Style>
-
-            <local:TimetableWeekView DataContext="{Binding Path=CurrentTimetable.Week2}"/>
-
-        </UserControl>
+        
+		
+      
        
     </Grid>
 </UserControl>

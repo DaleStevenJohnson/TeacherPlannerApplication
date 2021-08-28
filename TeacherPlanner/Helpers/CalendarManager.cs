@@ -18,7 +18,7 @@ namespace TeacherPlanner.Helpers
             CurrentDates = new DateTime[2];
             
             var startOfYearDate = GetStartOfYearDateLimit(CurrentAcademicYear);
-            StartOfYearDateLimit = startOfYearDate;
+            StartOfYearDateLimit = new DateTime(2021, 9, 21);//startOfYearDate;
             EndOfYearDateLimit = GetEndOfYearDateLimit(CurrentAcademicYear);
 
             // MUST be delcared After setting the StartOfYearDateLimit and EndOfYearDateLimit
@@ -203,7 +203,9 @@ namespace TeacherPlanner.Helpers
             // to go backwards, do nothing
             if (CurrentDateRight == StartOfYearDateLimit && days < 0)
                 return;
-            
+            else if (CurrentDateRight != StartOfYearDateLimit)
+                CurrentDateLeft = GetAdvancedDate(CurrentDateLeft, days);
+
             CurrentDateRight = GetAdvancedDate(CurrentDateRight, days);
         }
 
@@ -257,7 +259,7 @@ namespace TeacherPlanner.Helpers
             }
         }
         
-        private DateTime GetAdvancedDate(DateTime date, int days)
+        public DateTime GetAdvancedDate(DateTime date, int days)
         {
             DateTime newDate;
             switch (days)

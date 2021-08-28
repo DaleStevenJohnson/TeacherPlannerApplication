@@ -10,7 +10,7 @@ namespace TeacherPlanner.Timetable.Models
         {
             Create(timetableFileData);
         }
-        public string Name { get; }
+        
         public TimetableWeekModel Week1 { get; private set; }
         public TimetableWeekModel Week2 { get; private set; }
         private void Create(string[][] timetableFileData)

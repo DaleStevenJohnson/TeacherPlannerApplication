@@ -15,18 +15,23 @@ namespace TeacherPlanner.Timetable.ViewModels
 {
     public class TimetableViewModel : ObservableObject
     {
+        private TimetableWeekModel _currentlyDisplayedTimetableWeek;
         private TimetableModel _currentTimetable;
         private int _selectedWeek;
-
+        public ICommand SwitchTimetableWeekCommand { get; }
         public TimetableViewModel(UserModel userModel)
         {
             ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
             ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
+            SwitchTimetableWeekCommand = new SimpleCommand(_ => OnSwitchTimetableWeek());
+
 
             UserModel = userModel;
             SelectedWeek = 1;
 
             TryGetImportedTimetable();
+            UpdateCurrentlyDisplayedTimetableWeek();
+
         }
         public int SelectedWeek 
         {
@@ -37,21 +42,30 @@ namespace TeacherPlanner.Timetable.ViewModels
         public TimetableModel CurrentTimetable
         {
             get => _currentTimetable;
-            set => RaiseAndSetIfChanged(ref _currentTimetable, value);  
+            set => RaiseAndSetIfChanged(ref _currentTimetable, value);
+        }
+        public TimetableWeekModel CurrentlyDisplayedTimetableWeek
+        {
+            get => _currentlyDisplayedTimetableWeek;
+            set => RaiseAndSetIfChanged(ref _currentlyDisplayedTimetableWeek, value);
         }
 
-        
         public ICommand ImportTimetableCommand { get; }
         public ICommand ManageTimetableCommand { get; }
         public ICommand ApplySelectedTimetableCommand { get; }
 
         //TODO implement timetable shift - add button to view
         //TODO Add total Occurances for periods - move dict count to import
-        
-        private void ChangeWeek()
+        private void UpdateCurrentlyDisplayedTimetableWeek()
+        {
+            CurrentlyDisplayedTimetableWeek = SelectedWeek == 1 ? CurrentTimetable.Week1 : CurrentTimetable.Week2;
+        }
+        private void OnSwitchTimetableWeek()
         {
             SelectedWeek = SelectedWeek == 1 ? 2 : 1;
+            UpdateCurrentlyDisplayedTimetableWeek();
         }
+   
         private void OnTimetableImportClick()
         {
             var importWindow = new ImportTimetableWindow();

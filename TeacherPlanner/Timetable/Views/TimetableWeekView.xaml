@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Timetable.Views"
-             xmlns:model="clr-namespace:TeacherPlanner.Timetable.Models"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.Timetable.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{Binding Source={d:DesignInstance Type=model:TimetableWeekModel}}"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TimetableViewModel}}"
              d:DesignHeight="400" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -50,8 +50,10 @@
         </Grid.Resources>
         <!--Column Headers-->
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-            <Label  Content="{Binding WeekNumber}" FontFamily="{StaticResource TitleHandwritten}" FontSize="40" Margin="20,0,0,0"/>
-            <Button Content="  ->" Style="{StaticResource ButtonOverride}" FontFamily="{StaticResource TitleHandwritten}" FontSize="40" Background="Transparent" Cursor="Hand"/>
+			<Label  Content="{Binding CurrentlyDisplayedTimetableWeek.WeekNumber}" FontFamily="{StaticResource TitleHandwritten}" FontSize="40" Margin="20,0,0,0"/>
+            <Button Content="  ->" Style="{StaticResource ButtonOverride}" 
+					FontFamily="{StaticResource TitleHandwritten}" FontSize="40" Background="Transparent" Cursor="Hand"
+					Command="{Binding SwitchTimetableWeekCommand}"/>
         </StackPanel>
         <Label Grid.Column="1" Grid.Row="0" Content="Monday" Style="{StaticResource TopHeaderStyle}"/>
         <Label Grid.Column="2" Grid.Row="0" Content="Tuesday" Style="{StaticResource TopHeaderStyle}"/>
@@ -70,67 +72,67 @@
         <Label Grid.Column="0" Grid.Row="9" Content="Twilight" Style="{StaticResource BreakStyle}"/>
         
         <!--Registration-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Monday.Registration}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Tuesday.Registration}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Wednesday.Registration}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Thursday.Registration}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Friday.Registration}"/>
+		<local:TimetablePeriodView Grid.Column="1" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Registration}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Registration}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Registration}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Registration}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="1" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Registration}"/>
         
         <!--Period 1-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="2" DataContext="{Binding Path=Monday.Period1}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="2" DataContext="{Binding Path=Tuesday.Period1}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="2" DataContext="{Binding Path=Wednesday.Period1}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="2" DataContext="{Binding Path=Thursday.Period1}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="2" DataContext="{Binding Path=Friday.Period1}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="2" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Period1}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="2" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Period1}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="2" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Period1}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="2" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Period1}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="2" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Period1}"/>
 
         <!--Period 2-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="3" DataContext="{Binding Path=Monday.Period2}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="3" DataContext="{Binding Path=Tuesday.Period2}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="3" DataContext="{Binding Path=Wednesday.Period2}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="3" DataContext="{Binding Path=Thursday.Period2}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="3" DataContext="{Binding Path=Friday.Period2}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="3" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Period2}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="3" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Period2}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="3" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Period2}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="3" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Period2}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="3" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Period2}"/>
 
         <!--Break-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Monday.Break}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Tuesday.Break}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Wednesday.Break}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Thursday.Break}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Friday.Break}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Break}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Break}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Break}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Break}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="4" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Break}"/>
 
         <!--Period 3-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="5" DataContext="{Binding Path=Monday.Period3}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="5" DataContext="{Binding Path=Tuesday.Period3}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="5" DataContext="{Binding Path=Wednesday.Period3}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="5" DataContext="{Binding Path=Thursday.Period3}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="5" DataContext="{Binding Path=Friday.Period3}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="5" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Period3}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="5" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Period3}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="5" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Period3}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="5" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Period3}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="5" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Period3}"/>
 
         <!--Lunch-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Monday.Lunch}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Tuesday.Lunch}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Wednesday.Lunch}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Thursday.Lunch}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Friday.Lunch}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Lunch}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Lunch}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Lunch}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Lunch}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="6" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Lunch}"/>
 
         <!--Period 4-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="7" DataContext="{Binding Path=Monday.Period4}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="7" DataContext="{Binding Path=Tuesday.Period4}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="7" DataContext="{Binding Path=Wednesday.Period4}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="7" DataContext="{Binding Path=Thursday.Period4}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="7" DataContext="{Binding Path=Friday.Period4}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="7" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Period4}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="7" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Period4}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="7" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Period4}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="7" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Period4}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="7" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Period4}"/>
 
         <!--Period 5-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="8" DataContext="{Binding Path=Monday.Period5}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="8" DataContext="{Binding Path=Tuesday.Period5}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="8" DataContext="{Binding Path=Wednesday.Period5}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="8" DataContext="{Binding Path=Thursday.Period5}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="8" DataContext="{Binding Path=Friday.Period5}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="8" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Period5}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="8" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Period5}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="8" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Period5}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="8" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Period5}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="8" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Period5}"/>
 
         <!--Twilight-->
-        <local:TimetablePeriodView Grid.Column="1" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Monday.Twilight}"/>
-        <local:TimetablePeriodView Grid.Column="2" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Tuesday.Twilight}"/>
-        <local:TimetablePeriodView Grid.Column="3" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Wednesday.Twilight}"/>
-        <local:TimetablePeriodView Grid.Column="4" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Thursday.Twilight}"/>
-        <local:TimetablePeriodView Grid.Column="5" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=Friday.Twilight}"/>
+        <local:TimetablePeriodView Grid.Column="1" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Monday.Twilight}"/>
+        <local:TimetablePeriodView Grid.Column="2" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Tuesday.Twilight}"/>
+        <local:TimetablePeriodView Grid.Column="3" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Wednesday.Twilight}"/>
+        <local:TimetablePeriodView Grid.Column="4" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Thursday.Twilight}"/>
+        <local:TimetablePeriodView Grid.Column="5" Grid.Row="9" Style="{StaticResource BreakBackground}" DataContext="{Binding Path=CurrentlyDisplayedTimetableWeek.Friday.Twilight}"/>
 
     </Grid>
 </UserControl>

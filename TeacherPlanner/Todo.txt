@@ -36,7 +36,7 @@ Fixes
 + Get Scrolling working
 + Remove Debug
 - Add prompt for timetable and weeks import on startup of year selection
-- Add Today button - set left day to today
++ Add Today button - set left day to today
 - Add Timetable Scrolling
 - Change where period counts are being calculated + add in total occurances
 - Timetable weeks import updating timetable

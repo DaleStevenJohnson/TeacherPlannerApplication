@@ -13,7 +13,9 @@
       d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:PlannerYearViewModel}}"
       d:DesignHeight="1080" d:DesignWidth="1920" 
       x:Name="plannerYearPage">
-
+	<UserControl.InputBindings>
+		<KeyBinding Key="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+	</UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

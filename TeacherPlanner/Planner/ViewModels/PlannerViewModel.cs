@@ -38,7 +38,6 @@ namespace TeacherPlanner.Planner.ViewModels
             // Command Assignment
             //TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
             //TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
-
             GoToTodayCommand = new SimpleCommand(_ => OnGoToToday());
             SaveCommand = new SimpleCommand(_ => OnSave());
         }
@@ -100,9 +99,9 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnGoToToday()
         {
-            CalendarManager.CurrentDateLeft = CalendarManager.Today;
+            CalendarManager.CurrentDateLeft = CalendarManager.GetAdvancedDate(CalendarManager.Today, 0);
             //if (CalendarManager.DatesAreNeighbours)
-            CalendarManager.CurrentDateRight = CalendarManager.Tomorrow;
+            CalendarManager.CurrentDateRight = CalendarManager.GetAdvancedDate(CalendarManager.CurrentDateLeft, 1);
             LoadNewDays();
         }
 
