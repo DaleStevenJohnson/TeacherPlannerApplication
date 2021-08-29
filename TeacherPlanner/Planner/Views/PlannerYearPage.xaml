@@ -12,16 +12,20 @@
       mc:Ignorable="d"
       d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:PlannerYearViewModel}}"
       d:DesignHeight="1080" d:DesignWidth="1920" 
-      x:Name="plannerYearPage">
+      x:Name="plannerYearPage"
+      MouseDown="PlannerYearWindow_MouseDown"
+      Focusable="True"
+             >
 	<UserControl.InputBindings>
 		<KeyBinding Key="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding Path=PlannerYearPage.LoseFocusCommand}"/>
 	</UserControl.InputBindings>
-    <Grid>
+    <Grid MouseDown="PlannerYearWindow_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
+        <DockPanel Grid.Row="0" MouseDown="PlannerYearWindow_MouseDown">
             <Menu>
                 <MenuItem Header="File">
                     <MenuItem Header="Log Out"/>
