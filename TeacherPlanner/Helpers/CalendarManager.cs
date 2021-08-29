@@ -18,7 +18,7 @@ namespace TeacherPlanner.Helpers
             CurrentDates = new DateTime[2];
             
             var startOfYearDate = GetStartOfYearDateLimit(CurrentAcademicYear);
-            StartOfYearDateLimit = new DateTime(2021, 9, 21);//startOfYearDate;
+            StartOfYearDateLimit = startOfYearDate;
             EndOfYearDateLimit = GetEndOfYearDateLimit(CurrentAcademicYear);
 
             // MUST be delcared After setting the StartOfYearDateLimit and EndOfYearDateLimit

@@ -13,5 +13,7 @@ namespace TeacherPlanner.Constants
         public const string FullMonthNumberFormat = "MM";
         public const string FullYearNumberFormat = "yyyy";
         public const string FullMonthNameAndFullYearNumberFormat = FullMonthNameFormat + " " + FullYearNumberFormat;
+        public const string EmptyDaySaveData = "\n``\n``\n``\n``\n``\n``\n``\n\n``\n``\n``\n``\n``\n``\n``\n\n``\n``\n``\n``\n``\n``\n``\n\n``\n``\n``\n``\n``\n``\n``\n\n``\n``\n``\n``\n``\n``\n``\n\n``\n``\n``\n``\n``\n``\n``\n \n \n \n \n \n ";
+       
     }
 }

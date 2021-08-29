@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
@@ -111,20 +112,8 @@ namespace TeacherPlanner.Planner.ViewModels
                         periodIndex++;
                     }
 
-                    var classCode = overwriteClassCode ? string.Empty : data[classCodeIndex];
+                    var classCode = data[classCodeIndex] == "" ? GetClassCodeFromTimetable(date, i + 1) : data[classCodeIndex];
 
-                    if (classCode == string.Empty)
-                    {
-                        var day = (int)date.DayOfWeek;
-                        var week = CalendarManager.GetWeek(date);
-                        if (week == 1 || week == 2)
-                        {
-                            var timetablePeriodModel = Timetable.GetPeriod(week, day, (i + 1).ToString());
-                            classCode = timetablePeriodModel.ClassCode;
-                        }
-                        else if (week == 3)
-                            classCode = "Holiday";
-                    }
                     // The below method call gets the day model to create a new period using the data supplied
                     newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, classCode, periodData);
 
@@ -153,19 +142,58 @@ namespace TeacherPlanner.Planner.ViewModels
             else
             {
                 newDayModel.LoadEmptyPeriods();
+                newDayModel = LoadTimetableIntoNewDay(newDayModel, date);
                 newDayModel.LoadEmptyIntoNewNoteSection();
             }
             return newDayModel;
         }
+
         internal void SaveDayToFile()
         {
             var filenameDate = DayModel.Date.ToString(Formats.FullDateFormat);
             var saveData = DayModel.PackageSaveData();
-            var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt", UserModel.Key);
+            if (TryParseSaveData(saveData))
+            {
+                var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt", UserModel.Key);
 
-            // Final save path looks like this, for user Bob on 15th January 1970: \Bob\1970\197001\19700115.txt
-            var path = FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key);
-            FileHandlingHelper.TryWriteDataToFile(path, filename, saveData, "o", true, UserModel.Key);
+                // Final save path looks like this, for user Bob on 15th January 1970: \Bob\1970\197001\19700115.txt
+                var path = FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key);
+
+                if (saveData != Formats.EmptyDaySaveData || File.Exists(Path.Combine(path, filename)))
+                {
+                    FileHandlingHelper.TryWriteDataToFile(path, filename, saveData, "o", true, UserModel.Key);
+                }
+            }
+        }
+
+        private bool TryParseSaveData(string saveData)
+        {
+            var periodsAreEmpty = RegexHelper.SearchForCount(RegexHelper.EmptyPeriodsSaveDataPattern, saveData, 42);
+            var notesAreEmpty = RegexHelper.SearchForCount(RegexHelper.EmptyNotesSaveDataPattern, saveData, 6);
+            return !(periodsAreEmpty && notesAreEmpty);
+        }
+
+        private DayModel LoadTimetableIntoNewDay(DayModel newDayModel, DateTime date)
+        {
+            for (var i = 0; i < newDayModel.Periods.Length; i++)
+            {
+                var periodModel = newDayModel.Periods[i];
+                periodModel.ClassCode = GetClassCodeFromTimetable(date, i + 1);
+            }
+            return newDayModel;
+        }
+        private string GetClassCodeFromTimetable(DateTime date, int period)
+        {
+            var day = (int)date.DayOfWeek;
+            var week = CalendarManager.GetWeek(date);
+            if (week == 1 || week == 2)
+            {
+                var timetablePeriodModel = Timetable.GetPeriod(week, day, period.ToString());
+                return timetablePeriodModel.ClassCode;
+            }
+            else if (week == 3)
+                return "Holiday";
+            return "";
         }
     }
 }
