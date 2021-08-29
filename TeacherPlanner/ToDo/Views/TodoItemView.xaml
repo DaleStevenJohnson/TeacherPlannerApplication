@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModel"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoItemViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="960">
     <Grid>
@@ -28,7 +30,7 @@
         </CheckBox>
         <TextBox
             Grid.Column="1"
-            Text="Todo Item"
+            Text="{Binding Content}"
             Margin="5"
             FontSize="25"
             VerticalContentAlignment="Center"
@@ -44,7 +46,8 @@
         <Button 
             Style="{DynamicResource ButtonOverride}"
             Grid.Column="3" Margin="40,10"
-            Background="{StaticResource Icon.DeleteBin.Normal}" BorderBrush="Transparent" BorderThickness="0" 
+            Content="X" FontFamily="{StaticResource TitleHandwritten}" FontSize="30"
+            Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"    
             >
             <!--<Image Source="/Assets/Icons/DeleteBinIcon.png"/>-->

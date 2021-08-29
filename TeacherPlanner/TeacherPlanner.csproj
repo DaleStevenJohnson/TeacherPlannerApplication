@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ToDo\Models\" />
     <Folder Include="UserData\DJohnson\2021\202108\" />
   </ItemGroup>
 

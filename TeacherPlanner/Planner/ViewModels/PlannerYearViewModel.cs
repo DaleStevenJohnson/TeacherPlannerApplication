@@ -25,7 +25,7 @@ namespace TeacherPlanner.Planner.ViewModels
             TimetableViewModel = new TimetableViewModel(UserModel);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager);
             TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
-            ToDoViewModel = new ToDoViewModel(UserModel);
+            ToDoViewModel = new TodoPageViewModel(UserModel);
             
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
@@ -35,7 +35,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public CalendarManager CalendarManager { get; private set; }
         public UserModel UserModel { get; }
         public PlannerViewModel PlannerViewModel { get; }
-        public ToDoViewModel ToDoViewModel { get; }
+        public TodoPageViewModel ToDoViewModel { get; }
         public TimetableViewModel TimetableViewModel 
         {
             get => _timetableViewModel;

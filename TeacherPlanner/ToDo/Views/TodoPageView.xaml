@@ -4,153 +4,52 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:model="clr-namespace:TeacherPlanner.ToDo.Models"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
-             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ToDoViewModel}}"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoPageViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
+    <UserControl.Resources>
+        <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
+            <Label Content="{Binding Header}"/>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="TodoListContentTemplate" DataType="{x:Type viewmodel:TodoListItemViewModel}">
+            <local:TodoListView/>
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <Grid>
-        <TabControl>
-
-            <TabItem Header="TodoList 1" Style="{DynamicResource TodoTabStyle}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="50*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="50*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="20*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="50*"/>
-                            
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="1" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.Add.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            />
-                        <Label Grid.Row="1" Grid.Column="2" Content="So Much To Do..." FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-
-                        <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-
-                        </ListBox>
-
-                    </Grid>
-                    <Grid Grid.Row="1" Grid.Column="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="20*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="20*"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="1" Grid.Column="2" Content="Getting it Done!" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="3" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.DeleteCross.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            />
-                        <local:TodoItemView Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Background="Green"/>
-                    </Grid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Todo List 2" Style="{DynamicResource TodoTabStyle}"></TabItem>
+        <TabControl ItemsSource="{Binding TodoLists}" 
+                    ItemTemplate="{StaticResource TodoListTemplate}" 
+                    ContentTemplate="{StaticResource TodoListContentTemplate}">
+               
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                    <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="10,2"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            
         </TabControl>
     </Grid>
 </UserControl>
