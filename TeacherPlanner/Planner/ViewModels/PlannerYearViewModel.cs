@@ -41,7 +41,7 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _timetableViewModel;
             set => RaiseAndSetIfChanged(ref _timetableViewModel, value);
         }
-        private void OnDefineTimetableWeeks()
+        public void OnDefineTimetableWeeks()
         {
             if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
                 PlannerViewModel.LoadNewDays();

@@ -99,7 +99,7 @@ namespace TeacherPlanner.Helpers
             var filepath = Path.Combine(FileHandlingHelper.LoggedInUserConfigPath, FilesAndDirectories.TimetableWeeksFileName);
             
             if (!File.Exists(filepath))
-                return 0;
+                return -1;
 
             var weekdata = FileHandlingHelper.ReadDataFromCSVFile(filepath);
             for (var i = 0; i < weekdata.Length; i++)

@@ -18,7 +18,6 @@
              >
 	<UserControl.InputBindings>
 		<KeyBinding Key="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
-        <KeyBinding Key="Esc" Command="{Binding Path=PlannerYearPage.LoseFocusCommand}"/>
 	</UserControl.InputBindings>
     <Grid MouseDown="PlannerYearWindow_MouseDown">
         <Grid.RowDefinitions>

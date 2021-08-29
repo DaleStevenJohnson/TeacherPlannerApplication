@@ -33,10 +33,14 @@ namespace TeacherPlanner.Timetable.ViewModels
             UserModel = userModel;
             SelectedWeek = 1;
 
+            TimetableWeeksAreDefined = CalendarManager.GetWeek(DateTime.Today) != -1;
+
             if (TryGetImportedTimetable())
                 UpdateCurrentlyDisplayedTimetableWeek();
 
         }
+        public bool TimetableIsImported { get; private set; }
+        public bool TimetableWeeksAreDefined { get; private set; }
         public int SelectedWeek 
         {
             get => _selectedWeek;
@@ -68,7 +72,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             UpdateCurrentlyDisplayedTimetableWeek();
         }
    
-        private void OnTimetableImportClick()
+        public void OnTimetableImportClick()
         {
             var importWindow = new ImportTimetableWindow();
             var importTimetableViewModel = new ImportTimetableWindowViewModel(UserModel, importWindow);
@@ -88,7 +92,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             return defineTimetableWeeksWindow.ShowDialog();
         }
 
-        private bool TryGetImportedTimetable()
+        public bool TryGetImportedTimetable()
         {
             var directory = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.TimetableDirectory, UserModel.Key));
             Directory.CreateDirectory(directory);
@@ -101,6 +105,7 @@ namespace TeacherPlanner.Timetable.ViewModels
                 {
                     var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filenames[i], true, UserModel.Key);
                     CurrentTimetable = new TimetableModel(timetableData);
+                    TimetableIsImported = true;
                     return true;
                 }
             }

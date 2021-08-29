@@ -39,9 +39,9 @@ Fixes
 + Add Today button - set left day to today
 + Add Timetable Scrolling
 + Change where period counts are being calculated + add in total occurances
-- Timetable weeks import updating timetable
-- Fix timetable import oddness - blank days if already saved
---- Maybe if day is completely blank then it is not saved by the app.
++ Timetable weeks import updating timetable
++ Fix timetable import oddness - blank days if already saved
++++ Maybe if day is completely blank then it is not saved by the app.
 + Add bookend end of academic year / start of academic year
 
 

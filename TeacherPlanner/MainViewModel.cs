@@ -46,7 +46,15 @@ namespace TeacherPlanner
             PlannerYearViewModel = new PlannerYearViewModel(UserModel, yearString);
             PlannerYearViewModel.SwitchViewEvent += (_, __) => SwitchView();
             SwitchView();
+
+            if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
+                PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
+            
+            if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
+                PlannerYearViewModel.OnDefineTimetableWeeks();
         }
+
+
         public void SwitchView()
         {
             //TODO update this if any other states are added

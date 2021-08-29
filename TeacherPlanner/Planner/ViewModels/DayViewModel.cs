@@ -184,6 +184,8 @@ namespace TeacherPlanner.Planner.ViewModels
         }
         private string GetClassCodeFromTimetable(DateTime date, int period)
         {
+            if (Timetable == null)
+                return string.Empty;
             var day = (int)date.DayOfWeek;
             var week = CalendarManager.GetWeek(date);
             if (week == 1 || week == 2)
@@ -193,7 +195,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             else if (week == 3)
                 return "Holiday";
-            return "";
+            return string.Empty;
         }
     }
 }
