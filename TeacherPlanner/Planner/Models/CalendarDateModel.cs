@@ -6,7 +6,7 @@ namespace TeacherPlanner.Planner.Models
 {
     public class CalendarDateModel
     {
-        public event EventHandler<string> CalendarDayClickedEvent;
+        //public event EventHandler<string> CalendarDayClickedEvent;
         public CalendarDateModel(string dayDate, int week)
         {
             DayDate = dayDate;

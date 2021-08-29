@@ -59,7 +59,10 @@ namespace TeacherPlanner.Helpers
                             }
                             catch (CryptographicException e)
                             {
-                                return string.Empty;
+                                if (e != null)
+                                    return string.Empty;
+                                else
+                                    return string.Empty;
                             }
                         }
                     }

@@ -122,36 +122,7 @@ namespace TeacherPlanner.Planner.ViewModels
             IsAtEndOfYear = LeftDay.CalendarModel.Date == CalendarManager.EndOfYearDateLimit;
         }
 
-        private void LoadNewDay(DateTime date, DayViewModel dayViewModel)
-        {
-            int index = IndexOfLoadedDay(date);
-            if (index != -1)
-                dayViewModel.DayModel = LoadedDayModels[index];
-            else
-            {
-                dayViewModel.DayModel = dayViewModel.LoadAndPopulateNewDay(date, OverwriteClassCode);
-                AddDayToLoadedDayModelList(dayViewModel.DayModel);
-            }
-        }
-        private bool TryRemoveLoadedDay(DateTime date)
-        {
-            for (int i = 0; i < LoadedDayModels.Length; i++)
-            {
-                if (LoadedDayModels[i] != null && LoadedDayModels[i].Date == date)
-                    LoadedDayModels[i] = null;
-                    return true;
-            }
-            return false;
-        }
-        private int IndexOfLoadedDay(DateTime date)
-        {
-            for (int i = 0; i < LoadedDayModels.Length; i++)
-            {
-                if (LoadedDayModels[i] != null && LoadedDayModels[i].Date == date)
-                    return i;
-            }
-            return -1;
-        }
+  
         private void AddDayToLoadedDayModelList(DayModel day)
         {
             LoadedDayModels[_loadedDayModelsIndex] = day;
