@@ -89,7 +89,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             else
             {
-                var finalYear = Path.GetDirectoryName(currentYears[currentYears.Length - 1]);
+                var finalYear = Path.GetFileName(currentYears[currentYears.Length - 1]);
                 var yearToAdd = FindNextYear(finalYear);//Int32.Parse(finalYear.Substring(0, 4)) + 1;
                 newYear = new YearSelectModel(yearToAdd.ToString());
                 yearSelectModels.Add(newYear);
