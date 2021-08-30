@@ -23,12 +23,12 @@ namespace TeacherPlanner.ToDo.ViewModels
             TodoLists = new List<TodoListViewModel>();
 
             AddTodoListCommand = new SimpleCommand(_ => OnAddTodoList());
-            RemoveTodoListCommand = new SimpleCommand(todoListModel => OnRemoveTodoList((TodoListModel)todoListModel));
+            RemoveTodoListCommand = new SimpleCommand(todoListModel => OnRemoveTodoList((TodoListViewModel)todoListModel));
 
 
             for (int i = 0; i < 3; i++)
             {
-                TodoLists.Add(new TodoListViewModel(i.ToString()));
+                TodoLists.Add(new TodoListViewModel(new TodoListModel(i.ToString())));
             }
         }
 
@@ -42,12 +42,12 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         private void OnAddTodoList()
         {
-            TodoListModels.Add(new TodoListModel(""));
+            TodoLists.Add(new TodoListViewModel(new TodoListModel("")));
              
         }
-        private void OnRemoveTodoList(TodoListModel todoListModel)
+        private void OnRemoveTodoList(TodoListViewModel todoListModel)
         {
-            TodoListModels.Remove(todoListModel);
+            TodoLists.Remove(todoListModel);
         }
 
     }

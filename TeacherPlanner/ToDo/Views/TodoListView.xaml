@@ -7,7 +7,7 @@
              xmlns:model="clr-namespace:TeacherPlanner.ToDo.Models"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoListViewModel}}"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ToDoListViewModel}}"
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         
@@ -18,7 +18,7 @@
         <DataTemplate x:Key="TodoSubItemTemplate" DataType="{x:Type viewmodel:TodoSubItemViewModel}">
             <local:TodoSubItemView/>
         </DataTemplate>
-        
+
         <DataTemplate x:Key="TodoItemContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
             <StackPanel Orientation="Vertical">
                 <local:TodoItemView/>
@@ -29,7 +29,7 @@
             </StackPanel>
         </DataTemplate>
 
-        
+
     </UserControl.Resources>
             <Grid>
                 <Grid.ColumnDefinitions>

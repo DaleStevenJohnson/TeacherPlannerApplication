@@ -10,10 +10,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
+        <!--This Controls the name of the list-->
         <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
             <Label Content="{Binding Header}"/>
         </DataTemplate>
         
+        <!--This tells the list tab what it should have inside it-->
         <DataTemplate x:Key="TodoListContentTemplate" DataType="{x:Type viewmodel:TodoListItemViewModel}">
             <local:TodoListView/>
         </DataTemplate>
