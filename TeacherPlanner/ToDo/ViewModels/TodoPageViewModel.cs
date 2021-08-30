@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using TeacherPlanner.ToDo.Views;
+using System.Windows;
 
 namespace TeacherPlanner.ToDo.ViewModels
 {
@@ -68,6 +69,17 @@ namespace TeacherPlanner.ToDo.ViewModels
         }
         private void OnRemoveTodoList(TodoListViewModel todoListModel)
         {
+            if (todoListModel.TodoItems.Any())
+            {
+                var result = MessageBox.Show(
+                    "This List still has active tasks - are you sure you want to delete?",
+                    "Confirm Delete List",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
             todoListModel.RemoveSelfEvent -= (_, __) => OnRemoveTodoList(__);
             TodoLists.Remove(todoListModel);
         }

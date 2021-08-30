@@ -75,14 +75,14 @@
 
 
                 <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" 
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                            Padding="0"
-                            Margin="0"
-                            BorderBrush="Transparent"
-                            BorderThickness="0"
-                            ItemsSource="{Binding TodoItems}" 
-                            ItemTemplate="{StaticResource TodoItemContentTemplate}"
-                            >
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                        Padding="0"
+                        Margin="0"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        ItemsSource="{Binding TodoItems}" 
+                        ItemTemplate="{StaticResource TodoItemContentTemplate}"
+                        >
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Focusable" Value="False"/>

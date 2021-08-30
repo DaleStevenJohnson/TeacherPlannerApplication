@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.ToDo.Models;
@@ -41,7 +43,6 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         public void AddTodoItem(TodoItemModel item = null)
         {
-
             var newItem = item == null ? new TodoItemViewModel() : new TodoItemViewModel(item);
             newItem.RemoveSelfEvent += (_, todoItem) => RemoveTodoItem(todoItem);
             TodoItems.Add(newItem);
@@ -49,6 +50,18 @@ namespace TeacherPlanner.ToDo.ViewModels
         
         public void RemoveTodoItem(TodoItemViewModel item)
         {
+            if (item.SubItems.Any())
+            {
+                var result = MessageBox.Show(
+                    "This todo task has sub-tasks - are you sure you want to delete?",
+                    "Confirm Delete Task",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+
             item.RemoveSelfEvent -= (_, todoItem) => RemoveTodoItem(todoItem);
             TodoItems.Remove(item);
         }
