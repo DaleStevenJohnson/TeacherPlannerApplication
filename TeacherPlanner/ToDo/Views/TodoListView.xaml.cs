@@ -22,5 +22,27 @@ namespace TeacherPlanner.ToDo.Views
         {
             InitializeComponent();
         }
+        private void Add_Button_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Button button = sender as Button;
+            button.Foreground = Brushes.LightGreen;
+        }
+
+        private void Add_Button_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Button button = sender as Button;
+            button.Foreground = Brushes.Green;
+        }
+
+        private void Delete_Button_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Button button = sender as Button;
+            button.Foreground = Brushes.Pink;
+        }
+        private void Delete_Button_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Button button = sender as Button;
+            button.Foreground = Brushes.Red;
+        }
     }
 }

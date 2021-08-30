@@ -11,19 +11,23 @@
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         
-        <DataTemplate x:Key="TodoItemTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
-            <local:TodoListView/>
-        </DataTemplate>
+       
         
         <DataTemplate x:Key="TodoSubItemTemplate" DataType="{x:Type viewmodel:TodoSubItemViewModel}">
-            <local:TodoSubItemView/>
+            <local:TodoSubItemView Width="810"/>
         </DataTemplate>
 
         <DataTemplate x:Key="TodoItemContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
-            <StackPanel Orientation="Vertical">
-                <local:TodoItemView/>
+            <StackPanel Orientation="Vertical" Margin="0">
+                <local:TodoItemView Padding="0" Width="830"/>
                 <ListBox ItemsSource="{Binding SubItems}"
-                         ItemTemplate="{StaticResource TodoSubItemTemplate}"/>
+                         ItemTemplate="{StaticResource TodoSubItemTemplate}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
 
 
             </StackPanel>
@@ -31,82 +35,110 @@
 
 
     </UserControl.Resources>
-            <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="50*"/>
 
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="1" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="20*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="50*"/>
-
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="1" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.Add.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            />
-                    <Label Grid.Row="1" Grid.Column="2" Content="So Much To Do..." FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button 
+                        Style="{DynamicResource ButtonOverride}"
+                        Grid.Column="1" Grid.Row="1" Margin="0,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent" BorderThickness="0" 
+                        Content="+ Add Todo" Foreground="Green" FontSize="20"
+                        MouseEnter="Add_Button_MouseEnter" MouseLeave="Add_Button_MouseLeave"
+                        Command="{Binding AddTodoItemCommand}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        />
+                <Label Grid.Row="1" Grid.Column="2" Content="So Much To Do..." FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 
-                    <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" 
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                             ItemsSource="{Binding TodoItems}" 
-                             ItemTemplate="{StaticResource TodoItemTemplate}" >
+                <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                            Padding="0"
+                            Margin="0"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            ItemsSource="{Binding TodoItems}" 
+                            ItemTemplate="{StaticResource TodoItemContentTemplate}"
+                            >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
 
-                    </ListBox>
+        </ListBox>
 
-                </Grid>
-                <Grid Grid.Row="1" Grid.Column="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="20*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="20*"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="1" Grid.Column="2" Content="Getting it Done!" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="3" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.DeleteCross.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            />
-                    
-                </Grid>
             </Grid>
+            <Grid Grid.Row="1" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="1" Grid.Column="2" Content="Getting it Done!" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button 
+                            
+            Grid.Column="3" Grid.Row="1" Margin="0,0"
+            Background="Transparent" Foreground="Red"
+            Content="X Delete List" FontFamily="{StaticResource TitleHandwritten}" FontSize="20"
+            BorderBrush="Transparent" BorderThickness="0" 
+            MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
+            HorizontalAlignment="Center" VerticalAlignment="Top"
+            Command="{Binding RemoveSelfCommand}">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={
+                                                    RelativeSource FindAncestor, 
+                                                    AncestorType={x:Type local:TodoPageView}},
+                                                    Path=DataContext.CanDeleteAnything}" Value="False">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+
+        </Button>
+
+        </Grid>
+    </Grid>
        
 </UserControl>

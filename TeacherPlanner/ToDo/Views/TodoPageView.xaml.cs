@@ -14,18 +14,6 @@ namespace TeacherPlanner.ToDo.Views
         {
             InitializeComponent();
         }
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Button button = sender as Button;
-            button.BorderBrush = new SolidColorBrush(Colors.Black) { Opacity = 0.2 };
-            button.BorderThickness = new Thickness(0.5);
-        }
-
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Button button = sender as Button;
-            button.BorderBrush = Brushes.Transparent;
-            button.BorderThickness = new Thickness(0);
-        }
+       
     }
 }

@@ -15,7 +15,9 @@ namespace TeacherPlanner.ToDo.Models
                 new TodoSubItemModel() { Content = "Steve"},
                 new TodoSubItemModel() { Content = "Eric"}
             };
+            IsChecked = false;
         }
+        public bool IsChecked { get; }
         public string Content { get; set; }
         public List<TodoSubItemModel> SubItems { get; set; }
     }

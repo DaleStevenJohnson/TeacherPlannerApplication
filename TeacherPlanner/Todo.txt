@@ -48,3 +48,9 @@ Fixes
 - Add Calendar Viewmodel
 - Investigate how to handle subscribe and unsubscribing to events
 - Add faint end of last month dates to calendar
+
+- Add Settings Config file & track user settings through storing on the usermodel
+
+TODO List APP
+ - Auto select new list tab
+ - Get rid of hover-over on listbox

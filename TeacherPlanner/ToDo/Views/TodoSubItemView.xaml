@@ -21,6 +21,7 @@
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
+            IsChecked="{Binding IsChecked}"
         >
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2" />
@@ -33,14 +34,27 @@
             FontSize="15"
             VerticalContentAlignment="Center"
         />
-        <Button Style="{DynamicResource ButtonOverride}" 
+        <Button  
             Grid.Column="2"
-            Margin="45,10"
-            Background="{StaticResource Icon.DeleteBin.Normal}" BorderBrush="Transparent" BorderThickness="0" 
+            Margin="20,0,20,0"
+            Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
+            Foreground="Red" Content="X"
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
-            
+            Command="{Binding RemoveSelfCommand}"
             >
-            <!--<Image Source="/Assets/Icons/DeleteBinIcon.png"/>-->
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={
+                                                       RelativeSource FindAncestor, 
+                                                       AncestorType={x:Type local:TodoPageView}},
+                                                       Path=DataContext.CanDeleteAnything}" Value="False">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
         </Button>
     </Grid>
 </UserControl>

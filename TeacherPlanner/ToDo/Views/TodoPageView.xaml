@@ -12,17 +12,44 @@
     <UserControl.Resources>
         <!--This Controls the name of the list-->
         <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
-            <Label Content="{Binding Header}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding Header}" 
+                     FontFamily="{StaticResource BodyText}" FontSize="20"
+                     Background="Transparent">
+                    
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderBrush" Value="LightGray" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="IsReadOnly" Value="False" />
+                            <Setter Property="IsHitTestVisible" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={
+                                                       RelativeSource FindAncestor, 
+                                                       AncestorType={x:Type UserControl}},
+                                                       Path=DataContext.CanEditListNames}" Value="False">
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="IsReadOnly" Value="True" />
+                                    <Setter Property="IsHitTestVisible" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                    
+                </TextBox>
+            </StackPanel>
         </DataTemplate>
         
         <!--This tells the list tab what it should have inside it-->
-        <DataTemplate x:Key="TodoListContentTemplate" DataType="{x:Type viewmodel:TodoListItemViewModel}">
+        <DataTemplate x:Key="TodoListContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
             <local:TodoListView/>
         </DataTemplate>
     </UserControl.Resources>
     
     <Grid>
-        <TabControl ItemsSource="{Binding TodoLists}" 
+        
+        <TabControl Background="Transparent"  ItemsSource="{Binding TodoLists}" 
                     ItemTemplate="{StaticResource TodoListTemplate}" 
                     ContentTemplate="{StaticResource TodoListContentTemplate}">
                
@@ -53,5 +80,13 @@
             </TabControl.ItemContainerStyle>
             
         </TabControl>
+
+        <Button Margin="12,0" Width="100" Height="40" 
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Style="{StaticResource ButtonOverride}"
+                Background="Transparent" Foreground="DarkGreen"
+                Content="+ Add List" FontFamily="{StaticResource BodyText}"
+                Command="{Binding AddTodoListCommand}"
+                FontSize="20"/>
     </Grid>
 </UserControl>

@@ -10,8 +10,8 @@
              d:DesignHeight="50" d:DesignWidth="960">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="20*"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
@@ -23,6 +23,7 @@
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
+            IsChecked="{Binding IsChecked}"
         >
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2.5" ScaleY="2.5" />
@@ -37,20 +38,37 @@
         />
         <Button 
             Style="{DynamicResource ButtonOverride}"
-            Grid.Column="2" Margin="40,10"
-            Background="{StaticResource Icon.Add.Normal}"
+            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+            Grid.Column="2" Margin="0" Padding="0"
+            Background="Transparent"
+            Content="+" FontFamily="{StaticResource BodyText}" FontSize="40"
+            Foreground="Green"
             BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Add_Button_MouseEnter" MouseLeave="Add_Button_MouseLeave"
-            
+            Command="{Binding AddSubItemCommand}"
             />
         <Button 
-            Style="{DynamicResource ButtonOverride}"
-            Grid.Column="3" Margin="40,10"
+            
+            Grid.Column="3" Margin="0" Padding="0"
             Content="X" FontFamily="{StaticResource TitleHandwritten}" FontSize="30"
+            Foreground="Red"
             Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
-            MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"    
+            MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
+            Command="{Binding RemoveSelfCommand}"
             >
-            <!--<Image Source="/Assets/Icons/DeleteBinIcon.png"/>-->
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={
+                                                       RelativeSource FindAncestor, 
+                                                       AncestorType={x:Type local:TodoPageView}},
+                                                       Path=DataContext.CanDeleteAnything}" Value="False">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
         </Button>
     </Grid>
 </UserControl>

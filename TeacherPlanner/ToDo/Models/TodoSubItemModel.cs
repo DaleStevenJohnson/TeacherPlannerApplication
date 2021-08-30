@@ -9,7 +9,9 @@ namespace TeacherPlanner.ToDo.Models
         public TodoSubItemModel()
         {
             Content = string.Empty;
+            IsChecked = true;
         }
+        public bool IsChecked { get; }
         public string Content { get; set; }
     }
 }
