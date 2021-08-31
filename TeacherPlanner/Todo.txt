@@ -52,7 +52,6 @@ Fixes
 - Add Settings Config file & track user settings through storing on the usermodel
 
 TODO List APP
-- Add popup to stop deleting 
 - Add Saving
 - Add Loading
 - Add moving of completed tasks to the done list
