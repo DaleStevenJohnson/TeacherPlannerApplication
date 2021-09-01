@@ -18,6 +18,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         public ICommand AddSubItemCommand { get; }
         public ICommand RemoveSelfCommand { get; set; }
         public event EventHandler<TodoItemViewModel> RemoveSelfEvent;
+        public event EventHandler<TodoItemViewModel> CompletedStatusChangedEvent;
 
         public TodoItemViewModel(TodoItemModel todoItemModel = null)
         {
@@ -47,16 +48,20 @@ namespace TeacherPlanner.ToDo.ViewModels
         }
 
         public string Content { get; set; }
-        public bool HasNoActiveSubItems 
+        public bool HasActiveSubItems 
         {
             get => _hasActiveSubItems;
             set => RaiseAndSetIfChanged(ref _hasActiveSubItems, value);
-        }
+        }   
 
         public bool IsChecked
         {
             get => _isChecked;
-            set => RaiseAndSetIfChanged(ref _isChecked, value);
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _isChecked, value))
+                    CompletedStatusChangedEvent.Invoke(null, this);
+            }
         }
 
 
@@ -78,7 +83,7 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         private void SetHasNoActiveSubItems()
         {
-            HasNoActiveSubItems = !SubItems.Any(i => i.IsChecked == false);
+            HasActiveSubItems = SubItems.Any(i => i.IsChecked == false);
         }
 
         private void RemoveSubItem(TodoSubItemViewModel item)

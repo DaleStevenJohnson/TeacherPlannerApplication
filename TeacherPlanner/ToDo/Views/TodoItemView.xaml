@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:converters="clr-namespace:TeacherPlanner.Converters"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoItemViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="960">
+    <UserControl.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -24,7 +28,7 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="{Binding IsChecked}"
-            IsEnabled="{Binding HasNoActiveSubItems}"
+            IsEnabled="{Binding HasActiveSubItems, Converter={StaticResource InverseBooleanConverter}}"
         >
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2.5" ScaleY="2.5" />
@@ -37,6 +41,7 @@
             Margin="5"
             FontSize="25"
             VerticalContentAlignment="Center"
+            IsReadOnly="{Binding IsChecked}"
         />
         <Button 
             Style="{DynamicResource ButtonOverride}"
@@ -48,6 +53,7 @@
             BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Add_Button_MouseEnter" MouseLeave="Add_Button_MouseLeave"
             Command="{Binding AddSubItemCommand}"
+            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             />
         <Button 
             
@@ -57,6 +63,7 @@
             Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             Command="{Binding RemoveSelfCommand}"
+            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             >
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">

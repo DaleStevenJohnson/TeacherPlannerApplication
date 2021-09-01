@@ -149,7 +149,7 @@
                             </MultiTrigger>
                             <Trigger Property="UIElement.IsMouseOver" Value="True">
                                 <Setter Property="Panel.Background" TargetName="Bd" 
-                       Value="LightSteelBlue"/>
+                       Value="Transparent"/>
                                 <Setter Property="Border.BorderBrush" TargetName="Bd">
                                     <Setter.Value>
                                         <SolidColorBrush>Transparent</SolidColorBrush>
@@ -162,6 +162,9 @@
                                         <DynamicResource ResourceKey="{x:Static SystemColors.GrayTextBrushKey}" />
                                     </Setter.Value>
                                 </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

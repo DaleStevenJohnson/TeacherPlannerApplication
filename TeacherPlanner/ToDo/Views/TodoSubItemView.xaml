@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:converters="clr-namespace:TeacherPlanner.Converters"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoSubItemViewModel}}"
              d:DesignHeight="40" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
     <Grid Margin="70,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -17,12 +21,23 @@
         <Grid.Background>
             <SolidColorBrush Color="Cyan"/>
         </Grid.Background>
+        <!--We think Ancestor Level is set to 2 because the ItemsControl parent is implementing a stackpanel-->
         <CheckBox 
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="{Binding IsChecked}"
-        >
+            
+            IsEnabled="{Binding RelativeSource=
+                {
+                    RelativeSource FindAncestor, 
+                    AncestorType={x:Type StackPanel},
+                    AncestorLevel=2
+                },
+                Converter={StaticResource InverseBooleanConverter},
+                Path=Children[0].DataContext.IsChecked
+            }">
+            
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2" />
             </CheckBox.LayoutTransform>
@@ -33,6 +48,7 @@
             Text="{Binding Content}"
             FontSize="15"
             VerticalContentAlignment="Center"
+            IsReadOnly="{Binding IsChecked}"
         />
         <Button  
             Grid.Column="2"
@@ -41,6 +57,7 @@
             Foreground="Red" Content="X"
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             Command="{Binding RemoveSelfCommand}"
+            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             >
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
