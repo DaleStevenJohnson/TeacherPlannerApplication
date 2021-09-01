@@ -5,11 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
              xmlns:model="clr-namespace:TeacherPlanner.ToDo.Models"
+             xmlns:converter="clr-namespace:TeacherPlanner.Converters"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoPageViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <!--This Controls the name of the list-->
         <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
             <StackPanel Orientation="Horizontal">
@@ -48,10 +51,19 @@
     </UserControl.Resources>
     
     <Grid>
-        
+        <Label Content="You have no Active Todo Lists! Add one here -->" 
+               FontFamily="{StaticResource TitleHandwritten}"
+               FontSize="50"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Visibility="{Binding HasTodoLists, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+
+
         <TabControl ItemsSource="{Binding TodoLists}" 
                     ItemTemplate="{StaticResource TodoListTemplate}" 
-                    ContentTemplate="{StaticResource TodoListContentTemplate}">
+                    ContentTemplate="{StaticResource TodoListContentTemplate}"
+                    Visibility="{Binding HasTodoLists, Converter={StaticResource BooleanToVisibilityConverter}}">
                
             <TabControl.ItemContainerStyle>
                 <Style TargetType="{x:Type TabItem}">

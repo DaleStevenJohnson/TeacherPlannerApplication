@@ -20,6 +20,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         private bool _canDeleteAnything;
         private string _newListName;
         private bool _isAddingNewList;
+        private bool _hasTodoLists;
 
         public ICommand AddTodoListCommand { get; }
         public ICommand ConfirmNewTodoListCommand { get; }
@@ -38,6 +39,14 @@ namespace TeacherPlanner.ToDo.ViewModels
             RemoveTodoListCommand = new SimpleCommand(todoListModel => OnRemoveTodoList((TodoListViewModel)todoListModel));
             ConfirmNewTodoListCommand = new SimpleCommand(_ => OnConfirmNewList());
             CancelNewTodoListCommand = new SimpleCommand(_ => ResetAddNewListBox());
+
+            SetHasTodoLists();
+        }
+
+        public bool HasTodoLists 
+        {
+            get => _hasTodoLists;
+            set => RaiseAndSetIfChanged(ref _hasTodoLists, value);
         }
 
         public string NewListName
@@ -51,7 +60,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             get => _isAddingNewList; 
             set => RaiseAndSetIfChanged(ref _isAddingNewList, value);
         }   
-    public UserModel UserModel { get; }
+        public UserModel UserModel { get; }
         public bool CanEditListNames 
         { 
             get => _canEditListNames; 
@@ -70,6 +79,10 @@ namespace TeacherPlanner.ToDo.ViewModels
             set => RaiseAndSetIfChanged(ref _todoLists, value);
         }
 
+        private void SetHasTodoLists()
+        {
+            HasTodoLists = TodoLists.Any();
+        }
         
         private void OnRemoveTodoList(TodoListViewModel todoListModel)
         {
@@ -86,6 +99,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             }
             todoListModel.RemoveSelfEvent -= (_, __) => OnRemoveTodoList(__);
             TodoLists.Remove(todoListModel);
+            SetHasTodoLists();
         }
         public void OnConfirmNewList()
         {
@@ -94,6 +108,7 @@ namespace TeacherPlanner.ToDo.ViewModels
                 var list = new TodoListViewModel(new TodoListModel(NewListName));
                 list.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
                 TodoLists.Add(list);
+                SetHasTodoLists();
                 ResetAddNewListBox();
             }
         }
