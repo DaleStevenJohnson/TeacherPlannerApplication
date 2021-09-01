@@ -24,10 +24,12 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             IsChecked="{Binding IsChecked}"
+            IsEnabled="{Binding HasNoActiveSubItems}"
         >
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2.5" ScaleY="2.5" />
             </CheckBox.LayoutTransform>
+            
         </CheckBox>
         <TextBox
             Grid.Column="1"

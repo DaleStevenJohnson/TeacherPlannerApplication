@@ -80,7 +80,7 @@
                         Margin="0"
                         BorderBrush="Transparent"
                         BorderThickness="0"
-                        ItemsSource="{Binding TodoItems}" 
+                        ItemsSource="{Binding ActiveTodoItems}" 
                         ItemTemplate="{StaticResource TodoItemContentTemplate}"
                         >
             <ListBox.ItemContainerStyle>

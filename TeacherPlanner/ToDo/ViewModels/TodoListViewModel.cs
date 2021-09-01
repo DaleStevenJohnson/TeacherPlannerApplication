@@ -21,7 +21,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         {
             Header = todoListModel.Header;
 
-            TodoItems = new ObservableCollection<TodoItemViewModel>();
+            ActiveTodoItems = new ObservableCollection<TodoItemViewModel>();
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
 
             foreach (var item in todoListModel.TodoItems)
@@ -34,7 +34,8 @@ namespace TeacherPlanner.ToDo.ViewModels
         }
         public string Header { get; set; }
         public TodoListModel TodoListModel { get; }
-        public ObservableCollection<TodoItemViewModel> TodoItems { get; set; }
+        public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
+        public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
 
         public void OnRemoveSelf()
         {
@@ -45,7 +46,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         {
             var newItem = item == null ? new TodoItemViewModel() : new TodoItemViewModel(item);
             newItem.RemoveSelfEvent += (_, todoItem) => RemoveTodoItem(todoItem);
-            TodoItems.Add(newItem);
+            ActiveTodoItems.Add(newItem);
         }
         
         public void RemoveTodoItem(TodoItemViewModel item)
@@ -63,7 +64,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             }
 
             item.RemoveSelfEvent -= (_, todoItem) => RemoveTodoItem(todoItem);
-            TodoItems.Remove(item);
+            ActiveTodoItems.Remove(item);
         }
     }
 }

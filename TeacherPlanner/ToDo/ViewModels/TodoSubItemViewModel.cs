@@ -11,6 +11,8 @@ namespace TeacherPlanner.ToDo.ViewModels
     { 
         private bool _isChecked;
         public event EventHandler<TodoSubItemViewModel> RemoveSelfEvent;
+        public event EventHandler CheckedEvent;
+        public ICommand OnCheckedCommand { get; set; }
         public ICommand RemoveSelfCommand { get; set; }
         public TodoSubItemViewModel(TodoSubItemModel subItemModel = null)
         {
@@ -31,7 +33,11 @@ namespace TeacherPlanner.ToDo.ViewModels
         public bool IsChecked
         {
             get => _isChecked;
-            set => RaiseAndSetIfChanged(ref _isChecked, value);
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _isChecked, value))
+                    CheckedEvent.Invoke(null, null);
+            }
         }
 
         public void OnRemoveSelf()

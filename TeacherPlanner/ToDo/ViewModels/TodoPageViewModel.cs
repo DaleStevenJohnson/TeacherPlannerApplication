@@ -73,7 +73,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         
         private void OnRemoveTodoList(TodoListViewModel todoListModel)
         {
-            if (todoListModel.TodoItems.Any())
+            if (todoListModel.ActiveTodoItems.Any())
             {
                 var result = MessageBox.Show(
                     "This List still has active tasks - are you sure you want to delete?",

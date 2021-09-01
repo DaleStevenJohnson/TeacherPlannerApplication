@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
@@ -12,6 +13,7 @@ namespace TeacherPlanner.ToDo.ViewModels
     public class TodoItemViewModel : ObservableObject
     {
         private bool _isChecked;
+        private bool _hasActiveSubItems;
 
         public ICommand AddSubItemCommand { get; }
         public ICommand RemoveSelfCommand { get; set; }
@@ -20,10 +22,11 @@ namespace TeacherPlanner.ToDo.ViewModels
         public TodoItemViewModel(TodoItemModel todoItemModel = null)
         {
             SubItems = new ObservableCollection<TodoSubItemViewModel>();
-            
+
             // Set properties to default
             Content = "";
             IsChecked = false;
+            
 
             AddSubItemCommand = new SimpleCommand(_ => OnAddSubItem());
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
@@ -38,9 +41,17 @@ namespace TeacherPlanner.ToDo.ViewModels
                     OnAddSubItem();
                 }
             }
+
+
+            SetHasNoActiveSubItems();
         }
-        
+
         public string Content { get; set; }
+        public bool HasNoActiveSubItems 
+        {
+            get => _hasActiveSubItems;
+            set => RaiseAndSetIfChanged(ref _hasActiveSubItems, value);
+        }
 
         public bool IsChecked
         {
@@ -60,13 +71,22 @@ namespace TeacherPlanner.ToDo.ViewModels
         {
             var item = new TodoSubItemViewModel();
             item.RemoveSelfEvent += (_, todoItem) => RemoveSubItem(todoItem);
+            item.CheckedEvent += (_, __) => SetHasNoActiveSubItems();
             SubItems.Add(item);
+            SetHasNoActiveSubItems();
+        }
+
+        private void SetHasNoActiveSubItems()
+        {
+            HasNoActiveSubItems = !SubItems.Any(i => i.IsChecked == false);
         }
 
         private void RemoveSubItem(TodoSubItemViewModel item)
         {
             item.RemoveSelfEvent -= (_, todoItem) => RemoveSubItem(todoItem);
+            item.CheckedEvent -= (_, __) => SetHasNoActiveSubItems();
             SubItems.Remove(item);
+            SetHasNoActiveSubItems();
         }
     }
 

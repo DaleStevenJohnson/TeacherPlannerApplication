@@ -57,3 +57,6 @@ TODO List APP
 - Add moving of completed tasks to the done list
 - Auto select new list tab
 - Get rid of hover-over on listbox
+
+BUGS
+- Notes section not saving when rest of page is blank
