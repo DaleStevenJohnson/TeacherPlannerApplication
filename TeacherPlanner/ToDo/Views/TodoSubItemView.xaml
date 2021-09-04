@@ -4,22 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:converters="clr-namespace:TeacherPlanner.Converters"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
              mc:Ignorable="d" 
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoSubItemViewModel}}"
              d:DesignHeight="40" d:DesignWidth="800">
-    <Grid Margin="70,0,0,0">
+
+    <Border BorderThickness="2,0,5,2" BorderBrush="LightSlateGray">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Grid.Background>
-            <SolidColorBrush Color="Cyan"/>
-        </Grid.Background>
+
+            <Grid.Style>
+                <Style>
+                    <Setter Property="Grid.Background" Value="LightBlue" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                            <Setter Property="Grid.Background" Value="#F0F0F0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <!--We think Ancestor Level is set to 2 because the ItemsControl parent is implementing a stackpanel-->
         <CheckBox 
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-        >
+            IsChecked="{Binding IsChecked}"
+            
+            IsEnabled="{Binding RelativeSource=
+                {
+                    RelativeSource FindAncestor, 
+                    AncestorType={x:Type StackPanel},
+                    AncestorLevel=2
+                },
+                Converter={StaticResource InverseBooleanConverter},
+                Path=Children[0].DataContext.IsChecked
+            }">
+            
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2" />
             </CheckBox.LayoutTransform>
@@ -27,18 +53,29 @@
         <TextBox
             Grid.Column="1"
             Margin="5"
-            Text="Todo Sub Item"
+            Text="{Binding Content}"
             FontSize="15"
             VerticalContentAlignment="Center"
+            IsReadOnly="{Binding IsChecked}"
         />
-        <Button Style="{DynamicResource ButtonOverride}" 
+        <Button  
             Grid.Column="2"
-            Margin="45,10"
-            Background="{StaticResource Icon.DeleteBin.Normal}" BorderBrush="Transparent" BorderThickness="0" 
+            Margin="20,0,20,0"
+            Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
+            Foreground="Red" Content="X"
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
-            
-            >
-            <!--<Image Source="/Assets/Icons/DeleteBinIcon.png"/>-->
+            Command="{Binding RemoveSelfCommand}"
+            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
+            Visibility="{Binding 
+                RelativeSource=
+                    {
+                        RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:TodoPageView}
+                    },
+                Path=DataContext.CanDeleteAnything, 
+                Converter={StaticResource BooleanToVisibilityConverter}
+            }">
         </Button>
     </Grid>
+    </Border>
 </UserControl>

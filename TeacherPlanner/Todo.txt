@@ -48,3 +48,20 @@ Fixes
 - Add Calendar Viewmodel
 - Investigate how to handle subscribe and unsubscribing to events
 - Add faint end of last month dates to calendar
+
+- Add reg period
+- Add day timings
+
+- Add Settings Config file & track user settings through storing on the usermodel
+
+TODO List APP
+- Add Saving
+- Add Loading
++ Add moving of completed tasks to the done list
++ Auto select new list tab
++ Get rid of hover-over on listbox
++ Replace data triggers with converter
+- Tidy up placeholder for no list
+
+BUGS
+- Notes section not saving when rest of page is blank

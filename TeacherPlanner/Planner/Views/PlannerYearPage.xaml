@@ -30,6 +30,13 @@
                     <MenuItem Header="Log Out"/>
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
+                
+
+                <MenuItem Header="Planner">
+                    <MenuItem Header="Locked Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
+                    <MenuItem Header="Go to Today" InputGestureText="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+                </MenuItem>
+
                 <MenuItem Header="Timetable">
                     <MenuItem Header="Import..." Command="{Binding TimetableViewModel.ImportTimetableCommand}"/>
                     <MenuItem Header="Define Weeks" Command="{Binding DefineTimetableWeeksCommand}"/>
@@ -46,9 +53,9 @@
                     </MenuItem>-->
                 </MenuItem>
 
-                <MenuItem Header="Planner">
-                    <MenuItem Header="Locked Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
-                    <MenuItem Header="Go to Today" InputGestureText="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+                <MenuItem Header="Todo List">
+                    <MenuItem Header="Edit List Names" IsCheckable="True" IsChecked="{Binding ToDoViewModel.CanEditListNames}"/>
+                    <MenuItem Header="Allow Deletion" IsCheckable="True" IsChecked="{Binding ToDoViewModel.CanDeleteAnything}"/>
                 </MenuItem>
 
             </Menu>

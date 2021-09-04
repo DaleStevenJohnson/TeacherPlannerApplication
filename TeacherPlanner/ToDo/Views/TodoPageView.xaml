@@ -4,153 +4,116 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.ToDo.Views"
+             xmlns:model="clr-namespace:TeacherPlanner.ToDo.Models"
+             xmlns:converter="clr-namespace:TeacherPlanner.Converters"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.ToDo.ViewModels"
-             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ToDoViewModel}}"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoPageViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
+    <UserControl.Resources>
+        <!--This Controls the name of the list-->
+        <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding Header}" 
+                     FontFamily="{StaticResource BodyText}" FontSize="20"
+                     Background="Transparent">
+                    
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderBrush" Value="LightGray" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="IsReadOnly" Value="False" />
+                            <Setter Property="IsHitTestVisible" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={
+                                                       RelativeSource FindAncestor, 
+                                                       AncestorType={x:Type UserControl}},
+                                                       Path=DataContext.CanEditListNames}" Value="False">
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="IsReadOnly" Value="True" />
+                                    <Setter Property="IsHitTestVisible" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                    
+                </TextBox>
+            </StackPanel>
+        </DataTemplate>
+        
+        <!--This tells the list tab what it should have inside it-->
+        <DataTemplate x:Key="TodoListContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
+            <local:TodoListView/>
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <Grid>
-        <TabControl>
-
-            <TabItem Header="TodoList 1" Style="{DynamicResource TodoTabStyle}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="50*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="50*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="20*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="50*"/>
-                            
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="1" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.Add.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            />
-                        <Label Grid.Row="1" Grid.Column="2" Content="So Much To Do..." FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Label Content="You have no Active Todo Lists! Add one here -->" 
+               FontFamily="{StaticResource TitleHandwritten}"
+               FontSize="50"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Visibility="{Binding HasTodoLists, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
 
 
-                        <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoItemView  Width="850" Height="50"/>
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <local:TodoSubItemView  Width="850" Height="40"/>
-                            </ListBoxItem>
 
-                        </ListBox>
-
-                    </Grid>
-                    <Grid Grid.Row="1" Grid.Column="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="20*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="20*"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="1" Grid.Column="2" Content="Getting it Done!" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button 
-                            Style="{DynamicResource ButtonOverride}"
-                            Grid.Column="3" Grid.Row="1" Margin="0,0" Width="50" Height="50"
-                            Background="{DynamicResource Icon.DeleteCross.Normal}"
-                            BorderBrush="Transparent" BorderThickness="0" 
-                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            />
-                        <local:TodoItemView Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Background="Green"/>
-                    </Grid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Todo List 2" Style="{DynamicResource TodoTabStyle}"></TabItem>
+        <TabControl ItemsSource="{Binding TodoLists}" 
+                    ItemTemplate="{StaticResource TodoListTemplate}" 
+                    ContentTemplate="{StaticResource TodoListContentTemplate}"
+                    Visibility="{Binding HasTodoLists, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    SelectedIndex="{Binding SelectedTab}">
+               
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Transparent" CornerRadius="4,4,0,0" Margin="2,0">
+                                    <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="10,2"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            
         </TabControl>
+
+        <Button 
+                Style="{StaticResource ButtonOverride}"
+                Margin="12,0" Width="100" Height="40" 
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Background="Transparent" Foreground="DarkGreen"
+                Content="+ Add List" FontFamily="{StaticResource BodyText}"
+                Command="{Binding AddTodoListCommand}"
+                FontSize="20"
+                Visibility="{Binding IsAddingNewList, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+        </Button>
+
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,0,30" Width="450" Height="40" 
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Visibility="{Binding IsAddingNewList, Converter={StaticResource BooleanToVisibilityConverter}}">
+            
+            
+            <Label Content="Enter List Name:"
+                   FontFamily="{StaticResource BodyText}" FontSize="20" VerticalContentAlignment="Center"/>
+            <TextBox Text="{Binding NewListName}" Width="200" Height="20"/>
+            <Button Content="✓" Margin="5,10" Width="20" Background="LightGreen" Command="{Binding ConfirmNewTodoListCommand}"/>
+            <Button Content="X" Margin="5,10" Width="20" Background="Red" Command="{Binding CancelNewTodoListCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

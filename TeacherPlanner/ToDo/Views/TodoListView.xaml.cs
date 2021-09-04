@@ -14,15 +14,14 @@ using System.Windows.Shapes;
 namespace TeacherPlanner.ToDo.Views
 {
     /// <summary>
-    /// Interaction logic for TodoItemView.xaml
+    /// Interaction logic for TodoListView.xaml
     /// </summary>
-    public partial class TodoItemView : UserControl
+    public partial class TodoListView : UserControl
     {
-        public TodoItemView()
+        public TodoListView()
         {
             InitializeComponent();
         }
-
         private void Add_Button_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = sender as Button;
@@ -34,9 +33,9 @@ namespace TeacherPlanner.ToDo.Views
             Button button = sender as Button;
             button.Foreground = Brushes.Green;
         }
-        
-         private void Delete_Button_MouseEnter(object sender, MouseEventArgs e)
-         {
+
+        private void Delete_Button_MouseEnter(object sender, MouseEventArgs e)
+        {
             Button button = sender as Button;
             button.Foreground = Brushes.Pink;
         }
