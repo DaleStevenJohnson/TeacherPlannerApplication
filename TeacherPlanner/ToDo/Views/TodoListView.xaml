@@ -11,7 +11,7 @@
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         <DataTemplate x:Key="TodoSubItemTemplate" DataType="{x:Type viewmodel:TodoSubItemViewModel}">
-            <local:TodoSubItemView Width="810"/>
+            <local:TodoSubItemView Width="800"/>
         </DataTemplate>
 
         <DataTemplate x:Key="TodoItemContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
@@ -108,20 +108,18 @@
             BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             HorizontalAlignment="Center" VerticalAlignment="Top"
-            Command="{Binding RemoveSelfCommand}">
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={
-                                                    RelativeSource FindAncestor, 
-                                                    AncestorType={x:Type local:TodoPageView}},
-                                                    Path=DataContext.CanDeleteAnything}" Value="False">
-                            <Setter Property="Visibility" Value="Hidden" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+            Command="{Binding RemoveSelfCommand}"
+            Visibility="{Binding 
+                RelativeSource=
+                    {
+                      RelativeSource FindAncestor, 
+                      AncestorType={x:Type local:TodoPageView}
+                    },
+                Path=DataContext.CanDeleteAnything, 
+                Converter={StaticResource BooleanToVisibilityConverter}
+            }">
+            
+            
 
         </Button>
             <ListBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" 

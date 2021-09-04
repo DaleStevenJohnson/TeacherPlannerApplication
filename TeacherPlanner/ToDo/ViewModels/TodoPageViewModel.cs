@@ -21,6 +21,7 @@ namespace TeacherPlanner.ToDo.ViewModels
         private string _newListName;
         private bool _isAddingNewList;
         private bool _hasTodoLists;
+        private int _selectedTab;
 
         public ICommand AddTodoListCommand { get; }
         public ICommand ConfirmNewTodoListCommand { get; }
@@ -34,6 +35,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             CanEditListNames = false;
             CanDeleteAnything = false;
             IsAddingNewList = false;
+            SelectedTab = -1;
 
             AddTodoListCommand = new SimpleCommand(_ => OnAddTodoList());
             RemoveTodoListCommand = new SimpleCommand(todoListModel => OnRemoveTodoList((TodoListViewModel)todoListModel));
@@ -41,6 +43,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             CancelNewTodoListCommand = new SimpleCommand(_ => ResetAddNewListBox());
 
             SetHasTodoLists();
+            SelectEndList();
         }
 
         public bool HasTodoLists 
@@ -48,6 +51,13 @@ namespace TeacherPlanner.ToDo.ViewModels
             get => _hasTodoLists;
             set => RaiseAndSetIfChanged(ref _hasTodoLists, value);
         }
+        public int SelectedTab
+        {
+            get => _selectedTab;
+            set => RaiseAndSetIfChanged(ref _selectedTab, value);
+        }
+
+
 
         public string NewListName
         {
@@ -100,6 +110,12 @@ namespace TeacherPlanner.ToDo.ViewModels
             todoListModel.RemoveSelfEvent -= (_, __) => OnRemoveTodoList(__);
             TodoLists.Remove(todoListModel);
             SetHasTodoLists();
+            SelectEndList();
+        }
+        private void SelectEndList()
+        {
+            var position = TodoLists.Count - 1;
+            SelectedTab = position;
         }
         public void OnConfirmNewList()
         {
@@ -109,6 +125,7 @@ namespace TeacherPlanner.ToDo.ViewModels
                 list.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
                 TodoLists.Add(list);
                 SetHasTodoLists();
+                SelectEndList();
                 ResetAddNewListBox();
             }
         }

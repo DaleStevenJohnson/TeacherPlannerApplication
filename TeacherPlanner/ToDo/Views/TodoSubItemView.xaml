@@ -9,19 +9,27 @@
              mc:Ignorable="d" 
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:TodoSubItemViewModel}}"
              d:DesignHeight="40" d:DesignWidth="800">
-    <UserControl.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-    </UserControl.Resources>
-    <Grid Margin="70,0,0,0">
+
+    <Border BorderThickness="2,0,5,2" BorderBrush="LightSlateGray">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Grid.Background>
-            <SolidColorBrush Color="Cyan"/>
-        </Grid.Background>
-        <!--We think Ancestor Level is set to 2 because the ItemsControl parent is implementing a stackpanel-->
+
+            <Grid.Style>
+                <Style>
+                    <Setter Property="Grid.Background" Value="LightBlue" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                            <Setter Property="Grid.Background" Value="#F0F0F0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <!--We think Ancestor Level is set to 2 because the ItemsControl parent is implementing a stackpanel-->
         <CheckBox 
             Grid.Column="0"
             VerticalAlignment="Center"
@@ -58,20 +66,16 @@
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             Command="{Binding RemoveSelfCommand}"
             IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
-            >
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={
-                                                       RelativeSource FindAncestor, 
-                                                       AncestorType={x:Type local:TodoPageView}},
-                                                       Path=DataContext.CanDeleteAnything}" Value="False">
-                            <Setter Property="Visibility" Value="Hidden" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+            Visibility="{Binding 
+                RelativeSource=
+                    {
+                        RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:TodoPageView}
+                    },
+                Path=DataContext.CanDeleteAnything, 
+                Converter={StaticResource BooleanToVisibilityConverter}
+            }">
         </Button>
     </Grid>
+    </Border>
 </UserControl>

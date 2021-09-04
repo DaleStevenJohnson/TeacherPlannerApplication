@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
+    <Border BorderBrush="LightSlateGray" BorderThickness="5">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -20,10 +21,20 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         
-        <Grid.Background>
-            <SolidColorBrush Color="LightBlue"/>
-        </Grid.Background>
-        <CheckBox 
+        
+
+        <Grid.Style>
+            <Style>
+                <Setter Property="Grid.Background" Value="LightSteelBlue" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                        <Setter Property="Grid.Background" Value="#D0D0D0"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+
+            <CheckBox 
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
@@ -35,6 +46,8 @@
             </CheckBox.LayoutTransform>
             
         </CheckBox>
+        
+        <!--User Text Entry-->
         <TextBox
             Grid.Column="1"
             Text="{Binding Content}"
@@ -43,6 +56,9 @@
             VerticalContentAlignment="Center"
             IsReadOnly="{Binding IsChecked}"
         />
+        
+        
+        <!-- ADD Button-->
         <Button 
             Style="{DynamicResource ButtonOverride}"
             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
@@ -55,8 +71,9 @@
             Command="{Binding AddSubItemCommand}"
             IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             />
+        
+        <!--DELETE Button-->
         <Button 
-            
             Grid.Column="3" Margin="0" Padding="0"
             Content="X" FontFamily="{StaticResource TitleHandwritten}" FontSize="30"
             Foreground="Red"
@@ -64,20 +81,17 @@
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             Command="{Binding RemoveSelfCommand}"
             IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
-            >
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={
-                                                       RelativeSource FindAncestor, 
-                                                       AncestorType={x:Type local:TodoPageView}},
-                                                       Path=DataContext.CanDeleteAnything}" Value="False">
-                            <Setter Property="Visibility" Value="Hidden" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+            Visibility="{Binding 
+                RelativeSource=
+                    {
+                        RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:TodoPageView}
+                    },
+                Path=DataContext.CanDeleteAnything, 
+                Converter={StaticResource BooleanToVisibilityConverter}
+            }">
+                
         </Button>
     </Grid>
+    </Border>
 </UserControl>

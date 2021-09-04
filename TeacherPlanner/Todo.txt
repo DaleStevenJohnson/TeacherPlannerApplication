@@ -58,9 +58,9 @@ TODO List APP
 - Add Saving
 - Add Loading
 + Add moving of completed tasks to the done list
-- Auto select new list tab
++ Auto select new list tab
 + Get rid of hover-over on listbox
-- Replace data triggers with converter
++ Replace data triggers with converter
 - Tidy up placeholder for no list
 
 BUGS

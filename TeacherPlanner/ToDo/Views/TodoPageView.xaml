@@ -11,8 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
-        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <!--This Controls the name of the list-->
         <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
             <StackPanel Orientation="Horizontal">
@@ -63,7 +61,8 @@
         <TabControl ItemsSource="{Binding TodoLists}" 
                     ItemTemplate="{StaticResource TodoListTemplate}" 
                     ContentTemplate="{StaticResource TodoListContentTemplate}"
-                    Visibility="{Binding HasTodoLists, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding HasTodoLists, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    SelectedIndex="{Binding SelectedTab}">
                
             <TabControl.ItemContainerStyle>
                 <Style TargetType="{x:Type TabItem}">
@@ -93,37 +92,21 @@
             
         </TabControl>
 
-        <Button Margin="12,0" Width="100" Height="40" 
+        <Button 
+                Style="{StaticResource ButtonOverride}"
+                Margin="12,0" Width="100" Height="40" 
                 HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Background="Transparent" Foreground="DarkGreen"
                 Content="+ Add List" FontFamily="{StaticResource BodyText}"
                 Command="{Binding AddTodoListCommand}"
-                FontSize="20">
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource ButtonOverride}">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsAddingNewList}" Value="True">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+                FontSize="20"
+                Visibility="{Binding IsAddingNewList, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
         </Button>
 
         <StackPanel Orientation="Horizontal"
                     Margin="0,0,0,30" Width="450" Height="40" 
-                    HorizontalAlignment="Right" VerticalAlignment="Top" >
-            <StackPanel.Style>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsAddingNewList}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Visibility="{Binding IsAddingNewList, Converter={StaticResource BooleanToVisibilityConverter}}">
             
             
             <Label Content="Enter List Name:"
