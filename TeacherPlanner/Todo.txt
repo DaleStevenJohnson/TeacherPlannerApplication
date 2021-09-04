@@ -32,6 +32,9 @@ Settings Tab
 - Dark mode?
 - Log out
 
+Key Dates
+- Parents Evening, Reports, Events, CPD, Meetings,
+
 Fixes
 + Get Scrolling working
 + Remove Debug

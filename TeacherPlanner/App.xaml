@@ -30,6 +30,7 @@
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converter:SortingColumnToPathConverter x:Key="SortDirectionToIconPathConverter"/>
         
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">

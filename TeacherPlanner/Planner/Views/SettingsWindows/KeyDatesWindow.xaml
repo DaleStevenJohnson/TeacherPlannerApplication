@@ -1,0 +1,147 @@
+﻿<Window x:Class="TeacherPlanner.Planner.Views.SettingsWindows.KeyDatesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TeacherPlanner.Planner.Views.SettingsWindows"
+        xmlns:helper="clr-namespace:TeacherPlanner.Helpers"
+        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+        d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:KeyDatesWindowViewModel}}"
+        mc:Ignorable="d"
+        Title="Key Dates" Height="800" Width="800">
+    <Window.Resources>
+
+        <Style x:Key="ColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Command" Value="{Binding Columns.SortByColumnCommand}" />
+            <Setter Property="CommandParameter" Value="{Binding Content, RelativeSource={RelativeSource Self}}" />
+        </Style>
+        
+        
+
+        <DataTemplate x:Key="ColumnHeaderTemplate" DataType="{x:Type helper:SortingColumn}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ColumnName}" />
+                <Path Fill="Black"
+                    Height="5"
+                    Margin="8,0,0,0"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False"
+                    Data="{Binding SortDirection, Converter={StaticResource SortDirectionToIconPathConverter}}" />
+            </StackPanel>
+        </DataTemplate>
+        
+     
+        <DataTemplate x:Key="KeyDateTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="150" Content="{Binding Path=Description}"/>
+                <Label Width="150" Content="{Binding Path=Type}"/>
+                <Label Width="150" Content="{Binding Path=DateString}"/>
+                <Label Width="150" Content="{Binding Path=TimeString}"/>
+                <Button Style="{StaticResource ButtonOverride}" Content="✎"/>
+            </StackPanel>
+        </DataTemplate>
+
+
+        <DataTemplate x:Key="DescriptionCellTemplate"
+                      DataType="viewmodel:KeyDateItemViewModel">
+            <ContentControl Content="{Binding Description}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="TypeCellTemplate"
+                      DataType="viewmodel:KeyDateItemViewModel">
+            <ContentControl Content="{Binding Type}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="DateCellTemplate"
+                      DataType="viewmodel:KeyDateItemViewModel">
+            <ContentControl Content="{Binding DateString}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="TimeCellTemplate"
+                      DataType="viewmodel:KeyDateItemViewModel">
+            <ContentControl Content="{Binding TimeString}" />
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Page Title-->
+        <Label Content="Key Dates:" Grid.Column="1" 
+               FontSize="20" FontFamily="{StaticResource BodyText}" FontWeight="Bold"
+               VerticalAlignment="Bottom"/>
+        
+        <!-- Data Grid-->
+        <ListView Grid.Row="1" Grid.Column="1" 
+                  Name="Listbox" 
+                  ItemsSource="{Binding Path=KeyDates}" 
+                  ItemTemplate="{StaticResource KeyDateTemplate}">
+
+            <ListView.View>
+                <GridView x:Name="KeyDatesList"  AllowsColumnReorder="False" ColumnHeaderContainerStyle="{StaticResource ColumnHeaderStyle}">
+                    
+                    <!--Description-->
+                    <GridViewColumn Header="Description" 
+                                    CellTemplate="{StaticResource DescriptionCellTemplate}"
+                                    Width="150"/>
+                    
+                    
+                    <!-- Type-->
+                    <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                    Header="{Binding Columns.HostNameColumnHeader}"
+                                    CellTemplate="{StaticResource TypeCellTemplate}"
+                                    Width="150"/>
+                    
+                    
+                    <!-- Date -->
+                    <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                    Header="{Binding Columns.HostNameColumnHeader}"
+                                    CellTemplate="{StaticResource TimeCellTemplate}"
+                                    Width="150"/>
+                    
+                    <!-- Time -->
+                    <GridViewColumn Header="Time" 
+                                    Width="150"
+                                    CellTemplate="{StaticResource TimeCellTemplate}"/>
+                    
+                    
+                </GridView>
+            </ListView.View>
+
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+        </ListView>
+
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
+            <Button
+                Margin="20,20"
+                Width="100"
+                
+                Command="{Binding }"
+                Content="Add +"/>
+            <Button
+                Margin="20,20"
+                Width="100"
+                
+                Command="{Binding }"
+                Content="Close"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
