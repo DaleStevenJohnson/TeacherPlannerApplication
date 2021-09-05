@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -10,30 +11,38 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class PlannerYearViewModel : ObservableObject
     {
+        // Fields
         private TimetableViewModel _timetableViewModel;
+        private ObservableCollection<KeyDateItemViewModel> _keyDates;
 
+        // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
         public event EventHandler<string> SwitchViewEvent;
         public ICommand SwitchViewCommand { get; }
         public ICommand KeyDatesClickedCommand { get; }
-        
+        public ICommand SpecialTestCommand { get; }
+
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
             UserModel = userModel;
             FileHandlingHelper.SetDirectories(UserModel, yearString);
+            KeyDates = new ObservableCollection<KeyDateItemViewModel>();
 
             CalendarManager = new CalendarManager(yearString);
 
             TimetableViewModel = new TimetableViewModel(UserModel);
-            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager);
+            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);
             TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
             ToDoViewModel = new TodoPageViewModel(UserModel);
             
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
+            SpecialTestCommand = new SimpleCommand(_ => OnSpecialTest());
             
         }
+
+        // Properties
 
         public CalendarManager CalendarManager { get; private set; }
         public UserModel UserModel { get; }
@@ -44,6 +53,13 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _timetableViewModel;
             set => RaiseAndSetIfChanged(ref _timetableViewModel, value);
         }
+        public ObservableCollection<KeyDateItemViewModel> KeyDates
+        {
+            get => _keyDates;
+            set => RaiseAndSetIfChanged(ref _keyDates, value);
+        }
+
+        // Methods
         public void OnDefineTimetableWeeks()
         {
             if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
@@ -54,10 +70,18 @@ namespace TeacherPlanner.Planner.ViewModels
             SwitchViewEvent.Invoke(null, (string)v);
         }
 
+        private void OnSpecialTest()
+        {
+            
+            KeyDates.Add(new KeyDateItemViewModel("Description", "Event", DateTime.Now.AddDays(1)));
+            PlannerViewModel.LeftDay.UpdateTodaysKeyDates();
+            PlannerViewModel.RightDay.UpdateTodaysKeyDates();
+        }
+
         private void OnKeyDatesClicked()
         {
             var window = new KeyDatesWindow();
-            var viewmodel = new KeyDatesWindowViewModel();
+            var viewmodel = new KeyDatesWindowViewModel(KeyDates);
             
             window.DataContext = viewmodel;
             window.Show();

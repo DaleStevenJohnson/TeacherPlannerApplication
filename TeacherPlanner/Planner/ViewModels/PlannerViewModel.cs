@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Constants;
@@ -18,14 +20,17 @@ namespace TeacherPlanner.Planner.ViewModels
         private bool _singlePageScrolling = false;
         private bool _isAtEndOfYear = false;
         private bool _isAtStartOfYear = false;
+        private ObservableCollection<KeyDateItemViewModel> _keyDates;
 
+        public ICommand SaveCommand { get; }
         public ICommand GoToTodayCommand { get; }
-        public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager)
+        public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager, ObservableCollection<KeyDateItemViewModel> keyDates)
         {
             // Parameter Assignment
             UserModel = userModel;
             Timetable = timetable;
             CalendarManager = calendarManager;
+            KeyDates = keyDates;
 
             // Property Assignment
             //LoadedDayModels = new DayModel[DAYLIMIT];
@@ -80,7 +85,13 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _rightDay, value);
         }
 
-        public ICommand SaveCommand { get; }
+        public ObservableCollection<KeyDateItemViewModel> KeyDates
+        {
+            get => _keyDates;
+            set => RaiseAndSetIfChanged(ref _keyDates, value);
+        }
+
+
         // TODO - Fix page turning Bug - most likely a fault on how
         // the CalendarManager is advancing day
         public void OnTurnPage(object parameter)
@@ -114,8 +125,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void LoadNewDays()
         {
-            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left");
-            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right");
+            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left", KeyDates);
+            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right", KeyDates);
             LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             IsAtStartOfYear = RightDay.CalendarModel.Date == CalendarManager.StartOfYearDateLimit;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using TeacherPlanner.Constants;
@@ -18,6 +19,8 @@ namespace TeacherPlanner.Planner.ViewModels
         private CalendarModel _calendarModel;
         private bool _isKeyDate;
         private bool _keyDatesAreShowing;
+        private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
+        private ObservableCollection<KeyDateItemViewModel> _todaysKeyDates;
 
         // Events / Commands / Actions
         public event EventHandler<AdvancePageState> TurnPageEvent;
@@ -25,12 +28,12 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand ToggleKeyDatesCommand { get; }
 
         // Constructor
-        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side)
+        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side, ObservableCollection<KeyDateItemViewModel> keyDates)
         {
             UserModel = userModel;
             Timetable = timetable;
             DayModel = LoadAndPopulateNewDay(date);
-            KeyDates = new ObservableCollection<KeyDateItemViewModel>();
+            AllKeyDates = keyDates;
 
             // Test Data
             //KeyDates.Add(new KeyDateItemViewModel("Year 12", "Event", DateTime.Now.AddHours(-1)));
@@ -61,6 +64,9 @@ namespace TeacherPlanner.Planner.ViewModels
                 Backward7 = AdvancePageState.RightBackward7;
                 BackwardMonth = AdvancePageState.RightBackwardMonth;
             }
+
+
+            UpdateTodaysKeyDates();
         }
 
         
@@ -79,7 +85,18 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _keyDatesAreShowing, value);
         }
 
-        public ObservableCollection<KeyDateItemViewModel> KeyDates { get; set; }
+        private ObservableCollection<KeyDateItemViewModel> AllKeyDates
+        {
+            get => _allKeyDates;
+            set => RaiseAndSetIfChanged(ref _allKeyDates, value);
+        }
+
+        public ObservableCollection<KeyDateItemViewModel> TodaysKeyDates
+        {
+            get => _todaysKeyDates;
+            set => RaiseAndSetIfChanged(ref _todaysKeyDates, value);
+        }
+
         public UserModel UserModel { get; }
         public AdvancePageState Forward1 { get; }
         public AdvancePageState Forward7 { get; }
@@ -239,6 +256,13 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnTurnPage(object v)
         {
             TurnPageEvent.Invoke(null, (AdvancePageState)v);
+        }
+
+        public void UpdateTodaysKeyDates()
+        {
+            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarModel.Date.Date));
+            
+            IsKeyDate = TodaysKeyDates.Any();
         }
 
         private void OnToggleKeyDates()

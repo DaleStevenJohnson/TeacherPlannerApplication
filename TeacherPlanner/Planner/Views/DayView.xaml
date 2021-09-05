@@ -117,7 +117,7 @@
                     Grid.RowSpan="6"  Visibility="{Binding KeyDatesAreShowing, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ItemsControl 
                 ItemTemplate="{StaticResource KeyDateDropDownTemplate}"
-                ItemsSource="{Binding KeyDates}">
+                ItemsSource="{Binding TodaysKeyDates}">
             </ItemsControl>
             
         </StackPanel>

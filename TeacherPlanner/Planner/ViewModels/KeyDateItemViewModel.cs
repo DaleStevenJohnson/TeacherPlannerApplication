@@ -21,7 +21,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public string Description { get; }
         public string Type { get; }
-        private DateTime Date { get; }
+        public DateTime Date { get; }
         public string DateString { get => Date.ToString("yyyy/MM/dd"); }
         public string TimeString { get => Date.ToString("HH:mm"); }
 

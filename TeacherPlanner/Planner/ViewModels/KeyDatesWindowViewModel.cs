@@ -21,9 +21,9 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
 
-        public KeyDatesWindowViewModel()
+        public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates)
         {
-            KeyDates = new ObservableCollection<KeyDateItemViewModel>();
+            KeyDates = keyDates;
             ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Date", "Time" }, 2);
 
             // Test Data

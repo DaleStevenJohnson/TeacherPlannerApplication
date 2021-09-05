@@ -28,6 +28,7 @@
             <Menu>
                 <MenuItem Header="File">
                     <MenuItem Header="Save" InputGestureText="N/A"/>
+                    <MenuItem Header="Special Test Button" Command="{Binding SpecialTestCommand}"/>
                     <MenuItem Header="Log Out"/>
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
