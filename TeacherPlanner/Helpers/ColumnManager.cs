@@ -16,7 +16,7 @@ namespace TeacherPlanner.Helpers
         private readonly Dictionary<string, Func<KeyDateItemViewModel, string?>> _objectPropertyExtractors =
            new Dictionary<string, Func<KeyDateItemViewModel, string?>>();
 
-        private string[] _columnHeaders { get; }
+        private string[] _columnHeaders;
 
         public List<SortingColumn> ColumnHeaders { get; set; }
 

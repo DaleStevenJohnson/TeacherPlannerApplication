@@ -33,6 +33,7 @@
 
         <Style x:Key="AddNew.ComboBox.Default" TargetType="{x:Type ComboBox}">
             <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
             <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
         </Style>
 
@@ -43,11 +44,13 @@
 
         <Style x:Key="AddNew.DatePicker.Default" TargetType="{x:Type DatePicker}">
             <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
             <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
         </Style>
         
         <Style x:Key="AddNew.TextBox.Default" TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
             <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
         </Style>
 
@@ -83,7 +86,7 @@
                 <Label Width="150" Content="{Binding Path=Type}"/>
                 <Label Width="100" Content="{Binding Path=DateString}"/>
                 <Label Width="75" Content="{Binding Path=TimeString}"/>
-                <Button Style="{StaticResource ButtonOverride}" Content="✎"/>
+                
             </StackPanel>
         </DataTemplate>
 
@@ -102,6 +105,10 @@
 
         <DataTemplate x:Key="TimeCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
             <ContentControl Content="{Binding TimeString}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="RemoveCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <Button BorderThickness="0" Content="X Remove" FontSize="10" Background="Transparent" Command="{Binding RemoveSelfCommand}"/>
         </DataTemplate>
 
     </Window.Resources>
@@ -167,6 +174,8 @@
                                         Header="{Binding ColumnManager.ColumnHeaders[3]}"
                                         CellTemplate="{StaticResource TimeCellTemplate}"
                                         Width="75"/>
+
+                        <GridViewColumn CellTemplate="{StaticResource RemoveCellTemplate}"/>
 
 
                     </GridView>
@@ -254,14 +263,14 @@
                     <Label Content="Time:" 
                            Style="{StaticResource AddNew.Label.Default}"/>
                     <Label Content="Hour" Style="{StaticResource AddNew.Label.Description}"/>
-                    <ComboBox Width="75" Margin="5,2" 
+                    <ComboBox Width="63" Margin="5,2" 
                               Style="{StaticResource AddNew.ComboBox.Default}"
                               ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
                               ItemsSource="{Binding HoursList}"
-                              SelectedItem="{Binding NewKeyDateTimeHour}"/> 
+                              SelectedItem="{Binding NewKeyDateTimeHour}"/>
                     
                     <Label Content="Minute" Style="{StaticResource AddNew.Label.Description}"/>
-                    <ComboBox Width="75" Margin="5,2" 
+                    <ComboBox Width="63" Margin="5,2" 
                               Style="{StaticResource AddNew.ComboBox.Default}"
                               ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
                               ItemsSource="{Binding MinuteList}"

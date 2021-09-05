@@ -16,6 +16,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private DateTime _newKeyDateDate;
         private string _newKeyDateDescription;
         private string _newKeyDateFeedback;
+        private ObservableCollection<KeyDateItemViewModel> _keyDates;
 
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
@@ -23,16 +24,19 @@ namespace TeacherPlanner.Planner.ViewModels
         public KeyDatesWindowViewModel()
         {
             KeyDates = new ObservableCollection<KeyDateItemViewModel>();
-            KeyDates.Add(new KeyDateItemViewModel("Year 13", "Parent's Evening", new DateTime(2021, 9, 9)));
-            KeyDates.Add(new KeyDateItemViewModel("Safegaurding", "CPD", new DateTime(2021, 10, 21)));
-            KeyDates.Add(new KeyDateItemViewModel("Year 10", "Parent's Evening", new DateTime(2021, 9, 13)));
-            ColumnManager = new ColumnManager(new string[]{ "Description", "Type", "Date", "Time" }, 2);
+            ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Date", "Time" }, 2);
+
+            // Test Data
+            AddNewKeyDate("Year 12", "Event", DateTime.Now);
+            AddNewKeyDate("Reading", "CPD", DateTime.Now.AddDays(5));
+            AddNewKeyDate("Year 9", "Parent's Evening", DateTime.Now.AddDays(10));
 
             SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
             AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
-            ColumnManager.SortingChanged += (_,__) => SortKeyDates();
-            
+            ColumnManager.SortingChanged += (_, __) => SortKeyDates();
+
             KeyDateTypes = new List<string> { "Parent's Evening", "Report", "Event", "CPD", "Meeting", "Other" };
+
             IsAddingNewKeyDate = false;
             Today = DateTime.Today;
             NewKeyDateDate = Today;
@@ -49,7 +53,11 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _isAddingNewKeyDate, value);
         }
         public DateTime Today { get; set; }
-        public ObservableCollection<KeyDateItemViewModel> KeyDates { get; private set; }
+        public ObservableCollection<KeyDateItemViewModel> KeyDates
+        {
+            get => _keyDates;
+            set => RaiseAndSetIfChanged(ref _keyDates, value);
+        }
 
         public ColumnManager ColumnManager { get; set; }
 
@@ -89,7 +97,20 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             get => _newKeyDateTimeMinute;
             set => RaiseAndSetIfChanged(ref _newKeyDateTimeMinute, value);
-        } 
+        }
+
+        public void SortKeyDates()
+        {
+            var sortedDates = ColumnManager.Sort(KeyDates);
+            KeyDates = new ObservableCollection<KeyDateItemViewModel>(sortedDates);
+        }
+
+        public void RemoveKeyDate(KeyDateItemViewModel keydate)
+        {
+            keydate.RemoveSelfEvent -= (_, keyDateToRemove) => RemoveKeyDate(keyDateToRemove);
+            KeyDates.Remove(keydate);
+            // Todo - Remove Keydate from the Database
+        }
 
         private void OnSwapIsAddingNewDateValue()
         {
@@ -116,21 +137,33 @@ namespace TeacherPlanner.Planner.ViewModels
             }
         }
 
-        private void AddNewKeyDate()
+        private void AddNewKeyDate(string description = null, string type = null, DateTime date = default)
         {
-            var hours = Int32.Parse(NewKeyDateTimeHour);
-            var minutes = Int32.Parse(NewKeyDateTimeMinute);
-            var day = Int32.Parse(NewKeyDateDate.ToString("dd"));
-            var month = Int32.Parse(NewKeyDateDate.ToString("MM"));
-            var year = Int32.Parse(NewKeyDateDate.ToString("yyyy"));
-            DateTime keydatetime = new DateTime(year, month, day, hours, minutes, 0);
-            var keydate = new KeyDateItemViewModel(NewKeyDateDescription,NewKeyDateType,keydatetime);
+            KeyDateItemViewModel keydate;
+            if (description == null)
+                description = NewKeyDateDescription;
+
+            if (type == null)
+                type = NewKeyDateType;
+
+            if (date == DateTime.MinValue)
+            {
+                var hours = Int32.Parse(NewKeyDateTimeHour);
+                var minutes = Int32.Parse(NewKeyDateTimeMinute);
+                var day = Int32.Parse(NewKeyDateDate.ToString("dd"));
+                var month = Int32.Parse(NewKeyDateDate.ToString("MM"));
+                var year = Int32.Parse(NewKeyDateDate.ToString("yyyy"));
+                date = new DateTime(year, month, day, hours, minutes, 0);
+            }
+            
+            
+            keydate = new KeyDateItemViewModel(description, type, date);
+
+            keydate.RemoveSelfEvent += (_, keyDateToRemove) => RemoveKeyDate(keyDateToRemove);
+
             KeyDates.Add(keydate);
+            
         }
-        public void SortKeyDates()
-        {
-            var sortedDates = ColumnManager.Sort(KeyDates);
-            KeyDates = new ObservableCollection<KeyDateItemViewModel>(sortedDates);
-        }
+       
     }
 }
