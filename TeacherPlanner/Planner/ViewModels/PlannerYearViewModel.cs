@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Planner.Views.SettingsWindows;
 using TeacherPlanner.Timetable.ViewModels;
 using TeacherPlanner.ToDo.ViewModels;
 
@@ -14,6 +15,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand DefineTimetableWeeksCommand { get; }
         public event EventHandler<string> SwitchViewEvent;
         public ICommand SwitchViewCommand { get; }
+        public ICommand KeyDatesClickedCommand { get; }
         
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
@@ -29,6 +31,7 @@ namespace TeacherPlanner.Planner.ViewModels
             
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
+            KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
             
         }
 
@@ -49,6 +52,15 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnSwitchView(object v)
         {
             SwitchViewEvent.Invoke(null, (string)v);
+        }
+
+        private void OnKeyDatesClicked()
+        {
+            var window = new KeyDatesWindow();
+            var viewmodel = new KeyDatesWindowViewModel();
+            
+            window.DataContext = viewmodel;
+            window.Show();
         }
     }
 }

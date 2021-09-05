@@ -27,6 +27,7 @@
         <DockPanel Grid.Row="0" MouseDown="PlannerYearWindow_MouseDown">
             <Menu>
                 <MenuItem Header="File">
+                    <MenuItem Header="Save" InputGestureText="N/A"/>
                     <MenuItem Header="Log Out"/>
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
@@ -35,6 +36,8 @@
                 <MenuItem Header="Planner">
                     <MenuItem Header="Locked Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
                     <MenuItem Header="Go to Today" InputGestureText="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Key Dates..." Command="{Binding KeyDatesClickedCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="Timetable">
