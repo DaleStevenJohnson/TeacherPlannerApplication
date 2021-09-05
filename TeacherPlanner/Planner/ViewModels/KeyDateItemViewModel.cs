@@ -42,9 +42,16 @@ namespace TeacherPlanner.Planner.ViewModels
             }
         }
 
+        public override string ToString()
+        {
+            return $"{Description} - {Type}: {TimeString}";
+        }
+
         private void OnRemoveSelf()
         {
             RemoveSelfEvent.Invoke(null, this);
         }
+
+
     }
 }
