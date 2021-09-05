@@ -23,7 +23,7 @@ namespace TeacherPlanner.Helpers
             SortDirection = direction;
         }
 
-        public void ReverseSort()
+        public void SwapSortDirection()
         {
             SortDirection = SortDirection.Equals(SortDirection.Ascending)
                ? SortDirection.Descending
