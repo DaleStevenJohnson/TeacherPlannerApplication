@@ -21,8 +21,9 @@ Add Encryption to files
 + Could be storing sensitive student information
 
 Add Calendar
-- Display Dates under appropriate day
++ Display Dates under appropriate day
 - Clicking a Date takes you to that page
+- Add CalendarViewModel
 
 Add / Revamp Scrolling between pages
 + Radio for Single/Dual page scrolling - Settings tab?
@@ -34,13 +35,13 @@ Settings Tab
 
 Key Dates
 - Parents Evening, Reports, Events, CPD, Meetings,
-- Read in from Day view to check whether Key date or not
++ Read in from Day view to check whether Key date or not
 + Display on day view if Key date
 - Read in from Calendar view to check whether Key date or not
 - Display on Calendar view if Key date
 + Change Remove to Checkbox
 + Move close button to command on VM
-- Sort DropDown Keydates list
++ Sort DropDown Keydates list
 + Add Keydates updated event to propogate from keydates window to planner and dayview
 
 

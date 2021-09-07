@@ -51,6 +51,10 @@
                     <Setter Property="Background" Value="DarkBlue" />
                     <Setter Property="Foreground" Value="White" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsKeyDate}" Value="True">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Foreground" Value="Goldenrod"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

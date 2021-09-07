@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
-             xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
-             d:DataContext="{Binding Source={d:DesignInstance Type=model:CalendarModel}}"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:CalendarViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200">
     <Grid>

@@ -129,8 +129,8 @@ namespace TeacherPlanner.Planner.ViewModels
             RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right", KeyDates);
             LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
-            IsAtStartOfYear = RightDay.CalendarModel.Date == CalendarManager.StartOfYearDateLimit;
-            IsAtEndOfYear = LeftDay.CalendarModel.Date == CalendarManager.EndOfYearDateLimit;
+            IsAtStartOfYear = RightDay.CalendarViewModel.Date == CalendarManager.StartOfYearDateLimit;
+            IsAtEndOfYear = LeftDay.CalendarViewModel.Date == CalendarManager.EndOfYearDateLimit;
         }
 
   

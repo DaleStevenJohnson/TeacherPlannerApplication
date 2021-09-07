@@ -16,7 +16,7 @@ namespace TeacherPlanner.Planner.ViewModels
     {
         // Fields
         private DayModel _dayModel;
-        private CalendarModel _calendarModel;
+        private CalendarViewModel _calendarViewModel;
         private bool _isKeyDate;
         private bool _keyDatesAreShowing;
         private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
@@ -104,10 +104,10 @@ namespace TeacherPlanner.Planner.ViewModels
         public AdvancePageState Backward1 { get; }
         public AdvancePageState Backward7 { get; }
         public AdvancePageState BackwardMonth { get; }
-        public CalendarModel CalendarModel 
+        public CalendarViewModel CalendarViewModel 
         {
-            get => _calendarModel;
-            set => RaiseAndSetIfChanged(ref _calendarModel, value);
+            get => _calendarViewModel;
+            set => RaiseAndSetIfChanged(ref _calendarViewModel, value);
         }
         public DayModel DayModel
         {
@@ -138,7 +138,7 @@ namespace TeacherPlanner.Planner.ViewModels
             var position = 0;
 
             // Update Calendar Model to a new Instance with the new date
-            CalendarModel = new CalendarModel(date);
+            CalendarViewModel = new CalendarViewModel(date, AllKeyDates);
 
             DayModel newDayModel = new DayModel(date);
             // If this is false, it means no save file exists, and we need to just go ahead and create a completely empty DayModel
@@ -260,10 +260,9 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void UpdateTodaysKeyDates()
         {
-            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarModel.Date.Date).OrderBy(keydate => keydate.Date));
-            
-            
+            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarViewModel.Date.Date).OrderBy(keydate => keydate.Date));
             IsKeyDate = TodaysKeyDates.Any();
+            CalendarViewModel.SetKeyDates();
         }
 
         private void OnToggleKeyDates()

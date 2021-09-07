@@ -85,7 +85,7 @@
             <Label
                 Grid.Column="1"
                 Style="{StaticResource Label.DateHeading.Default}"
-                Content="{Binding CalendarModel.DisplayDate}"/>
+                Content="{Binding CalendarViewModel.DisplayDate}"/>
 
             
             <Button
@@ -133,7 +133,7 @@
 
                 <local:NotesView Grid.Row="7" Grid.Column="0" DataContext="{Binding DayModel.NoteSectionModel}"/>
                 <local:CalendarView Grid.Row="7" Grid.Column="1" Margin="0,20,20,20"
-                                    DataContext="{Binding CalendarModel}"/>
+                                    DataContext="{Binding CalendarViewModel}"/>
             </Grid>
         </Border>
 
