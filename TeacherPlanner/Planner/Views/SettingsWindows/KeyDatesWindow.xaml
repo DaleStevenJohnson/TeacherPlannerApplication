@@ -108,7 +108,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="RemoveCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
-            <Button BorderThickness="0" Content="X Remove" FontSize="10" Background="Transparent" Command="{Binding RemoveSelfCommand}"/>
+            <CheckBox IsChecked="{Binding IsChecked}"/>
         </DataTemplate>
 
     </Window.Resources>
@@ -175,7 +175,7 @@
                                         CellTemplate="{StaticResource TimeCellTemplate}"
                                         Width="75"/>
 
-                        <GridViewColumn CellTemplate="{StaticResource RemoveCellTemplate}"/>
+                        <GridViewColumn CellTemplate="{StaticResource RemoveCellTemplate}" Header="Remove"/>
 
 
                     </GridView>
@@ -191,11 +191,22 @@
             </ListView>
 
             <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left">
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                    Background="LightPink"
+                
+                    Command="{Binding RemoveSelectedKeyDatesCommand}"
+                    Content="Delete Selected"/>
+            </StackPanel>
+
+
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
                 <Button
                     Margin="20,20"
                     Width="100"
-                
+                    Background="LightGreen"
                     Command="{Binding SwapIsAddingNewDateValueCommand}"
                     Content="Add +"/>
                 <Button

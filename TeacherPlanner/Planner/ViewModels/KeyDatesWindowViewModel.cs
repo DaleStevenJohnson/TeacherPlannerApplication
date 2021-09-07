@@ -20,6 +20,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
+        public ICommand RemoveSelectedKeyDatesCommand { get; }
 
         public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates)
         {
@@ -33,6 +34,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
             AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
+            RemoveSelectedKeyDatesCommand = new SimpleCommand(_ => RemoveKeyDates());
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
 
             KeyDateTypes = new List<string> { "Parent's Evening", "Report", "Event", "CPD", "Meeting", "Other" };
@@ -105,10 +107,14 @@ namespace TeacherPlanner.Planner.ViewModels
             KeyDates = new ObservableCollection<KeyDateItemViewModel>(sortedDates);
         }
 
-        public void RemoveKeyDate(KeyDateItemViewModel keydate)
+        public void RemoveKeyDates()
         {
-            keydate.RemoveSelfEvent -= (_, keyDateToRemove) => RemoveKeyDate(keyDateToRemove);
-            KeyDates.Remove(keydate);
+            List<KeyDateItemViewModel> keydates = new List<KeyDateItemViewModel>();
+            foreach (KeyDateItemViewModel keydate in KeyDates)
+                if (keydate.IsChecked)
+                    keydates.Add(keydate);
+            foreach (KeyDateItemViewModel keydate in keydates)
+                KeyDates.Remove(keydate);
             // Todo - Remove Keydate from the Database
         }
 
@@ -159,7 +165,7 @@ namespace TeacherPlanner.Planner.ViewModels
             
             keydate = new KeyDateItemViewModel(description, type, date);
 
-            keydate.RemoveSelfEvent += (_, keyDateToRemove) => RemoveKeyDate(keyDateToRemove);
+            
 
             KeyDates.Add(keydate);
             

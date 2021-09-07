@@ -8,17 +8,14 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class KeyDateItemViewModel
     {
-        public ICommand RemoveSelfCommand { get; }
-        public event EventHandler<KeyDateItemViewModel> RemoveSelfEvent;
         public KeyDateItemViewModel(string description, string keydatetype, DateTime date)
         {
             Description = description;
             Type = keydatetype;
             Date = date;
-
-            RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
+            IsChecked = false;
         }
-
+        public bool IsChecked { get; set; }
         public string Description { get; }
         public string Type { get; }
         public DateTime Date { get; }
@@ -27,19 +24,14 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public string GetProperty(string property)
         {
-            switch (property.ToLower())
+            return property.ToLower() switch
             {
-                case "description":
-                    return Description;
-                case "date":
-                    return DateString;
-                case "type":
-                    return Type;
-                case "time":
-                    return TimeString;
-                default:
-                    return "Not Found";
-            }
+                "description" => Description,
+                "date" => DateString,
+                "type" => Type,
+                "time" => TimeString,
+                _ => "Not Found",
+            };
         }
 
         public override string ToString()
@@ -47,10 +39,7 @@ namespace TeacherPlanner.Planner.ViewModels
             return $"{Description} - {Type}: {TimeString}";
         }
 
-        private void OnRemoveSelf()
-        {
-            RemoveSelfEvent.Invoke(null, this);
-        }
+     
 
 
     }
