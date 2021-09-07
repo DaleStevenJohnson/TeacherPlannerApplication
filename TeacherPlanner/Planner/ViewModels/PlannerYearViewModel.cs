@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -12,16 +13,18 @@ namespace TeacherPlanner.Planner.ViewModels
     public class PlannerYearViewModel : ObservableObject
     {
         // Fields
+        private Window _keyDatesWindow = null;
         private TimetableViewModel _timetableViewModel;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
 
         // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
-        public event EventHandler<string> SwitchViewEvent;
         public ICommand SwitchViewCommand { get; }
         public ICommand KeyDatesClickedCommand { get; }
         public ICommand SpecialTestCommand { get; }
 
+        public event EventHandler<string> SwitchViewEvent;
+        
         public PlannerYearViewModel(UserModel userModel, string yearString)
         {
             UserModel = userModel;
@@ -58,12 +61,19 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _keyDates;
             set => RaiseAndSetIfChanged(ref _keyDates, value);
         }
+        
 
         // Methods
         public void OnDefineTimetableWeeks()
         {
             if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
                 PlannerViewModel.LoadNewDays();
+        }
+
+        private void UpdateKeyDatesList()
+        {
+            PlannerViewModel.LeftDay.UpdateTodaysKeyDates();
+            PlannerViewModel.RightDay.UpdateTodaysKeyDates();
         }
         private void OnSwitchView(object v)
         {
@@ -80,11 +90,26 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnKeyDatesClicked()
         {
-            var window = new KeyDatesWindow();
-            var viewmodel = new KeyDatesWindowViewModel(KeyDates);
-            
-            window.DataContext = viewmodel;
-            window.Show();
+            // Check to see whether the window is already open
+            if (_keyDatesWindow == null)
+            {
+                _keyDatesWindow = new KeyDatesWindow();
+                var viewmodel = new KeyDatesWindowViewModel(KeyDates);
+                viewmodel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
+                viewmodel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
+                _keyDatesWindow.DataContext = viewmodel;
+                _keyDatesWindow.Show();
+                UpdateKeyDatesList();
+            }
+            // If window is already open, then just give focus to it
+            else
+                _keyDatesWindow.Focus();
+
+        }
+
+        private void OnKeyDatesWindowClosed()
+        {
+            _keyDatesWindow = null;
         }
     }
 }

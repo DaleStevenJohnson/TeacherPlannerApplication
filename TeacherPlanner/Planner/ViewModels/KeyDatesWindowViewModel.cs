@@ -23,31 +23,38 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand AddNewKeyDateCommand { get; }
         public ICommand RemoveSelectedKeyDatesCommand { get; }
         public ICommand CloseWindowCommand { get; }
+        public event EventHandler KeyDatesListUpdatedEvent;
+        public event EventHandler CloseWindowEvent;
 
         public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates)
         {
+            // Parameter Assignment
             KeyDates = keyDates;
+
+            // Property Assignment
             ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Date", "Time" }, 2);
-
-            // Test Data
-            AddNewKeyDate("Year 12", "Event", DateTime.Now);
-            AddNewKeyDate("Reading", "CPD", DateTime.Now.AddDays(5));
-            AddNewKeyDate("Year 9", "Parent's Evening", DateTime.Now.AddDays(10));
-
-            SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
-            AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
-            RemoveSelectedKeyDatesCommand = new SimpleCommand(_ => RemoveKeyDates());
-            CloseWindowCommand = new SimpleCommand(window => OnCloseWindow((Window)window));
-            ColumnManager.SortingChanged += (_, __) => SortKeyDates();
-
             KeyDateTypes = new List<string> { "Parent's Evening", "Report", "Event", "CPD", "Meeting", "Other" };
-
             IsAddingNewKeyDate = false;
             Today = DateTime.Today;
             NewKeyDateDate = Today;
             NewKeyDateTimeHour = "12";
             NewKeyDateTimeMinute = "00";
             NewKeyDateType = KeyDateTypes[0];
+
+            // Test Data
+            AddNewKeyDate("Year 12", "Event", DateTime.Now);
+            AddNewKeyDate("Reading", "CPD", DateTime.Now.AddDays(5));
+            AddNewKeyDate("Year 9", "Parent's Evening", DateTime.Now.AddDays(10));
+
+            // Command Assignment
+            SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
+            AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
+            RemoveSelectedKeyDatesCommand = new SimpleCommand(_ => RemoveKeyDates());
+            CloseWindowCommand = new SimpleCommand(window => OnCloseWindow((Window)window));
+
+            // Event Subscription
+            ColumnManager.SortingChanged += (_, __) => SortKeyDates();
+
         }
         public List<string> KeyDateTypes { get; }
         public IEnumerable<string> HoursList { get; } = new List<string> { "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18" };
@@ -118,6 +125,8 @@ namespace TeacherPlanner.Planner.ViewModels
                     keydates.Add(keydate);
             foreach (KeyDateItemViewModel keydate in keydates)
                 KeyDates.Remove(keydate);
+
+            KeyDatesListUpdatedEvent.Invoke(null, EventArgs.Empty);
             // Todo - Remove Keydate from the Database
         }
 
@@ -133,6 +142,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnCloseWindow(Window window)
         {
+            KeyDatesListUpdatedEvent = null;
+            CloseWindowEvent.Invoke(null, EventArgs.Empty);
             window.Close();
         }
 
@@ -147,6 +158,7 @@ namespace TeacherPlanner.Planner.ViewModels
             else
             {
                 AddNewKeyDate();
+                KeyDatesListUpdatedEvent.Invoke(null, EventArgs.Empty);
                 OnSwapIsAddingNewDateValue();
             }
         }

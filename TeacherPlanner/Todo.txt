@@ -35,11 +35,11 @@ Settings Tab
 Key Dates
 - Parents Evening, Reports, Events, CPD, Meetings,
 - Read in from Day view to check whether Key date or not
-- Display on day view if Key date
++ Display on day view if Key date
 - Read in from Calendar view to check whether Key date or not
 - Display on Calendar view if Key date
 + Change Remove to Checkbox
-- Move close button to command on VM
++ Move close button to command on VM
 - Sort DropDown Keydates list
 - Add Keydates updated event to propogate from keydates window to planner and dayview
 

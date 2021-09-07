@@ -36,7 +36,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public override string ToString()
         {
-            return $"{Description} - {Type}: {TimeString}";
+            return $"{Description} - {Type} - {TimeString}";
         }
 
      
