@@ -41,7 +41,7 @@ Key Dates
 + Change Remove to Checkbox
 + Move close button to command on VM
 - Sort DropDown Keydates list
-- Add Keydates updated event to propogate from keydates window to planner and dayview
++ Add Keydates updated event to propogate from keydates window to planner and dayview
 
 
 Fixes

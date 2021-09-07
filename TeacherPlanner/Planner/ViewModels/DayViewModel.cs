@@ -260,7 +260,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void UpdateTodaysKeyDates()
         {
-            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarModel.Date.Date));
+            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarModel.Date.Date).OrderBy(keydate => keydate.Date));
+            
             
             IsKeyDate = TodaysKeyDates.Any();
         }
