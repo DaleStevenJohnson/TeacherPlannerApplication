@@ -215,7 +215,8 @@
                 
                     IsCancel="True"
                     Content="Close"
-                    Click="Close_Button_Click"/>
+                    Command="{Binding CloseWindowCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
 
             </StackPanel>
         </Grid>

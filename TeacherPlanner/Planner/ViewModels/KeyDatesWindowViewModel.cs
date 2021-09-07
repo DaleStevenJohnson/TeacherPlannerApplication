@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 
@@ -21,6 +22,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
         public ICommand RemoveSelectedKeyDatesCommand { get; }
+        public ICommand CloseWindowCommand { get; }
 
         public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates)
         {
@@ -35,6 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
             SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
             AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
             RemoveSelectedKeyDatesCommand = new SimpleCommand(_ => RemoveKeyDates());
+            CloseWindowCommand = new SimpleCommand(window => OnCloseWindow((Window)window));
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
 
             KeyDateTypes = new List<string> { "Parent's Evening", "Report", "Event", "CPD", "Meeting", "Other" };
@@ -126,6 +129,11 @@ namespace TeacherPlanner.Planner.ViewModels
                 NewKeyDateDescription = string.Empty;
             }
             IsAddingNewKeyDate = !IsAddingNewKeyDate;
+        }
+
+        private void OnCloseWindow(Window window)
+        {
+            window.Close();
         }
 
         private void OnAddNewKeyDate()
