@@ -158,7 +158,6 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnCloseWindow(Window window)
         {
-           // KeyDatesListUpdatedEvent = null;
             CloseWindowEvent.Invoke(null, EventArgs.Empty);
             window.Close();
         }

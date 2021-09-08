@@ -34,11 +34,11 @@ Settings Tab
 - Log out
 
 Key Dates
-- Parents Evening, Reports, Events, CPD, Meetings,
++ Parents Evening, Reports, Events, CPD, Meetings,
 + Read in from Day view to check whether Key date or not
 + Display on day view if Key date
-- Read in from Calendar view to check whether Key date or not
-- Display on Calendar view if Key date
++ Read in from Calendar view to check whether Key date or not
++ Display on Calendar view if Key date
 + Change Remove to Checkbox
 + Move close button to command on VM
 + Sort DropDown Keydates list
