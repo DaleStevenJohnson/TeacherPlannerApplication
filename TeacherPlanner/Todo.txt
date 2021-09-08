@@ -55,18 +55,20 @@ Fixes
 + Change where period counts are being calculated + add in total occurances
 + Timetable weeks import updating timetable
 + Fix timetable import oddness - blank days if already saved
-+++ Maybe if day is completely blank then it is not saved by the app.
+	+ Maybe if day is completely blank then it is not saved by the app.
 + Add bookend end of academic year / start of academic year
 
 
 - Add Calendar Viewmodel
-- Investigate how to handle subscribe and unsubscribing to events
++ Investigate how to handle subscribe and unsubscribing to events
 - Add faint end of last month dates to calendar
 
 - Add reg period
 - Add day timings
 
 - Add Settings Config file & track user settings through storing on the usermodel
+- Add Options Tab to combine all 
+
 
 TODO List APP
 - Add Saving

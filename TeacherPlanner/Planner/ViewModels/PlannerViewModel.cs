@@ -13,10 +13,8 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class PlannerViewModel : ObservableObject
     {
-        private const int DAYLIMIT = 14;
         private DayViewModel _leftDay;
         private DayViewModel _rightDay;
-        private int _loadedDayModelsIndex = 0;
         private bool _singlePageScrolling = false;
         private bool _isAtEndOfYear = false;
         private bool _isAtStartOfYear = false;
@@ -132,35 +130,5 @@ namespace TeacherPlanner.Planner.ViewModels
             IsAtStartOfYear = RightDay.CalendarViewModel.Date == CalendarManager.StartOfYearDateLimit;
             IsAtEndOfYear = LeftDay.CalendarViewModel.Date == CalendarManager.EndOfYearDateLimit;
         }
-
-  
-        private void AddDayToLoadedDayModelList(DayModel day)
-        {
-            LoadedDayModels[_loadedDayModelsIndex] = day;
-            _loadedDayModelsIndex++;
-            if (_loadedDayModelsIndex >= DAYLIMIT)
-            {
-                _loadedDayModelsIndex = 0;
-            }
-        }
-        private void MoveLeft()
-        {
-            for (int i = 1; i < LoadedDayModels.Length; i++)
-            {
-                LoadedDayModels[i - 1] = LoadedDayModels[i];
-            }
-        }
-        private void MoveRight()
-        {
-            for (int i = LoadedDayModels.Length - 2; i > -1; i--)
-            {
-                LoadedDayModels[i + 1] = LoadedDayModels[i];
-            }
-        }
-
-
-
     }
-
-
 }
