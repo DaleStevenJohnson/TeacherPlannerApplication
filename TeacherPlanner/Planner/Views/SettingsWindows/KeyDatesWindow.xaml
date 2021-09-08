@@ -108,7 +108,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="RemoveCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
-            <CheckBox IsChecked="{Binding IsChecked}"/>
+            <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
         </DataTemplate>
 
     </Window.Resources>
@@ -260,16 +260,22 @@
                 </StackPanel>
                 
                 <!--DATE-->
-                <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
-                    <Label Content="Date:" 
-                           Style="{StaticResource AddNew.Label.Default}"/>
-                    <DatePicker Width="300" 
-                                Style="{StaticResource AddNew.DatePicker.Default}"
-                                IsTodayHighlighted="True"
-                                SelectedDate="{Binding NewKeyDateDate}"
-                                DisplayDateStart="{Binding Today}"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
+                        <Label Content="Date:" 
+                               Style="{StaticResource AddNew.Label.Default}"/>
+                        <DatePicker Width="300" 
+                                    Style="{StaticResource AddNew.DatePicker.Default}"
+                                    IsTodayHighlighted="True"
+                                    SelectedDate="{Binding NewKeyDateDate}"
+                                    DisplayDateStart="{Binding Today}"/>
+                    </StackPanel>
+                    <TextBlock TextAlignment="Center" Margin="20,-35,0,0" 
+                       HorizontalAlignment="Center" Width="300" TextWrapping="Wrap"
+                       Foreground="Red" Visibility="{Binding NewKeyDateIsWeekend, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        You have selected a Weekend Date.<LineBreak/>Weekend Dates will not be displayed in the planner
+                    </TextBlock>
                 </StackPanel>
-
                 <!--TIME-->
                 <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
                     <Label Content="Time:" 

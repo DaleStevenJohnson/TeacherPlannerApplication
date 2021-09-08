@@ -13,6 +13,7 @@ namespace TeacherPlanner.Planner.ViewModels
     public class PlannerYearViewModel : ObservableObject
     {
         // Fields
+        private KeyDatesWindowViewModel _keyDatesWindowViewModel;
         private Window _keyDatesWindow = null;
         private TimetableViewModel _timetableViewModel;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
@@ -38,11 +39,20 @@ namespace TeacherPlanner.Planner.ViewModels
             TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
             ToDoViewModel = new TodoPageViewModel(UserModel);
             
+            // keyDates view Model new up and event subscription
+            _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates);
+            _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
+            _keyDatesWindowViewModel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
+
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
             SpecialTestCommand = new SimpleCommand(_ => OnSpecialTest());
-            
+
+            //Method Calls
+            UpdateKeyDatesList();
+
+
         }
 
         // Properties
@@ -93,18 +103,15 @@ namespace TeacherPlanner.Planner.ViewModels
             // Check to see whether the window is already open
             if (_keyDatesWindow == null)
             {
-                _keyDatesWindow = new KeyDatesWindow();
-                var viewmodel = new KeyDatesWindowViewModel(KeyDates);
-                viewmodel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
-                viewmodel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
-                _keyDatesWindow.DataContext = viewmodel;
+                _keyDatesWindow = new KeyDatesWindow
+                {
+                    DataContext = _keyDatesWindowViewModel
+                };
                 _keyDatesWindow.Show();
-                UpdateKeyDatesList();
             }
             // If window is already open, then just give focus to it
             else
                 _keyDatesWindow.Focus();
-
         }
 
         private void OnKeyDatesWindowClosed()

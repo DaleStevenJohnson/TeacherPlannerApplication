@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -18,6 +19,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _newKeyDateDescription;
         private string _newKeyDateFeedback;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
+        private bool _newKeyDateIsWeekend;
 
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
@@ -40,6 +42,7 @@ namespace TeacherPlanner.Planner.ViewModels
             NewKeyDateTimeHour = "12";
             NewKeyDateTimeMinute = "00";
             NewKeyDateType = KeyDateTypes[0];
+            NewKeyDateIsWeekend = false;
 
             // Test Data
             AddNewKeyDate("Year 12", "Event", DateTime.Now);
@@ -54,6 +57,9 @@ namespace TeacherPlanner.Planner.ViewModels
 
             // Event Subscription
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
+
+            
+            
 
         }
         public List<string> KeyDateTypes { get; }
@@ -93,10 +99,22 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _newKeyDateType, value);
         }
 
+        public bool NewKeyDateIsWeekend
+        {
+            get => _newKeyDateIsWeekend;
+            set => RaiseAndSetIfChanged(ref _newKeyDateIsWeekend, value);
+        }
+
         public DateTime NewKeyDateDate
         {
             get => _newKeyDateDate;
-            set => RaiseAndSetIfChanged(ref _newKeyDateDate, value);
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _newKeyDateDate, value))
+                {
+                    NewKeyDateIsWeekend = value.DayOfWeek == DayOfWeek.Saturday || value.DayOfWeek == DayOfWeek.Sunday;
+                }
+            }
         }
 
         public string NewKeyDateTimeHour
@@ -119,11 +137,9 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void RemoveKeyDates()
         {
-            List<KeyDateItemViewModel> keydates = new List<KeyDateItemViewModel>();
-            foreach (KeyDateItemViewModel keydate in KeyDates)
-                if (keydate.IsChecked)
-                    keydates.Add(keydate);
-            foreach (KeyDateItemViewModel keydate in keydates)
+            var selectedDates = KeyDates.Where(kd => kd.IsChecked).ToList();
+            
+            foreach (KeyDateItemViewModel keydate in selectedDates)
                 KeyDates.Remove(keydate);
 
             KeyDatesListUpdatedEvent.Invoke(null, EventArgs.Empty);
@@ -142,18 +158,16 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnCloseWindow(Window window)
         {
-            KeyDatesListUpdatedEvent = null;
+           // KeyDatesListUpdatedEvent = null;
             CloseWindowEvent.Invoke(null, EventArgs.Empty);
             window.Close();
         }
 
         private void OnAddNewKeyDate()
         {
-
             if (NewKeyDateDescription == string.Empty)
             {
                 NewKeyDateFeedback = "Please enter a description for this Key Date.";
-
             }
             else
             {
@@ -182,14 +196,9 @@ namespace TeacherPlanner.Planner.ViewModels
                 date = new DateTime(year, month, day, hours, minutes, 0);
             }
             
-            
             keydate = new KeyDateItemViewModel(description, type, date);
 
-            
-
             KeyDates.Add(keydate);
-            
         }
-       
     }
 }

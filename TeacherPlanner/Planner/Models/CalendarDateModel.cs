@@ -7,6 +7,8 @@ namespace TeacherPlanner.Planner.Models
 {
     public class CalendarDateModel : ObservableObject
     {
+        private bool _isKeyDate;
+
         //public event EventHandler<string> CalendarDayClickedEvent;
         public CalendarDateModel(string dayDate, int week, DateTime date)
         {
@@ -15,8 +17,6 @@ namespace TeacherPlanner.Planner.Models
             Date = date;
         }
         public DateTime Date;
-        private bool _isKeyDate;
-
         public string DayDate { get; }
         public int Week { get; }
         public bool IsDisplayedDate { get; set; }

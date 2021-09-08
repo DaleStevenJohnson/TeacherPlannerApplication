@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Planner.Models;
@@ -67,10 +68,7 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 foreach (CalendarDateModel date in Dates)
                 {
-                    foreach (KeyDateItemViewModel keydate in KeyDates)
-                    {
-                        date.IsKeyDate = keydate.Date.Date == date.Date.Date;
-                    }
+                    date.IsKeyDate = KeyDates.Any(kd => kd.Date.Date == date.Date.Date);
                 }
             }
         }

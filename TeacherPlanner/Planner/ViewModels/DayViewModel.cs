@@ -32,8 +32,10 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             UserModel = userModel;
             Timetable = timetable;
-            DayModel = LoadAndPopulateNewDay(date);
             AllKeyDates = keyDates;
+
+            DayModel = LoadAndPopulateNewDay(date);
+            
 
             // Test Data
             //KeyDates.Add(new KeyDateItemViewModel("Year 12", "Event", DateTime.Now.AddHours(-1)));
