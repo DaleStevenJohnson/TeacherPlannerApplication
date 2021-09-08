@@ -1,0 +1,322 @@
+﻿<Window x:Class="TeacherPlanner.Planner.Views.SettingsWindows.KeyDatesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TeacherPlanner.Planner.Views.SettingsWindows"
+        xmlns:helper="clr-namespace:TeacherPlanner.Helpers"
+        xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+        d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:KeyDatesWindowViewModel}}"
+        mc:Ignorable="d"
+        Title="Key Dates" Height="800" Width="800">
+    <Window.Resources>
+
+        <Style x:Key="ColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Command" Value="{Binding ColumnManager.SortByColumnCommand}" />
+            <Setter Property="CommandParameter" Value="{Binding Content, RelativeSource={RelativeSource Self}}" />
+        </Style>
+
+        <Style x:Key="AddNew.Label.Default" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="AddNew.Label.Description" BasedOn="{StaticResource AddNew.Label.Default}" TargetType="{x:Type Label}">
+            <Setter Property="FontWeight" Value="Thin"/>
+            <Setter Property="Margin" Value="20,0,0,0"/>
+            <Setter Property="Width" Value="auto"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="AddNew.ComboBox.Default" TargetType="{x:Type ComboBox}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+        </Style>
+
+        <Style x:Key="AddNew.ComboBoxItem.Default" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+        </Style>
+
+        <Style x:Key="AddNew.DatePicker.Default" TargetType="{x:Type DatePicker}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+        </Style>
+        
+        <Style x:Key="AddNew.TextBox.Default" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,0"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+        </Style>
+
+
+        <Style x:Key="AddNew.StackPanel.Default" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="0,40"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+
+        </Style>
+
+        <Style x:Key="View.ListItem.Default" TargetType="{x:Type ListViewItem}">
+            <!--<Setter Property="HorizontalContentAlignment" Value="Left"/>-->
+        </Style>
+        
+        <DataTemplate x:Key="ColumnHeaderTemplate" DataType="{x:Type helper:SortingColumn}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ColumnName}" HorizontalAlignment="Left" />
+                <Path Fill="Black"
+                    Height="5"
+                    Margin="8,0,0,0"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False"
+                    Data="{Binding SortDirection, Converter={StaticResource SortDirectionToIconPathConverter}}" />
+            </StackPanel>
+        </DataTemplate>
+        
+     
+        <DataTemplate x:Key="KeyDateTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="300" Content="{Binding Path=Description}"/>
+                <Label Width="150" Content="{Binding Path=Type}"/>
+                <Label Width="100" Content="{Binding Path=DateString}"/>
+                <Label Width="75" Content="{Binding Path=TimeString}"/>
+                
+            </StackPanel>
+        </DataTemplate>
+
+        
+        <DataTemplate x:Key="DescriptionCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <ContentControl Content="{Binding Description}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TypeCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <ContentControl Content="{Binding Type}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="DateCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <ContentControl Content="{Binding DateString}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="TimeCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <ContentControl Content="{Binding TimeString}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="RemoveCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+
+        </Grid.RowDefinitions>
+
+        <!--         ########        -->
+        <!--         NEW PAGE        -->
+
+        <!-- All Dates View -->
+        <Grid Grid.Column="1" Visibility="{Binding IsAddingNewKeyDate, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Page Title-->
+            <Label Content="Key Dates:" Grid.Row="0" 
+                   FontSize="20" FontFamily="{StaticResource BodyText}" FontWeight="Bold"
+                   VerticalAlignment="Bottom"/>
+
+            <!-- Data Grid-->
+            <ListView Grid.Row="1"
+                      Name="Listbox" 
+                      ItemsSource="{Binding Path=KeyDates}"
+                      ItemContainerStyle="{StaticResource View.ListItem.Default}"
+                      ItemTemplate="{StaticResource KeyDateTemplate}">
+
+                <ListView.View>
+                    <GridView x:Name="KeyDatesList"  AllowsColumnReorder="False" ColumnHeaderContainerStyle="{StaticResource ColumnHeaderStyle}">
+
+                        <!--Description-->
+                        <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[0]}"
+                                        CellTemplate="{StaticResource DescriptionCellTemplate}"
+                                        Width="300"/>
+
+
+                        <!-- Type-->
+                        <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[1]}"
+                                        CellTemplate="{StaticResource TypeCellTemplate}"
+                                        Width="150"/>
+
+
+                        <!-- Date -->
+                        <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[2]}"
+                                        CellTemplate="{StaticResource DateCellTemplate}"
+                                        Width="100"/>
+
+                        <!-- Time -->
+                        <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[3]}"
+                                        CellTemplate="{StaticResource TimeCellTemplate}"
+                                        Width="75"/>
+
+                        <GridViewColumn CellTemplate="{StaticResource RemoveCellTemplate}" Header="Remove"/>
+
+
+                    </GridView>
+                </ListView.View>
+
+
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+            </ListView>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left">
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                    Background="LightPink"
+                
+                    Command="{Binding RemoveSelectedKeyDatesCommand}"
+                    Content="Delete Selected"/>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                    Background="LightGreen"
+                    Command="{Binding SwapIsAddingNewDateValueCommand}"
+                    Content="Add +"/>
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                
+                    IsCancel="True"
+                    Content="Close"
+                    Command="{Binding CloseWindowCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+
+            </StackPanel>
+        </Grid>
+        
+        
+        <!--        ########         -->
+        <!--        NEW PAGE         -->
+        
+        <!--Add Dates View-->
+        <Grid Grid.Column="1" Visibility="{Binding IsAddingNewKeyDate, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Page Title-->
+            <Label Content="Add New Key Date" Grid.Row="0" 
+               FontSize="20" FontFamily="{StaticResource BodyText}" FontWeight="Bold"
+               VerticalAlignment="Bottom"/>
+
+            <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0,20,0,0">
+                <!-- Description -->
+                <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
+                    <Label Content="Description:" 
+                           Style="{StaticResource AddNew.Label.Default}"/>
+                    <TextBox Width="300" Style="{StaticResource AddNew.TextBox.Default}"
+                             Text="{Binding NewKeyDateDescription}"/>
+                </StackPanel>
+                
+                
+                <!--TYPE -->
+                <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
+                    <Label Content="Type:"
+                           Style="{StaticResource AddNew.Label.Default}"/>
+                    <ComboBox ItemsSource="{Binding KeyDateTypes}" 
+                              ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
+                              SelectedItem="{Binding NewKeyDateType}" 
+                              Style="{StaticResource AddNew.ComboBox.Default}"
+                              Width="300"/>
+                </StackPanel>
+                
+                <!--DATE-->
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
+                        <Label Content="Date:" 
+                               Style="{StaticResource AddNew.Label.Default}"/>
+                        <DatePicker Width="300" 
+                                    Style="{StaticResource AddNew.DatePicker.Default}"
+                                    IsTodayHighlighted="True"
+                                    SelectedDate="{Binding NewKeyDateDate}"
+                                    DisplayDateStart="{Binding Today}"/>
+                    </StackPanel>
+                    <TextBlock TextAlignment="Center" Margin="20,-35,0,0" 
+                       HorizontalAlignment="Center" Width="300" TextWrapping="Wrap"
+                       Foreground="Red" Visibility="{Binding NewKeyDateIsWeekend, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        You have selected a Weekend Date.<LineBreak/>Weekend Dates will not be displayed in the planner
+                    </TextBlock>
+                </StackPanel>
+                <!--TIME-->
+                <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
+                    <Label Content="Time:" 
+                           Style="{StaticResource AddNew.Label.Default}"/>
+                    <Label Content="Hour" Style="{StaticResource AddNew.Label.Description}"/>
+                    <ComboBox Width="63" Margin="5,2" 
+                              Style="{StaticResource AddNew.ComboBox.Default}"
+                              ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
+                              ItemsSource="{Binding HoursList}"
+                              SelectedItem="{Binding NewKeyDateTimeHour}"/>
+                    
+                    <Label Content="Minute" Style="{StaticResource AddNew.Label.Description}"/>
+                    <ComboBox Width="63" Margin="5,2" 
+                              Style="{StaticResource AddNew.ComboBox.Default}"
+                              ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
+                              ItemsSource="{Binding MinuteList}"
+                              SelectedItem="{Binding NewKeyDateTimeMinute}"/>
+                </StackPanel>
+                <!-- Feedback -->
+                <StackPanel Style="{StaticResource AddNew.StackPanel.Default}" Width="600" HorizontalAlignment="Center">
+                    <Label Content="{Binding NewKeyDateFeedback}" Style="{StaticResource AddNew.Label.Description}" Foreground="Gray"/>
+                </StackPanel>
+
+
+            </StackPanel>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                
+                    Command="{Binding AddNewKeyDateCommand}"
+                    Content="Confirm"/>
+                <Button
+                    Margin="20,20"
+                    Width="100"
+                    Content="Cancel"
+                    Command="{Binding SwapIsAddingNewDateValueCommand}"/>
+
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

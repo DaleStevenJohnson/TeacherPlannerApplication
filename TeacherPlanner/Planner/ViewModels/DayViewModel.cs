@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using TeacherPlanner.Constants;
@@ -12,17 +14,39 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class DayViewModel : ObservableObject
     {
+        // Fields
         private DayModel _dayModel;
-        private CalendarModel _calendarModel;
+        private CalendarViewModel _calendarViewModel;
+        private bool _isKeyDate;
+        private bool _keyDatesAreShowing;
+        private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
+        private ObservableCollection<KeyDateItemViewModel> _todaysKeyDates;
 
+        // Events / Commands / Actions
         public event EventHandler<AdvancePageState> TurnPageEvent;
         public ICommand TurnPageCommand { get; }
-        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side)
+        public ICommand ToggleKeyDatesCommand { get; }
+
+        // Constructor
+        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side, ObservableCollection<KeyDateItemViewModel> keyDates)
         {
             UserModel = userModel;
             Timetable = timetable;
+            AllKeyDates = keyDates;
+
             DayModel = LoadAndPopulateNewDay(date);
+            
+
+            // Test Data
+            //KeyDates.Add(new KeyDateItemViewModel("Year 12", "Event", DateTime.Now.AddHours(-1)));
+            //KeyDates.Add(new KeyDateItemViewModel("Year 7", "Parent's Evening", DateTime.Now.AddHours(-3)));
+            //KeyDates.Add(new KeyDateItemViewModel("Year 10", "Report", DateTime.Now.AddHours(-5)));
+            
+            IsKeyDate = false;
+            KeyDatesAreShowing = false;
+
             TurnPageCommand = new SimpleCommand(numOfDays => OnTurnPage(numOfDays));
+            ToggleKeyDatesCommand = new SimpleCommand(_ => OnToggleKeyDates());
 
             if (side == "left")
             {
@@ -42,12 +66,39 @@ namespace TeacherPlanner.Planner.ViewModels
                 Backward7 = AdvancePageState.RightBackward7;
                 BackwardMonth = AdvancePageState.RightBackwardMonth;
             }
+
+
+            UpdateTodaysKeyDates();
         }
-        private TimetableModel Timetable { get; }
-        private void OnTurnPage(object v)
+
+        
+
+        // Properties
+        // Public
+        public bool IsKeyDate 
         {
-            TurnPageEvent.Invoke(null, (AdvancePageState)v);
+            get => _isKeyDate;
+            set => RaiseAndSetIfChanged(ref _isKeyDate, value);
         }
+
+        public bool KeyDatesAreShowing
+        {
+            get => _keyDatesAreShowing;
+            set => RaiseAndSetIfChanged(ref _keyDatesAreShowing, value);
+        }
+
+        private ObservableCollection<KeyDateItemViewModel> AllKeyDates
+        {
+            get => _allKeyDates;
+            set => RaiseAndSetIfChanged(ref _allKeyDates, value);
+        }
+
+        public ObservableCollection<KeyDateItemViewModel> TodaysKeyDates
+        {
+            get => _todaysKeyDates;
+            set => RaiseAndSetIfChanged(ref _todaysKeyDates, value);
+        }
+
         public UserModel UserModel { get; }
         public AdvancePageState Forward1 { get; }
         public AdvancePageState Forward7 { get; }
@@ -55,10 +106,10 @@ namespace TeacherPlanner.Planner.ViewModels
         public AdvancePageState Backward1 { get; }
         public AdvancePageState Backward7 { get; }
         public AdvancePageState BackwardMonth { get; }
-        public CalendarModel CalendarModel 
+        public CalendarViewModel CalendarViewModel 
         {
-            get => _calendarModel;
-            set => RaiseAndSetIfChanged(ref _calendarModel, value);
+            get => _calendarViewModel;
+            set => RaiseAndSetIfChanged(ref _calendarViewModel, value);
         }
         public DayModel DayModel
         {
@@ -66,6 +117,12 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _dayModel, value);
         }
 
+        // Private Properties
+        private TimetableModel Timetable { get; }
+
+
+
+        // Public Methods
         public DayModel LoadAndPopulateNewDay(DateTime date, bool overwriteClassCode = false)
         {
             var filenameDate = date.ToString(Formats.FullDateFormat);
@@ -83,7 +140,7 @@ namespace TeacherPlanner.Planner.ViewModels
             var position = 0;
 
             // Update Calendar Model to a new Instance with the new date
-            CalendarModel = new CalendarModel(date);
+            CalendarViewModel = new CalendarViewModel(date, AllKeyDates);
 
             DayModel newDayModel = new DayModel(date);
             // If this is false, it means no save file exists, and we need to just go ahead and create a completely empty DayModel
@@ -196,6 +253,23 @@ namespace TeacherPlanner.Planner.ViewModels
             else if (week == 3)
                 return "Holiday";
             return string.Empty;
+        }
+
+        private void OnTurnPage(object v)
+        {
+            TurnPageEvent.Invoke(null, (AdvancePageState)v);
+        }
+
+        public void UpdateTodaysKeyDates()
+        {
+            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarViewModel.Date.Date).OrderBy(keydate => keydate.Date));
+            IsKeyDate = TodaysKeyDates.Any();
+            CalendarViewModel.SetKeyDates();
+        }
+
+        private void OnToggleKeyDates()
+        {
+            KeyDatesAreShowing = !KeyDatesAreShowing;
         }
     }
 }
