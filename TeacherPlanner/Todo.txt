@@ -86,5 +86,6 @@ Timetable
 - Make timetable editable
 
 Database Implementation
+- Create a Class diagram
 - Change period control & notes control to one text box rather than 7
 - Add Domain models
