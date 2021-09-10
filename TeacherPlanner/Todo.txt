@@ -81,3 +81,10 @@ TODO List APP
 
 BUGS
 - Notes section not saving when rest of page is blank
+
+Timetable
+- Make timetable editable
+
+Database Implementation
+- Change period control & notes control to one text box rather than 7
+- Add Domain models
