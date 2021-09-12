@@ -5,6 +5,7 @@ using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.Planner.Views.SettingsWindows;
 using TeacherPlanner.Planner.Views;
 using System.Windows.Controls;
+using TeacherPlanner.Login.Models;
 
 namespace TeacherPlanner
 {
@@ -29,6 +30,7 @@ namespace TeacherPlanner
             {
                 Application.Current.Shutdown();
             }
+            // Todo change how UserModel is being created
             var mainViewModel = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
             this.DataContext = mainViewModel;
             this.DataContextChanged += (sender, args) =>

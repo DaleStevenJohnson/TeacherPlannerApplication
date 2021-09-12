@@ -26,7 +26,6 @@ namespace TeacherPlanner.Login.ViewModels
             set => RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
         }
         public UserModel UserModel { get; set; }
-        public UserControl CurrentPage { get; set; }
         public ICommand LoginButtonClickedCommand { get; }
         
         private void OnLoginButtonClicked(object parameter)

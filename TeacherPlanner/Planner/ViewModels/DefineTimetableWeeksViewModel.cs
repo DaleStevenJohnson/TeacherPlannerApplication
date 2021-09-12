@@ -11,12 +11,13 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class DefineTimetableWeeksViewModel : ObservableObject
     {
-        public Action CloseAction { get; }
-        public ICommand SaveTimeTableWeeksCommand { get; }
         private string _rootpath;
         private string _filename;
         private string _filepath;
         private DateRowModel[] _rows;
+
+        public Action CloseAction { get; }
+        public ICommand SaveTimeTableWeeksCommand { get; }
 
         public DefineTimetableWeeksViewModel(Window window, UserModel userModel)
         {
@@ -37,13 +38,15 @@ namespace TeacherPlanner.Planner.ViewModels
             else
                 Rows = CreateTimeTableWeeks();
         }
-        private UserModel UserModel { get; }
-        private Window Window { get; }
+        
         public DateRowModel[] Rows 
         {
             get => _rows;
             set => RaiseAndSetIfChanged(ref _rows, value);
         }
+
+        private UserModel UserModel { get; }
+        private Window Window { get; }
 
         private bool TryGetTimeTableWeeks(out DateRowModel[] dateRows)
         {

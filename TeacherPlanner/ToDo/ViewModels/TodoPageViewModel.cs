@@ -46,6 +46,8 @@ namespace TeacherPlanner.ToDo.ViewModels
             SelectEndList();
         }
 
+        // Properties
+
         public bool HasTodoLists 
         {
             get => _hasTodoLists;
@@ -89,6 +91,8 @@ namespace TeacherPlanner.ToDo.ViewModels
             set => RaiseAndSetIfChanged(ref _todoLists, value);
         }
 
+        // Methods
+
         private void SetHasTodoLists()
         {
             HasTodoLists = TodoLists.Any();
@@ -117,7 +121,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             var position = TodoLists.Count - 1;
             SelectedTab = position;
         }
-        public void OnConfirmNewList()
+        private void OnConfirmNewList()
         {
             if (NewListName.Length > 0)
             {

@@ -14,7 +14,7 @@ namespace TeacherPlanner.Planner.Models
             int nextYear = thisYear + 1;
             AcademicYear = thisYear.ToString() + " - " + nextYear.ToString();
         }
-        private string Year { get; }
         public string AcademicYear { get; }
+        private string Year { get; }
     }
 }

@@ -31,6 +31,8 @@ namespace TeacherPlanner.Login.ViewModels
         }
         
         private string PasswordHash { get; set; }
+        public bool UsernameIsValidFormat { get; set; } = false;
+        public bool PasswordIsValidFormat { get; set; } = false;
         public ICommand CreateAccountButtonClickedCommand { get; }
         public ICommand OnPasswordChangeCommand { get; }
         public string FeedbackForCreateUsername 
@@ -44,8 +46,7 @@ namespace TeacherPlanner.Login.ViewModels
             set => RaiseAndSetIfChanged(ref _feedbackForCreatePassword, value);
         }
             
-        public bool UsernameIsValidFormat { get; set; } = false;
-        public bool PasswordIsValidFormat { get; set; } = false;
+        
         public void ParseUsername(string username)
         {
             if (username.Length > 3)

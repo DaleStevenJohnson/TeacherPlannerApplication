@@ -42,10 +42,10 @@ namespace TeacherPlanner.ToDo.ViewModels
                     OnAddSubItem();
                 }
             }
-
-
             SetHasNoActiveSubItems();
         }
+
+        // Properties
 
         public string Content { get; set; }
         public bool HasActiveSubItems 
@@ -64,13 +64,16 @@ namespace TeacherPlanner.ToDo.ViewModels
             }
         }
 
+        public ObservableCollection<TodoSubItemViewModel> SubItems { get; }
+
+        // Methods
 
         public void OnRemoveSelf()
         {
             RemoveSelfEvent.Invoke(null, this);
         }
 
-        public ObservableCollection<TodoSubItemViewModel> SubItems { get; }      
+           
 
         private void OnAddSubItem()
         {

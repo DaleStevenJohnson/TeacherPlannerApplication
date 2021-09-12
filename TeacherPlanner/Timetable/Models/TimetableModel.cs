@@ -10,9 +10,20 @@ namespace TeacherPlanner.Timetable.Models
         {
             Create(timetableFileData);
         }
+
+        // Properties
         
         public TimetableWeekModel Week1 { get; private set; }
         public TimetableWeekModel Week2 { get; private set; }
+
+        // Public Methods
+        public TimetablePeriodModel GetPeriod(int week, int day, string period)
+        {
+            return week == 1 ? Week1.GetPeriod(day, period) : Week2.GetPeriod(day, period);
+        }
+
+        // Private Methods
+
         private void Create(string[][] timetableFileData)
         {
             string[] days = new string[] {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
@@ -41,10 +52,7 @@ namespace TeacherPlanner.Timetable.Models
             }
         }
         
-        public TimetablePeriodModel GetPeriod(int week, int day, string period)
-        {
-            return week == 1 ? Week1.GetPeriod(day, period) : Week2.GetPeriod(day, period);
-        }
+       
 
        
     }

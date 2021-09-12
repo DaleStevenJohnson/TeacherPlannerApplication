@@ -33,8 +33,9 @@ namespace TeacherPlanner.ToDo.ViewModels
 
             AddTodoItemCommand = new SimpleCommand(_ => AddTodoItem());
         }
+
+        // Properties
         public string Header { get; set; }
-        public TodoListModel TodoListModel { get; }
         public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
         public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
 

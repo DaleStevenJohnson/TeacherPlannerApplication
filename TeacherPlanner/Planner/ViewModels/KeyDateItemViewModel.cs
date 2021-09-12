@@ -15,12 +15,17 @@ namespace TeacherPlanner.Planner.ViewModels
             Date = date;
             IsChecked = false;
         }
+
+        // Properties
+
         public bool IsChecked { get; set; }
         public string Description { get; }
         public string Type { get; }
         public DateTime Date { get; }
         public string DateString { get => Date.ToString("yyyy/MM/dd"); }
         public string TimeString { get => Date.ToString("HH:mm"); }
+
+        // Methods
 
         public string GetProperty(string property)
         {

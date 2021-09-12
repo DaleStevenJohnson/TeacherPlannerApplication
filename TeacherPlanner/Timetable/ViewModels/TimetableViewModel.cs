@@ -39,6 +39,9 @@ namespace TeacherPlanner.Timetable.ViewModels
                 UpdateCurrentlyDisplayedTimetableWeek();
 
         }
+
+        // Properties
+
         public bool TimetableIsImported { get; private set; }
         public bool TimetableWeeksAreDefined { get; private set; }
         public int SelectedWeek 
@@ -58,20 +61,8 @@ namespace TeacherPlanner.Timetable.ViewModels
             set => RaiseAndSetIfChanged(ref _currentlyDisplayedTimetableWeek, value);
         }
 
-        
+        // Public Methods
 
-        //TODO implement timetable shift - add button to view
-        //TODO Add total Occurances for periods - move dict count to import
-        private void UpdateCurrentlyDisplayedTimetableWeek()
-        {
-            CurrentlyDisplayedTimetableWeek = SelectedWeek == 1 ? CurrentTimetable.Week1 : CurrentTimetable.Week2;
-        }
-        private void OnSwitchTimetableWeek()
-        {
-            SelectedWeek = SelectedWeek == 1 ? 2 : 1;
-            UpdateCurrentlyDisplayedTimetableWeek();
-        }
-   
         public void OnTimetableImportClick()
         {
             var importWindow = new ImportTimetableWindow();
@@ -85,7 +76,7 @@ namespace TeacherPlanner.Timetable.ViewModels
                 TimetableChangedEvent.Invoke(null, CurrentTimetable);
             }
         }
-        
+
         public bool? DefineTimetableWeeks(UserModel userModel)
         {
             var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow(userModel);
@@ -110,6 +101,19 @@ namespace TeacherPlanner.Timetable.ViewModels
                 }
             }
             return false;
+        }
+
+
+        // Private Methods
+
+        private void UpdateCurrentlyDisplayedTimetableWeek()
+        {
+            CurrentlyDisplayedTimetableWeek = SelectedWeek == 1 ? CurrentTimetable.Week1 : CurrentTimetable.Week2;
+        }
+        private void OnSwitchTimetableWeek()
+        {
+            SelectedWeek = SelectedWeek == 1 ? 2 : 1;
+            UpdateCurrentlyDisplayedTimetableWeek();
         }
 
         private void ApplySelectedTimetable(string filename)

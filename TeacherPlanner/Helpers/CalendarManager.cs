@@ -197,6 +197,43 @@ namespace TeacherPlanner.Helpers
             }
         }
 
+        public DateTime GetAdvancedDate(DateTime date, int days)
+        {
+            DateTime newDate;
+            switch (days)
+            {
+                case 999:
+                    newDate = date.AddMonths(1);
+                    break;
+                case -999:
+                    newDate = date.AddMonths(-1);
+                    break;
+                default:
+                    newDate = date.AddDays(days);
+                    break;
+            }
+
+            var extraDays = 0;
+            if (newDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                extraDays = days < 0 ? -1 : 2;
+            }
+            else if (newDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                extraDays = days < 0 ? -2 : 1;
+            }
+            newDate = newDate.AddDays(extraDays);
+
+            if (newDate < StartOfYearDateLimit)
+                return StartOfYearDateLimit;
+            else if (newDate > EndOfYearDateLimit)
+                return EndOfYearDateLimit;
+
+            return newDate;
+        }
+
+        // Private Methods
+
         private void HandleStartOfYearDayChange(int days)
         {
             // If the right hand page is at the limit and the user is trying
@@ -259,39 +296,6 @@ namespace TeacherPlanner.Helpers
             }
         }
         
-        public DateTime GetAdvancedDate(DateTime date, int days)
-        {
-            DateTime newDate;
-            switch (days)
-            {
-                case 999:
-                    newDate = date.AddMonths(1);
-                    break;
-                case -999:
-                    newDate = date.AddMonths(-1);
-                    break;
-                default:
-                    newDate = date.AddDays(days);
-                    break;
-            }
-            
-            var extraDays = 0;
-            if (newDate.DayOfWeek == DayOfWeek.Saturday)
-            {
-                extraDays = days < 0 ? -1 : 2;
-            }
-            else if (newDate.DayOfWeek == DayOfWeek.Sunday)
-            {
-                extraDays = days < 0 ? -2 : 1;
-            }
-            newDate = newDate.AddDays(extraDays);
-            
-            if (newDate < StartOfYearDateLimit)
-                return StartOfYearDateLimit;
-            else if (newDate > EndOfYearDateLimit)
-                return EndOfYearDateLimit;
-
-            return newDate;
-        }
+        
     }
 }

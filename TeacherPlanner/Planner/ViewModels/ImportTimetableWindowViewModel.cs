@@ -107,7 +107,7 @@ namespace TeacherPlanner.Planner.ViewModels
         /// and if both are successful, it saves the file locally for future use by the application
         /// </summary>
         /// <param name="timetableFilePath"></param>
-        public bool TryImportTimetable(string timetableFilePath, string name, UserModel userModel)
+        private bool TryImportTimetable(string timetableFilePath, string name, UserModel userModel)
         {
             string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
             if (TryParseTimetableFileData(rawTimetableFileData))

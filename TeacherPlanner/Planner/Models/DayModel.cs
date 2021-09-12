@@ -10,6 +10,9 @@ namespace TeacherPlanner.Planner.Models
             NoteSectionModel = new NoteSectionModel();
             Date = date;
         }
+
+        // Properties
+
         public DateTime Date { get; }
         public PeriodModel[] Periods;
         public PeriodModel Period1
@@ -45,18 +48,15 @@ namespace TeacherPlanner.Planner.Models
 
         public NoteSectionModel NoteSectionModel { get; set; }
         
+        // Public Methods
+
         public void LoadPeriodDataIntoNewPeriod(int periodNumber, string classCode, string[] periodData)
         {
             PeriodModel newPeriodModel = new PeriodModel(periodNumber, classCode);
             newPeriodModel.LoadData(periodData);
             Periods[periodNumber - 1] = newPeriodModel;
         }
-        private PeriodModel LoadEmptyIntoNewPeriod(int periodNumber)
-        {
-            PeriodModel newEmptyPeriodModel = new PeriodModel(periodNumber, string.Empty);
-            newEmptyPeriodModel.LoadData(new string[] { " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` " });
-            return newEmptyPeriodModel;
-        }
+        
         public void LoadEmptyPeriods()
         {
             for (int i = 0; i < Periods.Length; i++)
@@ -81,6 +81,15 @@ namespace TeacherPlanner.Planner.Models
             saveData += notes;
 
             return saveData;
+        }
+
+        // Private methods
+
+        private PeriodModel LoadEmptyIntoNewPeriod(int periodNumber)
+        {
+            PeriodModel newEmptyPeriodModel = new PeriodModel(periodNumber, string.Empty);
+            newEmptyPeriodModel.LoadData(new string[] { " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` ", " ` ` " });
+            return newEmptyPeriodModel;
         }
     }
 }

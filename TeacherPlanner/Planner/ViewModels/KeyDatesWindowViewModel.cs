@@ -58,10 +58,10 @@ namespace TeacherPlanner.Planner.ViewModels
             // Event Subscription
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
 
-            
-            
-
         }
+
+        // Properties
+
         public List<string> KeyDateTypes { get; }
         public IEnumerable<string> HoursList { get; } = new List<string> { "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18" };
         public IEnumerable<string> MinuteList { get; } = new List<string> { "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" };
@@ -128,6 +128,8 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _newKeyDateTimeMinute;
             set => RaiseAndSetIfChanged(ref _newKeyDateTimeMinute, value);
         }
+
+        // Methods
 
         public void SortKeyDates()
         {

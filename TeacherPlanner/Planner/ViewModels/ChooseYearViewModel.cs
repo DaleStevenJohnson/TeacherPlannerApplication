@@ -37,10 +37,39 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _yearSelectModels;
             set => RaiseAndSetIfChanged(ref _yearSelectModels, value);
         }
+
+
         public void OnYearSelected(object v)
         {
             ChooseYearEvent.Invoke(null, (string)v);
         }
+
+        public void AddYear()
+        {
+            List<YearSelectModel> yearSelectModels;
+            if (YearSelectModels != null)
+                yearSelectModels = new List<YearSelectModel>(YearSelectModels);
+            else
+                yearSelectModels = new List<YearSelectModel>();
+
+            string[] currentYears = Directory.GetDirectories(FileHandlingHelper.LoggedInUserPath);
+            YearSelectModel newYear;
+            if (currentYears.Length == 0)
+            {
+                newYear = new YearSelectModel(CalendarManager.GetStartingYearOfAcademicYear(DateTime.Today));
+                yearSelectModels.Add(newYear);
+            }
+            else
+            {
+                var finalYear = Path.GetFileName(currentYears[currentYears.Length - 1]);
+                var yearToAdd = FindNextYear(finalYear);//Int32.Parse(finalYear.Substring(0, 4)) + 1;
+                newYear = new YearSelectModel(yearToAdd.ToString());
+                yearSelectModels.Add(newYear);
+            }
+            Directory.CreateDirectory(Path.Combine(FileHandlingHelper.LoggedInUserPath, FileHandlingHelper.EncryptFileOrDirectory(newYear.AcademicYear, UserModel.Key)));
+            YearSelectModels = yearSelectModels;
+        }
+
         private string GetCurrentYear()
         {
             var day = Int32.Parse(DateTime.Today.ToString("dd"));
@@ -72,31 +101,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             YearSelectModels = yearSelectModels;
         }
-        public void AddYear()
-        {
-            List<YearSelectModel> yearSelectModels;
-            if (YearSelectModels != null)
-                yearSelectModels = new List<YearSelectModel>(YearSelectModels);
-            else
-                yearSelectModels = new List<YearSelectModel>();
-
-            string[] currentYears = Directory.GetDirectories(FileHandlingHelper.LoggedInUserPath);
-            YearSelectModel newYear;
-            if (currentYears.Length == 0)
-            {
-                newYear = new YearSelectModel(CalendarManager.GetStartingYearOfAcademicYear(DateTime.Today));
-                yearSelectModels.Add(newYear);
-            }
-            else
-            {
-                var finalYear = Path.GetFileName(currentYears[currentYears.Length - 1]);
-                var yearToAdd = FindNextYear(finalYear);//Int32.Parse(finalYear.Substring(0, 4)) + 1;
-                newYear = new YearSelectModel(yearToAdd.ToString());
-                yearSelectModels.Add(newYear);
-            }
-            Directory.CreateDirectory(Path.Combine(FileHandlingHelper.LoggedInUserPath, FileHandlingHelper.EncryptFileOrDirectory(newYear.AcademicYear, UserModel.Key)));
-            YearSelectModels = yearSelectModels;
-        }
+        
         private int FindNextYear(string finalYear)
         {
             var currentAcademicStartYear = 2021;

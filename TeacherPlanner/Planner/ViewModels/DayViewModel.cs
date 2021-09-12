@@ -87,12 +87,6 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _keyDatesAreShowing, value);
         }
 
-        private ObservableCollection<KeyDateItemViewModel> AllKeyDates
-        {
-            get => _allKeyDates;
-            set => RaiseAndSetIfChanged(ref _allKeyDates, value);
-        }
-
         public ObservableCollection<KeyDateItemViewModel> TodaysKeyDates
         {
             get => _todaysKeyDates;
@@ -120,9 +114,21 @@ namespace TeacherPlanner.Planner.ViewModels
         // Private Properties
         private TimetableModel Timetable { get; }
 
-
+        private ObservableCollection<KeyDateItemViewModel> AllKeyDates
+        {
+            get => _allKeyDates;
+            set => RaiseAndSetIfChanged(ref _allKeyDates, value);
+        }
 
         // Public Methods
+
+        public void UpdateTodaysKeyDates()
+        {
+            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarViewModel.Date.Date).OrderBy(keydate => keydate.Date));
+            IsKeyDate = TodaysKeyDates.Any();
+            CalendarViewModel.SetKeyDates();
+        }
+
         public DayModel LoadAndPopulateNewDay(DateTime date, bool overwriteClassCode = false)
         {
             var filenameDate = date.ToString(Formats.FullDateFormat);
@@ -260,12 +266,7 @@ namespace TeacherPlanner.Planner.ViewModels
             TurnPageEvent.Invoke(null, (AdvancePageState)v);
         }
 
-        public void UpdateTodaysKeyDates()
-        {
-            TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarViewModel.Date.Date).OrderBy(keydate => keydate.Date));
-            IsKeyDate = TodaysKeyDates.Any();
-            CalendarViewModel.SetKeyDates();
-        }
+        
 
         private void OnToggleKeyDates()
         {
