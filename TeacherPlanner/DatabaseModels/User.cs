@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TeacherPlanner.Domain
+namespace TeacherPlanner.DatabaseModels
 {
     public class User
     {
-        public User(string username, string password)
-        {
-            Username = username;
-            Password = password;
-        }
+        // PK
+        public int ID { get; set; }
 
+        // Data
         public string Username { get; set; }
         public string Password { get; set; }
     }

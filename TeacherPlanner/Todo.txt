@@ -93,3 +93,11 @@ Database Implementation
 - Change period control & notes control to one text box rather than 7
 - Add Domain models
 - Change KeyDateItemViewModel to contain an ObservableCollection of KeyDateItemModels
+
+microsoft.data.sqllite
+dapper
+Map_names_with_underscore
+
+Rename database schema
+
+Store UTC, display local times
