@@ -4,12 +4,15 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class UserSettings
+    class AcademicYear
     {
         // PK
         public int ID { get; set; }
         
         // FK1
         public int UserID { get; set; }
+        
+        // Data
+        public string Year { get; set; }
     }
 }

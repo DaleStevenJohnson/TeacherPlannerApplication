@@ -4,12 +4,14 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class UserSettings
+    public class User
     {
         // PK
         public int ID { get; set; }
-        
-        // FK1
-        public int UserID { get; set; }
+
+        // Data
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
+
 }

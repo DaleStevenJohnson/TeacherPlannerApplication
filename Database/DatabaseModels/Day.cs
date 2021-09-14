@@ -4,12 +4,16 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class UserSettings
+    class Day
     {
         // PK
         public int ID { get; set; }
-        
+
         // FK1
-        public int UserID { get; set; }
+        public int AcademicYearID { get; set; }
+
+        // Data
+        public DateTime Date { get; set; }
+        public string Notes { get; set; }
     }
 }

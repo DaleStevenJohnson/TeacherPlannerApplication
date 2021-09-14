@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -15,7 +17,7 @@ namespace TeacherPlanner.Login.ViewModels
         private string _feedbackForCreatePassword;
         public CreateAccountViewModel()
         {
-            CreateAccountButtonClickedCommand = new SimpleCommand(password => OnCreateAccountButtonClicked(password));
+            CreateAccountButtonClickedCommand = new SimpleCommand(password => OnCreateAccountButtonClicked());
             OnPasswordChangeCommand = new SimpleCommand(password => OnPasswordChange(password));
             FeedbackForCreateUsername = string.Empty;
             FeedbackForCreatePassword = string.Empty;
@@ -68,7 +70,7 @@ namespace TeacherPlanner.Login.ViewModels
             {
                 FeedbackForCreatePassword = "Password is Valid";
                 PasswordIsValidFormat = true;
-                PasswordHash = password.Trim();//SecurePasswordHasher.Hash(password.Trim());
+                PasswordHash = SecurePasswordHasher.Hash(password.Trim());
             }
             else
             {
@@ -84,42 +86,22 @@ namespace TeacherPlanner.Login.ViewModels
         }
         private void StoreCredentials()
         {
-            // Combine username and the hash of their entered password and store a hash of that value
-            var userHash = SecurePasswordHasher.Hash(Username + PasswordHash);
-            FileHandlingHelper.TryWriteDataToFile(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountDataFileName, userHash);
-
-            // Store username in separate file using symmetrical encryption to be able to keep track of registered users
-            FileHandlingHelper.TryWriteDataToFile(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountManagementUsersFileName, Username, "a", true, FileHandlingHelper.Secret);
+            // SQLite DB implementation           
+            var user = new User()
+            {
+                Username = Username,
+                Password = PasswordHash
+            };
+            DatabaseManager.AddUser(user);
         }
 
-        private bool CheckUserExists(string username)
-        {
-            var path = Path.Combine(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountManagementUsersFileName);
-            if (!File.Exists(path))
-            {
-                return false;
-            }
-            var users = File.ReadAllLines(path);
-            for (int i = 0; i < users.Length; i++)
-            {
-                if (username == Cryptography.DecryptString(FileHandlingHelper.Secret, users[i].Trim()))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void OnCreateAccountButtonClicked(object password)
+        public void OnCreateAccountButtonClicked()
         {       
             if (UsernameIsValidFormat && PasswordIsValidFormat)
             {
-                if (!CheckUserExists(Username))
+                if (!DatabaseManager.CheckIfUserExists(Username))
                 {
                     StoreCredentials();
-                    PasswordBox passwordBox = (PasswordBox)password;
-                    UserModel user = new UserModel(Username, passwordBox.Password.Trim());
-                    Directory.CreateDirectory(Path.Combine(FileHandlingHelper.UserDataPath, FileHandlingHelper.EncryptFileOrDirectory(Username)));
                     MessageBox.Show("Account Created Successfully");
                 }
                 else

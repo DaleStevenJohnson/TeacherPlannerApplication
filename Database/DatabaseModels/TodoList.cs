@@ -4,12 +4,14 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class UserSettings
+    class TodoList
     {
         // PK
         public int ID { get; set; }
-        
         // FK1
-        public int UserID { get; set; }
+        public int AcademicYearID { get; set; }
+        
+        // Data
+        public string Name { get; set; }
     }
 }

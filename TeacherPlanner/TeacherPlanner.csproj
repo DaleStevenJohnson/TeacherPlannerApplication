@@ -43,6 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Database\Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\Fonts\Montserrat-Bold.ttf" />
     <Resource Include="Assets\Fonts\Montserrat-Light.ttf" />
     <Resource Include="Assets\Fonts\NothingYouCouldDo-Regular.ttf" />

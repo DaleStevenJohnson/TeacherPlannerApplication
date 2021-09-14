@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Database.DatabaseModels
+namespace TeacherPlanner.DatabaseModels
 {
     class UserSettings
     {
