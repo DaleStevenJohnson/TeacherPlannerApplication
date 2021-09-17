@@ -82,6 +82,9 @@ TODO List APP
 BUGS
 - Notes section not saving when rest of page is blank
 
+CreateAccount
+- Replace the invalid message box with locking of the button on the UI.
+
 Timetable
 - Make timetable editable
 

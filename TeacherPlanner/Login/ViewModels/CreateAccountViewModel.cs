@@ -99,6 +99,7 @@ namespace TeacherPlanner.Login.ViewModels
         {
             if (!UsernameIsValidFormat || !PasswordIsValidFormat)
             {
+                // Todo - replace the below message box with locking of the button on the UI.
                 MessageBox.Show($"Username:{UsernameIsValidFormat}, Password:{PasswordIsValidFormat}");
                 return;
             }
