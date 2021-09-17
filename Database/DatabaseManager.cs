@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq;
+using Dapper;
 using Database.DatabaseModels;
 
 namespace Database
@@ -17,127 +19,61 @@ namespace Database
             //databaseConnection = new SQLiteConnection("Data Source=TeacherPlannerDB.db");
         }
 
-        public static void AddUser(User user)
+        public static bool TryAddUser(User user)
         {
-            var query = $"INSERT INTO Users (username, password) VALUES ('{user.Username}', '{user.Password}');";
-            insertQuery(query);
-
+            var query = "INSERT INTO Users (username, password) VALUES (@Username, @Password);";
+            return InsertModelsIntoDatabase(query, user);
         }
 
         public static bool CheckIfUserExists(string username)
         {
-            var query = $"SELECT username FROM Users WHERE username='{username}'";
-            var result = selectQuery(query);
+            var query = "SELECT username FROM Users WHERE username=@Username";
+            var parameters = new Dictionary<string, object> { { "@Username", username } };
+            var result = GetModelsFromDatabase<User>(query, parameters);
             return result.Count != 0;
         }
 
         public static User GetUserAccount(string username)
         {
-            string query = $"SELECT username,password FROM Users WHERE username='{username}';";
-            var data = selectQuery(query);
-            if (data.Count == 2)
+            string query = "SELECT * FROM Users WHERE username=@Username";
+            var parameters = new Dictionary<string, object> { { "@Username", username } };
+            var data = GetModelsFromDatabase<User>(query, parameters);
+            if (data.Count == 1)
             {
-                return new User()
-                {
-                    Username = data[0],
-                    Password = data[1]
-                };
+                return data[0];
             }
             return null;
         }
 
         public static List<User> GetUserAccounts()
         {
-            string query = $"SELECT username,password FROM Users;";
-            var data = selectQuery(query);
-            var users = new List<User>();
-            for (int i = 0; i < data.Count; i += 2)
-            {
-                var user = new User()
-                {
-                    Username = data[i],
-                    Password = data[i + 1]
-                };
-                users.Add(user);
-            }
-            return users;
-        }
-
-        private static bool insertQuery(string query)
-        {
-            int result = 0;
-            try
-            {
-                using (SQLiteConnection databaseConnection = new SQLiteConnection(_connectionString))
-                {
-                    databaseConnection.Open();  //Initiate connection to the db
-                    var command = databaseConnection.CreateCommand();
-                    command.CommandText = query;  //set the passed query
-                    result = command.ExecuteNonQuery();
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                //Add your exception code here.
-            }
-            return result > 0;
+            string query = "SELECT * FROM Users;";
+            return GetModelsFromDatabase<User>(query);
         }
 
 
-        private static List<string> selectQuery(string query)
+        // Private Methods
+       
+        private static bool InsertModelsIntoDatabase(string query, params object[] models)
         {
-            //SQLiteDataAdapter ad;
-            //DataTable dt = new DataTable();
-            List<string> results = new List<string>();
-            try
+            int rowsAffected = 0;
+            using (IDbConnection connection = new SQLiteConnection(_connectionString))
             {
-                using (SQLiteConnection databaseConnection = new SQLiteConnection(_connectionString))
+                foreach (object model in models)
                 {
-                    databaseConnection.Open();  //Initiate connection to the db
-                    var command = databaseConnection.CreateCommand();
-                    command.CommandText = query;  //set the passed query
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            results.Add(reader.GetString(i));
-                        }
-                    }
-                    //ad = new SQLiteDataAdapter(command);
-                    //ad.Fill(dt); //fill the datasource
+                    rowsAffected += connection.Execute(query, model);
                 }
             }
-            catch (SQLiteException ex)
-            {
-                //Add your exception code here.
-            }
-            
-            return results;
+            return rowsAffected > 0;
         }
 
-        private static DataTable selectMultipleColumnsQuery(string query)
+        private static List<T> GetModelsFromDatabase<T>(string query, Dictionary<string, object> parameters = null)
         {
-            //SQLiteDataAdapter ad;
-            DataTable dataTable = new DataTable();
-            List<string> results = new List<string>();
-            try
+            using (IDbConnection connection = new SQLiteConnection(_connectionString))
             {
-                using (SQLiteConnection databaseConnection = new SQLiteConnection(_connectionString))
-                {
-                    databaseConnection.Open();  //Initiate connection to the db
-                    var command = databaseConnection.CreateCommand();
-                    command.CommandText = query;  //set the passed query
-                    var adapter = new SQLiteDataAdapter(command);
-                    adapter.Fill(dataTable); //fill the datasource
-                }
+                var output = connection.Query<T>(query, new DynamicParameters(parameters));
+                return output.ToList();
             }
-            catch (SQLiteException ex)
-            {
-                //Add your exception code here.
-            }
-
-            return dataTable;
         }
     }
 }

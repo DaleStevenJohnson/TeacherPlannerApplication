@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class TimetablePeriod
+    public class TimetablePeriod
     {
         // PK
         public int ID { get; set; }

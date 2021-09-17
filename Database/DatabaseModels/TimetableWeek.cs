@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class TimetableWeek
+    public class TimetableWeek
     {
         // PK
         public int ID { get; set; }
@@ -13,6 +13,6 @@ namespace Database.DatabaseModels
 
         // Data
         public DateTime WeekBeginning { get; set; }
-        public int? Week { get; set; }
+        public int Week { get; set; }
     }
 }

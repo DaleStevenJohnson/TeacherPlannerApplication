@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TeacherPlanner.DatabaseModels
 {
-    class UserSettings
+    public class UserSettings
     {
         // PK
         public int ID { get; set; }

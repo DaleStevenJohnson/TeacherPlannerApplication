@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class AcademicYear
+    public class AcademicYear
     {
         // PK
         public int ID { get; set; }

@@ -27,8 +27,8 @@ namespace TeacherPlanner.Login.ViewModels
             get => _username;
             set 
             {
-                RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
-                ParseUsername(_username);
+                if (RaiseAndSetIfChanged(ref _username, value.Trim().ToLower()))
+                    ParseUsername(_username);
             }
         }
         
@@ -84,7 +84,7 @@ namespace TeacherPlanner.Login.ViewModels
             PasswordBox passwordBox = (PasswordBox)password;
             ParsePassword(passwordBox.Password);
         }
-        private void StoreCredentials()
+        private bool StoreCredentials()
         {
             // SQLite DB implementation           
             var user = new User()
@@ -92,28 +92,28 @@ namespace TeacherPlanner.Login.ViewModels
                 Username = Username,
                 Password = PasswordHash
             };
-            DatabaseManager.AddUser(user);
+            return DatabaseManager.TryAddUser(user);
         }
 
         public void OnCreateAccountButtonClicked()
-        {       
-            if (UsernameIsValidFormat && PasswordIsValidFormat)
-            {
-                if (!DatabaseManager.CheckIfUserExists(Username))
-                {
-                    StoreCredentials();
-                    MessageBox.Show("Account Created Successfully");
-                }
-                else
-                {
-                    Username = string.Empty;
-                    MessageBox.Show("User already exists");
-                }
-            }
-            else
+        {
+            if (!UsernameIsValidFormat || !PasswordIsValidFormat)
             {
                 MessageBox.Show($"Username:{UsernameIsValidFormat}, Password:{PasswordIsValidFormat}");
+                return;
             }
+
+            if (DatabaseManager.CheckIfUserExists(Username))
+            {
+                Username = string.Empty;
+                MessageBox.Show("User already exists");
+                return;
+            }
+            
+            if (StoreCredentials())
+                MessageBox.Show("Account Created Successfully");
+            else
+                MessageBox.Show("Error creating account");
         }
     }
 }

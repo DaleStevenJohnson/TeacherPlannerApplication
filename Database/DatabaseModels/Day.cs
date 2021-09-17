@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class Day
+    public class Day
     {
         // PK
         public int ID { get; set; }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.DatabaseModels
 {
-    class TodoList
+    public class TodoList
     {
         // PK
         public int ID { get; set; }
