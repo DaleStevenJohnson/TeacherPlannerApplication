@@ -27,7 +27,7 @@ namespace TeacherPlanner.Login.ViewModels
             get => _username;
             set => RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
         }
-        public UserModel UserModel { get; set; }
+        public User User { get; set; }
         public ICommand LoginButtonClickedCommand { get; }
         
         private void OnLoginButtonClicked(object parameter)
@@ -36,17 +36,11 @@ namespace TeacherPlanner.Login.ViewModels
             var window = (Window)values[0];
             var passwordBox = (PasswordBox)values[1];
 
-            var user = Authenticate(Username, passwordBox.Password.Trim());
+            User = Authenticate(Username, passwordBox.Password.Trim());
             if (LoggedIn)
-            {
-                UserModel = new UserModel(user.Username, user.Password);
-                //MessageBox.Show("Success");
                 window.Close();
-            }
             else
-            {
                 MessageBox.Show("Invalid Credentials");
-            }
         }
 
         private User Authenticate(string username, string password)

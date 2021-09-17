@@ -13,6 +13,6 @@ namespace Database.DatabaseModels
         public int UserID { get; set; }
         
         // Data
-        public string Year { get; set; }
+        public int Year { get; set; }
     }
 }

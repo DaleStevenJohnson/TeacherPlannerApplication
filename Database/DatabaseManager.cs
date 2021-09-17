@@ -35,7 +35,7 @@ namespace Database
 
         public static User GetUserAccount(string username)
         {
-            string query = "SELECT * FROM Users WHERE username=@Username";
+            string query = "SELECT * FROM Users WHERE username=@Username;";
             var parameters = new Dictionary<string, object> { { "@Username", username } };
             var data = GetModelsFromDatabase<User>(query, parameters);
             if (data.Count == 1)
@@ -51,9 +51,34 @@ namespace Database
             return GetModelsFromDatabase<User>(query);
         }
 
+        
+        
+        // Academic Years
+
+        public static List<AcademicYear> GetAcademicYears(int ID)
+        {
+            string query = "SELECT * FROM AcademicYears WHERE user_id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", ID } };
+            return GetModelsFromDatabase<AcademicYear>(query, parameters);
+        }
+
+        public static bool TrySaveAcademicYear(AcademicYear academicYear)
+        {
+            var query = "INSERT INTO AcademicYears (year, user_id) VALUES (@Year, @UserID);";
+            return InsertModelsIntoDatabase(query, academicYear);
+        }
+
+        public static bool CheckIfAcademicYearExists(int userID, int year)
+        {
+            var query = "SELECT year FROM AcademicYears WHERE user_id=@UserID AND year=@Year";
+            var parameters = new Dictionary<string, object> { { "@UserID", userID }, { "@Year", year} };
+            var result = GetModelsFromDatabase<AcademicYear>(query, parameters);
+            return result.Count != 0;
+        }
+
 
         // Private Methods
-       
+
         private static bool InsertModelsIntoDatabase(string query, params object[] models)
         {
             int rowsAffected = 0;

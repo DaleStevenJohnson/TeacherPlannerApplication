@@ -83,15 +83,15 @@ namespace TeacherPlanner.Helpers
         public DateTime EndOfYearDateLimit { get; private set; }
 
         // Static Methods
-        public static string GetStartingYearOfAcademicYear(DateTime date)
+        public static int GetStartingYearOfAcademicYear(DateTime date)
         {
-            var day = Int32.Parse(date.ToString("dd"));
-            var month = Int32.Parse(date.ToString("MM"));
-            var year = Int32.Parse(date.ToString("yyyy"));
+            var day = date.Day;
+            var month = date.Month;
+            var year = date.Year; 
             if ((month == 8 && day <= 15) || month > 1 && month < 8)
-                return (year - 1).ToString();
+                return (year - 1);
             else
-                return year.ToString();
+                return year;
         }
 
         public static int GetWeek(DateTime date)
@@ -129,7 +129,7 @@ namespace TeacherPlanner.Helpers
         }
         public static bool IsAcademicYearNow(string year)
         {
-            var thisAcademicYearString = GetStartingYearOfAcademicYear(DateTime.Today);
+            var thisAcademicYearString = GetStartingYearOfAcademicYear(DateTime.Today).ToString();
             return year == thisAcademicYearString;
         }
 

@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Linq;
+using Database.DatabaseModels;
 using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Login.Models
 {
     public class UserModel
     {
-        public UserModel(string username, string password)
+        public UserModel(User user)
         {
-            Username = username;
-            Key = GetEncrypted(password, password, 32);
-            UsernameHash = GetEncrypted(username, password, 20);
+            ID = user.ID;
+            Username = user.Username;
+            Key = GetEncrypted(user.Password, user.Password, 32);
         }
+        public int ID { get; }
         public string Username { get; }
-        public string UsernameHash { get; }
         public string Key { get; }
         private string GetEncrypted(string input, string keyString, int length)
         {

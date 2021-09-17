@@ -20,8 +20,6 @@ namespace TeacherPlanner
         {
             InitializeComponent();
 
-           
-
             var accountManagementViewModel = new AccountManagementViewModel();
             var accountManagementWindow = new AccountManagementWindow
             {
@@ -35,11 +33,9 @@ namespace TeacherPlanner
                 Application.Current.Shutdown();
             }
 
+            var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
+            var mainViewModel = new MainViewModel(user);
             
-
-
-            // Todo change how UserModel is being created
-            var mainViewModel = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
             this.DataContext = mainViewModel;
             this.DataContextChanged += (sender, args) =>
             {
