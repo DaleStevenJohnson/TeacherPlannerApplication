@@ -12,8 +12,8 @@ namespace Database
     {
         //private SQLiteConnection databaseConnection;
         private static string _connectionString = "Data Source=TeacherPlannerDB.db";
-       
-        
+
+
         //
         // User
         //
@@ -50,7 +50,7 @@ namespace Database
             return GetModelsFromDatabase<User>(query);
         }
 
-        
+
         //
         // Academic Years
         //
@@ -71,7 +71,7 @@ namespace Database
         public static bool CheckIfAcademicYearExists(int userID, int year)
         {
             var query = "SELECT year FROM AcademicYears WHERE user_id=@UserID AND year=@Year";
-            var parameters = new Dictionary<string, object> { { "@UserID", userID }, { "@Year", year} };
+            var parameters = new Dictionary<string, object> { { "@UserID", userID }, { "@Year", year } };
             var result = GetModelsFromDatabase<AcademicYear>(query, parameters);
             return result.Count != 0;
         }
@@ -89,7 +89,59 @@ namespace Database
         }
 
 
+        //
+        // Todo List
+        //
+
+        public static bool TrySaveTodoList(TodoList todoList, out int id)
+        {
+            var query = "INSERT INTO TodoLists (academic_year_id, name) VALUES (@AcademicYearID, @Name);";
+            var result = InsertModelsIntoDatabase(query, todoList);
+            id = GetLastIDFromDatabase("TodoLists");
+            return result;
+        }
+
+        public static List<TodoList> GetTodoLists(int academicYearID)
+        {
+            string query = "SELECT * FROM TodoLists WHERE academic_year_id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", academicYearID } };
+            return GetModelsFromDatabase<TodoList>(query, parameters);
+        }
+
+        public static bool RemoveTodoList(int id)
+        {
+            RemoveTodoItems(id);
+            var query = $"DELETE * FROM TodoLists WHERE id=@ID";
+            var parameters = new Dictionary<string, object> { { "@ID", id } };
+            return RemoveFromDatabase(query, parameters);
+        }
+
+        public static bool RemoveTodoItems(int id)
+        {
+            var query = $"DELETE * FROM TodoItems WHERE todo_list_id=@ID";
+            var parameters = new Dictionary<string, object> { { "@ID", id } };
+            return RemoveFromDatabase(query, parameters);
+        }
+
+
         // Private Methods
+
+        private static int GetLastIDFromDatabase(string tablename)
+        {
+            var query = "SELECT id FROM @TableName WHERE id=(SELECT max(id) FROM @TableName);";
+            var parameters = new Dictionary<string, object> { { "@TableName", tablename } };
+            using (IDbConnection connection = new SQLiteConnection(_connectionString))
+            {
+                return connection.Query<int>(query, new DynamicParameters(parameters)).FirstOrDefault();
+            }
+        }
+        private static bool RemoveFromDatabase(string query, Dictionary<string, object> parameters)
+        {
+            using (IDbConnection connection = new SQLiteConnection(_connectionString))
+            {
+                return connection.Execute(query, parameters) > 0;
+            }
+        }
 
         private static bool InsertModelsIntoDatabase(string query, params object[] models)
         {

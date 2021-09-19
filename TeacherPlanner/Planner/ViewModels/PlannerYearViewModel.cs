@@ -40,7 +40,7 @@ namespace TeacherPlanner.Planner.ViewModels
             TimetableViewModel = new TimetableViewModel(UserModel);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);
             TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
-            ToDoViewModel = new TodoPageViewModel(UserModel);
+            ToDoViewModel = new TodoPageViewModel(UserModel, year);
             
             // keyDates view Model new up and event subscription
             _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates);

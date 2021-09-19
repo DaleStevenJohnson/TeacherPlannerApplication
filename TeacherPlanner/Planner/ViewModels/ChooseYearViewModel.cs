@@ -27,8 +27,9 @@ namespace TeacherPlanner.Planner.ViewModels
             UserModel = usermodel;
 
             // Property Assignments
-            YearSelectModels = GetAcademicYears(); ; //new List<YearSelectModel>();
-
+            YearSelectModels = GetAcademicYears();
+            if (!YearSelectModels.Any())
+                OnAddNewAcademicYear();
 
             //Command Assignments
             AddYearCommand = new SimpleCommand(_ => OnAddNewAcademicYear());
@@ -53,23 +54,25 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnAddNewAcademicYear()
         {
-            var year = GetNextAcademicYear();
+            if (AddAcademicYearToDatabase())   
+                YearSelectModels = GetAcademicYears();
+        }
 
+        private bool AddAcademicYearToDatabase()
+        {
+            var year = GetNextAcademicYear();
+            
             if (!DatabaseManager.CheckIfAcademicYearExists(UserModel.ID, year))
             {
-                
                 var academicYear = new AcademicYear()
                 {
                     UserID = UserModel.ID,
                     Year = year
                 };
-
-                if (DatabaseManager.TrySaveAcademicYear(academicYear))
-                    YearSelectModels = GetAcademicYears();
+                return DatabaseManager.TrySaveAcademicYear(academicYear);
             }
+            return false;
         }
-
-        
 
         private int GetNextAcademicYear()
         {
@@ -87,18 +90,13 @@ namespace TeacherPlanner.Planner.ViewModels
                 
         }
 
-
         private ObservableCollection<YearSelectModel> GetAcademicYears()
         {
             var yearSelectModels = new ObservableCollection<YearSelectModel>();
             // Get currently stored Academic Years from database
             var academicYears = DatabaseManager.GetAcademicYears(UserModel.ID);
             
-            if (!academicYears.Any())
-            {
-                OnAddNewAcademicYear();
-            }
-            else
+            if (academicYears.Any())
             {
                 foreach (var year in academicYears)
                 {

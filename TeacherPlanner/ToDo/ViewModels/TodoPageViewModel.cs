@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using TeacherPlanner.ToDo.Views;
 using System.Windows;
+using Database;
+using TeacherPlanner.Planner.Models;
+using Database.DatabaseModels;
 
 namespace TeacherPlanner.ToDo.ViewModels
 {
@@ -22,16 +25,17 @@ namespace TeacherPlanner.ToDo.ViewModels
         private bool _isAddingNewList;
         private bool _hasTodoLists;
         private int _selectedTab;
+        private readonly YearSelectModel _year;
 
         public ICommand AddTodoListCommand { get; }
         public ICommand ConfirmNewTodoListCommand { get; }
         public ICommand CancelNewTodoListCommand { get; }
         public ICommand RemoveTodoListCommand { get; }
-        public TodoPageViewModel(UserModel userModel)
+        public TodoPageViewModel(UserModel userModel, YearSelectModel year)
         {
             UserModel = userModel;
-
-            TodoLists = new ObservableCollection<TodoListViewModel>();
+            _year = year;
+            TodoLists = GetTodoLists();
             CanEditListNames = false;
             CanDeleteAnything = false;
             IsAddingNewList = false;
@@ -42,6 +46,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             ConfirmNewTodoListCommand = new SimpleCommand(_ => OnConfirmNewList());
             CancelNewTodoListCommand = new SimpleCommand(_ => ResetAddNewListBox());
 
+            
             SetHasTodoLists();
             SelectEndList();
         }
@@ -58,8 +63,6 @@ namespace TeacherPlanner.ToDo.ViewModels
             get => _selectedTab;
             set => RaiseAndSetIfChanged(ref _selectedTab, value);
         }
-
-
 
         public string NewListName
         {
@@ -93,14 +96,27 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         // Methods
 
+        private ObservableCollection<TodoListViewModel> GetTodoLists()
+        {
+            var todoLists = new ObservableCollection<TodoListViewModel>();
+            var databaseObjects = DatabaseManager.GetTodoLists(_year.ID);
+            foreach (var list in databaseObjects)
+            {
+                var model = new TodoListModel(list.Name, list.ID);
+                var viewModel = new TodoListViewModel(model);
+                todoLists.Add(viewModel);
+            }
+            return todoLists;
+        }
+
         private void SetHasTodoLists()
         {
             HasTodoLists = TodoLists.Any();
         }
         
-        private void OnRemoveTodoList(TodoListViewModel todoListModel)
+        private void OnRemoveTodoList(TodoListViewModel todoListViewModel)
         {
-            if (todoListModel.ActiveTodoItems.Any())
+            if (todoListViewModel.Model.ActiveTodoItems.Any())
             {
                 var result = MessageBox.Show(
                     "This List still has active tasks - are you sure you want to delete?",
@@ -111,10 +127,13 @@ namespace TeacherPlanner.ToDo.ViewModels
                 if (result != MessageBoxResult.Yes)
                     return;
             }
-            todoListModel.RemoveSelfEvent -= (_, __) => OnRemoveTodoList(__);
-            TodoLists.Remove(todoListModel);
-            SetHasTodoLists();
-            SelectEndList();
+            if (DatabaseManager.RemoveTodoList(todoListViewModel.Model.ID))
+            {
+                todoListViewModel.RemoveSelfEvent -= (_, __) => OnRemoveTodoList(__);
+                TodoLists.Remove(todoListViewModel);
+                SetHasTodoLists();
+                SelectEndList();
+            }
         }
         private void SelectEndList()
         {
@@ -125,12 +144,21 @@ namespace TeacherPlanner.ToDo.ViewModels
         {
             if (NewListName.Length > 0)
             {
-                var list = new TodoListViewModel(new TodoListModel(NewListName));
-                list.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
-                TodoLists.Add(list);
-                SetHasTodoLists();
-                SelectEndList();
-                ResetAddNewListBox();
+                var list = new TodoList()
+                {
+                    Name = NewListName,
+                    AcademicYearID = _year.ID
+                };
+
+                if (DatabaseManager.TrySaveTodoList(list, out var id))
+                {
+                    var listModel = new TodoListViewModel(new TodoListModel(NewListName, id));
+                    listModel.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
+                    TodoLists.Add(listModel);
+                    SetHasTodoLists();
+                    SelectEndList();
+                    ResetAddNewListBox();
+                }
             }
         }
 

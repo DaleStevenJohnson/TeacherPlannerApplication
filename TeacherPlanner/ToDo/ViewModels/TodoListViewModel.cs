@@ -19,25 +19,16 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         public TodoListViewModel(TodoListModel todoListModel)
         {
-            Header = todoListModel.Header;
-
-            ActiveTodoItems = new ObservableCollection<TodoItemViewModel>();
-            CompletedTodoItems = new ObservableCollection<TodoItemViewModel>();
+            // Property Assignment
+            Model = todoListModel;
+            
+            // Command Assignment
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
-
-            foreach (var item in todoListModel.TodoItems)
-            {
-                AddTodoItem(item);
-            }
-
-
             AddTodoItemCommand = new SimpleCommand(_ => AddTodoItem());
         }
 
         // Properties
-        public string Header { get; set; }
-        public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
-        public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
+        public TodoListModel Model { get; }      
 
         public void OnRemoveSelf()
         {
@@ -68,22 +59,21 @@ namespace TeacherPlanner.ToDo.ViewModels
 
             item.RemoveSelfEvent -= (_, todoItem) => RemoveTodoItem(todoItem);
             item.CompletedStatusChangedEvent -= (_, todoItem) => OnTodoItemCompleted(todoItem);
-            ActiveTodoItems.Remove(item);
+            Model.ActiveTodoItems.Remove(item);
         }
 
         private void OnTodoItemCompleted(TodoItemViewModel item)
         {
             if (item.IsChecked)
             {
-                ActiveTodoItems.Remove(item);
-                CompletedTodoItems.Add(item);
+                Model.ActiveTodoItems.Remove(item);
+                Model.CompletedTodoItems.Add(item);
             }
             else
             {
-                CompletedTodoItems.Remove(item);
-                ActiveTodoItems.Add(item);
+                Model.CompletedTodoItems.Remove(item);
+                Model.ActiveTodoItems.Add(item);
             }
-
         }
     }
 
