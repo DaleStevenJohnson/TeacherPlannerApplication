@@ -17,7 +17,7 @@
         <DataTemplate x:Key="TodoItemContentTemplate" DataType="{x:Type viewmodel:TodoItemViewModel}">
             <StackPanel Orientation="Vertical" Margin="0">
                 <local:TodoItemView Padding="0" Width="830"/>
-                <ItemsControl ItemsSource="{Binding SubItems}"
+                <ItemsControl ItemsSource="{Binding Model.SubItems}"
                          ItemTemplate="{StaticResource TodoSubItemTemplate}">
                 </ItemsControl>
 
@@ -72,7 +72,7 @@
                         Margin="0"
                         BorderBrush="Transparent"
                         BorderThickness="0"
-                        ItemsSource="{Binding ActiveTodoItems}" 
+                        ItemsSource="{Binding Model.ActiveTodoItems}" 
                         ItemTemplate="{StaticResource TodoItemContentTemplate}"
                         ScrollViewer.CanContentScroll="False">
                     <ListBox.ItemContainerStyle>
@@ -128,7 +128,7 @@
                         Margin="0"
                         BorderBrush="Transparent"
                         BorderThickness="0"
-                        ItemsSource="{Binding CompletedTodoItems}" 
+                        ItemsSource="{Binding Model.CompletedTodoItems}" 
                         ItemTemplate="{StaticResource TodoItemContentTemplate}"
                         >
                 <ListBox.ItemContainerStyle>

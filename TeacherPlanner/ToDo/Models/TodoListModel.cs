@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Database.DatabaseModels;
+using TeacherPlanner.Helpers;
 using TeacherPlanner.ToDo.ViewModels;
 
 namespace TeacherPlanner.ToDo.Models
 {
-    public class TodoListModel
+    public class TodoListModel : ObservableObject
     {
+        private string _header;
+
+        public event EventHandler ValuesUpdatedEvent;
         public TodoListModel(string header, int id)
         {
             ID = id;
@@ -17,7 +21,15 @@ namespace TeacherPlanner.ToDo.Models
             CompletedTodoItems = new ObservableCollection<TodoItemViewModel>();
         }
         public int ID { get; }
-        public string Header { get; set; }
+        public string Header 
+        {
+            get => _header;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _header, value) && ValuesUpdatedEvent != null)
+                    ValuesUpdatedEvent.Invoke(null, EventArgs.Empty);
+            }
+        }
         public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
         public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
     }

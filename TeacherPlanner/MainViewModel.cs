@@ -47,11 +47,11 @@ namespace TeacherPlanner
             PlannerYearViewModel.SwitchViewEvent += (_, __) => SwitchView();
             SwitchView();
 
-            if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
-                PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
+            //if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
+             //   PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
             
-            if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
-                PlannerYearViewModel.OnDefineTimetableWeeks();
+          //  if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
+            //    PlannerYearViewModel.OnDefineTimetableWeeks();
         }
 
 

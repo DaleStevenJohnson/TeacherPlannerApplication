@@ -110,37 +110,104 @@ namespace Database
 
         public static bool RemoveTodoList(int id)
         {
-            RemoveTodoItems(id);
-            var query = $"DELETE * FROM TodoLists WHERE id=@ID";
+            RemoveAllTodoListItems(id);
+            var query = $"DELETE FROM TodoLists WHERE id=@ID";
             var parameters = new Dictionary<string, object> { { "@ID", id } };
             return RemoveFromDatabase(query, parameters);
         }
 
-        public static bool RemoveTodoItems(int id)
+        public static bool TryUpdateTodoList(TodoList todoList)
         {
-            var query = $"DELETE * FROM TodoItems WHERE todo_list_id=@ID";
+            var query = "UPDATE TodoLists SET name=@Name WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, todoList);
+        }
+
+        //
+        // Todo Items
+        //
+
+        public static bool RemoveAllTodoListItems(int id)
+        {
+            var query = $"DELETE FROM TodoItems WHERE todo_list_id=@ID";
             var parameters = new Dictionary<string, object> { { "@ID", id } };
             return RemoveFromDatabase(query, parameters);
         }
+
+        public static List<TodoItem> GetTodoItems(int listID)
+        {
+            string query = "SELECT * FROM TodoItems WHERE todo_list_id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", listID } };
+            return GetModelsFromDatabase<TodoItem>(query, parameters);
+        }
+
+        public static bool RemoveTodoItem(int id)
+        {
+            var query = $"DELETE FROM TodoItems WHERE id=@ID";
+            var parameters = new Dictionary<string, object> { { "@ID", id } };
+            return RemoveFromDatabase(query, parameters);
+        }
+
+
+        public static bool TrySaveTodoItem(TodoItem todoItem, out int id)
+        {
+            var query = "INSERT INTO TodoItems (todo_list_id, is_sub_item, parent_item, description, is_completed) VALUES (@TodoListID,  @IsSubItem, @ParentItem, @Description, @IsCompleted);";
+            var result = InsertModelsIntoDatabase(query, todoItem);
+            id = GetLastIDFromDatabase("TodoItems");
+            return result;
+        }
+
+        public static bool TryUpdateTodoItem(TodoItem todoItem)
+        {
+            var query = "UPDATE TodoItems SET description=@Description, is_completed=@IsCompleted WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, todoItem);
+        }
+
+
 
 
         // Private Methods
 
         private static int GetLastIDFromDatabase(string tablename)
         {
-            var query = "SELECT id FROM @TableName WHERE id=(SELECT max(id) FROM @TableName);";
-            var parameters = new Dictionary<string, object> { { "@TableName", tablename } };
+            if (CheckTableExists(tablename))
+            {
+                var query = $"SELECT id FROM {tablename} WHERE id=(SELECT max(id) FROM {tablename});";
+                using (IDbConnection connection = new SQLiteConnection(_connectionString))
+                {
+                    return connection.QuerySingle<int>(query, new DynamicParameters());
+                }
+            }
+            return -1;
+        }
+
+        private static bool CheckTableExists(string tableName)
+        {
+            string query = "SELECT COUNT(name) FROM sqlite_master WHERE name=@tableName;";
             using (IDbConnection connection = new SQLiteConnection(_connectionString))
             {
-                return connection.Query<int>(query, new DynamicParameters(parameters)).FirstOrDefault();
+                return connection.QuerySingle<int>(query, new { tableName }) == 1;
             }
         }
+
         private static bool RemoveFromDatabase(string query, Dictionary<string, object> parameters)
         {
             using (IDbConnection connection = new SQLiteConnection(_connectionString))
             {
                 return connection.Execute(query, parameters) > 0;
             }
+        }
+
+        private static bool UpdateModelsInDatabase(string query, params object[] models)
+        {
+            int rowsAffected = 0;
+            using (IDbConnection connection = new SQLiteConnection(_connectionString))
+            {
+                foreach (object model in models)
+                {
+                    rowsAffected += connection.Execute(query, model);
+                }
+            }
+            return rowsAffected > 0;
         }
 
         private static bool InsertModelsIntoDatabase(string query, params object[] models)
@@ -158,10 +225,11 @@ namespace Database
 
         private static List<T> GetModelsFromDatabase<T>(string query, Dictionary<string, object> parameters = null)
         {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             using (IDbConnection connection = new SQLiteConnection(_connectionString))
             {
                 var output = connection.Query<T>(query, new DynamicParameters(parameters));
-                return output.ToList();
+                return output.AsList();
             }
         }
     }

@@ -104,6 +104,7 @@ namespace TeacherPlanner.ToDo.ViewModels
             {
                 var model = new TodoListModel(list.Name, list.ID);
                 var viewModel = new TodoListViewModel(model);
+                viewModel.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
                 todoLists.Add(viewModel);
             }
             return todoLists;
