@@ -46,7 +46,8 @@ namespace TeacherPlanner.Planner.ViewModels
             var date = new DateTime(yearInt, monthInt, 1);
             for (int i = 0, currentDayOfMonth = 1; i < CALENDARSPACES; i++)
             {
-                var week = CalendarManager.GetWeek(date);
+                //var week = CalendarManager.GetWeek(date);
+                var week = 1;
                 if (i >= firstDay && i < firstDay + daysInMonth)
                 {
                     var calendarDateModel = new CalendarDateModel(currentDayOfMonth.ToString(), week, date);

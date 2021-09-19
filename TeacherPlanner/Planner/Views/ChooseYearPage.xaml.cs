@@ -15,12 +15,12 @@ namespace TeacherPlanner.Planner.Views
             InitializeComponent();
         }
 
-        private void ListViewItem_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ChooseYearViewModel viewmodel = (ChooseYearViewModel)this.DataContext;
-            ListViewItem item = (ListViewItem)sender;
-            YearSelectModel yearselect = (YearSelectModel)item.DataContext;
-            viewmodel.OnYearSelected(yearselect.AcademicYear);
-        }
+        //private void ListViewItem_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    ChooseYearViewModel viewmodel = (ChooseYearViewModel)this.DataContext;
+        //    ListViewItem item = (ListViewItem)sender;
+        //    YearSelectModel yearselect = (YearSelectModel)item.DataContext;
+        //    viewmodel.OnYearSelected(yearselect.AcademicYear);
+        //}
     }
 }

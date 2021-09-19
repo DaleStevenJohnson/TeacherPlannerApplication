@@ -3,6 +3,9 @@ using System.IO;
 using static TeacherPlanner.Constants.Formats;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Constants;
+using Database;
+using TeacherPlanner.Planner.Models;
+using System.Linq;
 
 namespace TeacherPlanner.Helpers
 {
@@ -11,10 +14,12 @@ namespace TeacherPlanner.Helpers
         // Fields
         private DateTime _today;
         private bool _datesAreNeighbours = true;
+        private readonly YearSelectModel _academicYearModel;
 
-        public CalendarManager(string academicYear)
+        public CalendarManager(YearSelectModel academicYear)
         {
-            CurrentAcademicYear = academicYear.Substring(0, 4);
+            _academicYearModel = academicYear;
+            CurrentAcademicYear = academicYear.Year;
             CurrentDates = new DateTime[2];
             
             var startOfYearDate = GetStartOfYearDateLimit(CurrentAcademicYear);
@@ -29,7 +34,7 @@ namespace TeacherPlanner.Helpers
         }
 
         // Properties
-        public string CurrentAcademicYear { get; set; }
+        public int CurrentAcademicYear { get; set; }
         public DateTime[] CurrentDates { get; set; }
 
         public DateTime Today
@@ -94,48 +99,34 @@ namespace TeacherPlanner.Helpers
                 return year;
         }
 
-        public static int GetWeek(DateTime date)
+        public int GetWeek(DateTime date)
         {
-            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserConfigPath, FilesAndDirectories.TimetableWeeksFileName);
-            
-            if (!File.Exists(filepath))
-                return -1;
+            var timetableWeeks = DatabaseManager.GetTimetableWeeks(_academicYearModel.ID);
 
-            var weekdata = FileHandlingHelper.ReadDataFromCSVFile(filepath);
-            for (var i = 0; i < weekdata.Length; i++)
+            if (!timetableWeeks.Any())
+                return -1;
+            
+            foreach (var week in timetableWeeks)
             {
-                var week = weekdata[i];
-                var weekstring = week[0].Split("/");
-                DateTime currentWeek = new DateTime(Int32.Parse(weekstring[0]), Int32.Parse(weekstring[1]), Int32.Parse(weekstring[2]));
-                DateTime nextWeek = currentWeek.AddDays(7);
-                if (date >= currentWeek && date < nextWeek)
+                DateTime nextWeek = week.WeekBeginning.AddDays(7);
+                if (date >= week.WeekBeginning && date < nextWeek)
                 {
-                    // Week 1
-                    if (week[1] == "True")
-                        return 1;
-                    // Week 2
-                    else if (week[2] == "True")
-                        return 2;
-                    // Holiday
-                    else if (week[3] == "True")
-                        return 3;
-                    // No week assigned
-                    else
-                        return 0;
+                    return week.Week;
                 }
             }
             // No week assigned
             return 0;
         }
-        public static bool IsAcademicYearNow(string year)
+
+        public static bool IsAcademicYearNow(int year)
         {
-            var thisAcademicYearString = GetStartingYearOfAcademicYear(DateTime.Today).ToString();
+            var thisAcademicYearString = GetStartingYearOfAcademicYear(DateTime.Today);
             return year == thisAcademicYearString;
         }
 
-        public static DateTime GetStartOfYearDateLimit(string AcademicYearString)
+        public static DateTime GetStartOfYearDateLimit(int AcademicYearString)
         {
-            var yearInt = Int32.Parse(AcademicYearString);
+            var yearInt = AcademicYearString;
             var month = 8;
             var day = 21;
             var date = new DateTime(yearInt, month, day);
@@ -147,9 +138,9 @@ namespace TeacherPlanner.Helpers
             return new DateTime(yearInt, month, day);
         }
 
-        public static DateTime GetEndOfYearDateLimit(string AcademicYearString)
+        public static DateTime GetEndOfYearDateLimit(int AcademicYearString)
         {
-            var yearInt = Int32.Parse(AcademicYearString) + 1;
+            var yearInt = AcademicYearString + 1;
             var month = 8;
             var day = 7;
             var date = new DateTime(yearInt, month, day);

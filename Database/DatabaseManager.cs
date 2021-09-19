@@ -12,12 +12,11 @@ namespace Database
     {
         //private SQLiteConnection databaseConnection;
         private static string _connectionString = "Data Source=TeacherPlannerDB.db";
-        public DatabaseManager()
-        {
-            //This part killed me in the beginning.  I was specifying "DataSource"
-            //instead of "Data Source"
-            //databaseConnection = new SQLiteConnection("Data Source=TeacherPlannerDB.db");
-        }
+       
+        
+        //
+        // User
+        //
 
         public static bool TryAddUser(User user)
         {
@@ -52,8 +51,9 @@ namespace Database
         }
 
         
-        
+        //
         // Academic Years
+        //
 
         public static List<AcademicYear> GetAcademicYears(int ID)
         {
@@ -74,6 +74,18 @@ namespace Database
             var parameters = new Dictionary<string, object> { { "@UserID", userID }, { "@Year", year} };
             var result = GetModelsFromDatabase<AcademicYear>(query, parameters);
             return result.Count != 0;
+        }
+
+
+        //
+        // Timetable Weeks
+        //
+
+        public static List<TimetableWeek> GetTimetableWeeks(int academicYearID)
+        {
+            string query = "SELECT * FROM TimetableWeeks WHERE academic_year_id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", academicYearID } };
+            return GetModelsFromDatabase<TimetableWeek>(query, parameters);
         }
 
 

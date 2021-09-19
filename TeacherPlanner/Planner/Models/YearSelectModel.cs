@@ -7,12 +7,14 @@ namespace TeacherPlanner.Planner.Models
 {
     public class YearSelectModel
     {
-        public YearSelectModel(int year)
+        public YearSelectModel(int year, int id)
         {
+            ID = id;
             Year = year;
             int nextYear = year + 1;
             AcademicYear = $"{year} - {nextYear}";
         }
+        public int ID { get; }
         public string AcademicYear { get; }
         public int Year { get; }
     }

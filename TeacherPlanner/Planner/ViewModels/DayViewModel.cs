@@ -250,7 +250,8 @@ namespace TeacherPlanner.Planner.ViewModels
             if (Timetable == null)
                 return string.Empty;
             var day = (int)date.DayOfWeek;
-            var week = CalendarManager.GetWeek(date);
+            //var week = CalendarManager.GetWeek(date);
+            var week = 1;
             if (week == 1 || week == 2)
             {
                 var timetablePeriodModel = Timetable.GetPeriod(week, day, period.ToString());

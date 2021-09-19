@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Planner.Models;
 using TeacherPlanner.Planner.Views.SettingsWindows;
 using TeacherPlanner.Timetable.ViewModels;
 using TeacherPlanner.ToDo.ViewModels;
@@ -17,6 +18,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private Window _keyDatesWindow = null;
         private TimetableViewModel _timetableViewModel;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
+        private readonly YearSelectModel _academicYear;
 
         // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
@@ -26,13 +28,14 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public event EventHandler<string> SwitchViewEvent;
         
-        public PlannerYearViewModel(UserModel userModel, string yearString)
+        public PlannerYearViewModel(UserModel userModel, YearSelectModel year)
         {
+            _academicYear = year;
             UserModel = userModel;
-            FileHandlingHelper.SetDirectories(UserModel, yearString);
+            //FileHandlingHelper.SetDirectories(UserModel, yearString);
             KeyDates = new ObservableCollection<KeyDateItemViewModel>();
 
-            CalendarManager = new CalendarManager(yearString);
+            CalendarManager = new CalendarManager(year);
 
             TimetableViewModel = new TimetableViewModel(UserModel);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);

@@ -33,7 +33,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             UserModel = userModel;
             SelectedWeek = 1;
 
-            TimetableWeeksAreDefined = CalendarManager.GetWeek(DateTime.Today) != -1;
+            TimetableWeeksAreDefined = false;//CalendarManager.GetWeek(DateTime.Today) != -1;
 
             if (TryGetImportedTimetable())
                 UpdateCurrentlyDisplayedTimetableWeek();

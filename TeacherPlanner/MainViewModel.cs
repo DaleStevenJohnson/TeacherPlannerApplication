@@ -23,7 +23,7 @@ namespace TeacherPlanner
 
             ChooseYearViewModel = new ChooseYearViewModel(UserModel);
 
-            ChoosePlannerYearCommand = new SimpleCommand(yearString => OnChoosePlannerYear((string)yearString));
+            ChoosePlannerYearCommand = new SimpleCommand(year => OnChoosePlannerYear((YearSelectModel)year));
             SwitchViewCommand = new SimpleCommand(_ => SwitchView());
             
             ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
@@ -42,8 +42,8 @@ namespace TeacherPlanner
         public UserModel UserModel { get; }
         private void OnChoosePlannerYear(object parameter)
         {
-            var yearString = (string)parameter;
-            PlannerYearViewModel = new PlannerYearViewModel(UserModel, yearString);
+            var year = (YearSelectModel)parameter;
+            PlannerYearViewModel = new PlannerYearViewModel(UserModel, year);
             PlannerYearViewModel.SwitchViewEvent += (_, __) => SwitchView();
             SwitchView();
 

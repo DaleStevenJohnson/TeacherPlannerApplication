@@ -18,8 +18,9 @@ namespace TeacherPlanner.Planner.ViewModels
     public class ChooseYearViewModel : ObservableObject
     {
         private ObservableCollection<YearSelectModel> _yearSelectModels;
-        public event EventHandler<string> ChooseYearEvent;
+        public event EventHandler<YearSelectModel> ChooseYearEvent;
         public ICommand AddYearCommand { get; }
+        public ICommand SelectYearCommand { get; }
         public ChooseYearViewModel(UserModel usermodel)
         {
             // Parameter Assignments
@@ -30,7 +31,8 @@ namespace TeacherPlanner.Planner.ViewModels
 
 
             //Command Assignments
-            AddYearCommand = new SimpleCommand(_ => OnAddYear());
+            AddYearCommand = new SimpleCommand(_ => OnAddNewAcademicYear());
+            SelectYearCommand = new SimpleCommand(_ => OnSelectYear(_));
 
         }
         private UserModel UserModel { get; set; }
@@ -42,30 +44,32 @@ namespace TeacherPlanner.Planner.ViewModels
 
         // Public Methods
 
-        public void OnYearSelected(object v)
+        public void OnSelectYear(object v)
         {
-            ChooseYearEvent.Invoke(null, (string)v);
-        }
-
-        public YearSelectModel AddNewAcademicYear()
-        {
-            var year = GetNextAcademicYear();
-            if (!DatabaseManager.CheckIfAcademicYearExists(UserModel.ID, year))
-            {
-                // Adding of a new academic year
-                var newYear = new YearSelectModel(year);
-                var academicYear = new AcademicYear()
-                {
-                    UserID = UserModel.ID,
-                    Year = newYear.Year
-                };
-                if (DatabaseManager.TrySaveAcademicYear(academicYear))
-                    return newYear;
-            }
-            return null;
+            ChooseYearEvent.Invoke(null, (YearSelectModel)v);
         }
 
         // Private Methods
+
+        private void OnAddNewAcademicYear()
+        {
+            var year = GetNextAcademicYear();
+
+            if (!DatabaseManager.CheckIfAcademicYearExists(UserModel.ID, year))
+            {
+                
+                var academicYear = new AcademicYear()
+                {
+                    UserID = UserModel.ID,
+                    Year = year
+                };
+
+                if (DatabaseManager.TrySaveAcademicYear(academicYear))
+                    YearSelectModels = GetAcademicYears();
+            }
+        }
+
+        
 
         private int GetNextAcademicYear()
         {
@@ -83,12 +87,6 @@ namespace TeacherPlanner.Planner.ViewModels
                 
         }
 
-        private void OnAddYear()
-        {
-            var newYear = AddNewAcademicYear();
-            if (newYear != null)
-                YearSelectModels.Add(newYear);
-        }
 
         private ObservableCollection<YearSelectModel> GetAcademicYears()
         {
@@ -98,15 +96,13 @@ namespace TeacherPlanner.Planner.ViewModels
             
             if (!academicYears.Any())
             {
-                var newYear = AddNewAcademicYear();
-                if (newYear != null)
-                    yearSelectModels.Add(newYear);
+                OnAddNewAcademicYear();
             }
             else
             {
                 foreach (var year in academicYears)
                 {
-                    var newYear = new YearSelectModel(year.Year);
+                    var newYear = new YearSelectModel(year.Year, year.ID);
                     yearSelectModels.Add(newYear);
                 }
             }
