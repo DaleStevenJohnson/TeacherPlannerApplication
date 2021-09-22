@@ -15,7 +15,7 @@ namespace TeacherPlanner.Timetable.ViewModels
 {
     public class TimetableViewModel : ObservableObject
     {
-        private TimetableWeekModel _currentlyDisplayedTimetableWeek;
+        private Models.TimetableWeekModel _currentlyDisplayedTimetableWeek;
         private TimetableModel _currentTimetable;
         private int _selectedWeek;
         public ICommand SwitchTimetableWeekCommand { get; }
@@ -55,7 +55,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             get => _currentTimetable;
             set => RaiseAndSetIfChanged(ref _currentTimetable, value);
         }
-        public TimetableWeekModel CurrentlyDisplayedTimetableWeek
+        public Models.TimetableWeekModel CurrentlyDisplayedTimetableWeek
         {
             get => _currentlyDisplayedTimetableWeek;
             set => RaiseAndSetIfChanged(ref _currentlyDisplayedTimetableWeek, value);
@@ -75,12 +75,6 @@ namespace TeacherPlanner.Timetable.ViewModels
                 UpdateCurrentlyDisplayedTimetableWeek();
                 TimetableChangedEvent.Invoke(null, CurrentTimetable);
             }
-        }
-
-        public bool? DefineTimetableWeeks(UserModel userModel)
-        {
-            var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow(userModel);
-            return defineTimetableWeeksWindow.ShowDialog();
         }
 
         public bool TryGetImportedTimetable()

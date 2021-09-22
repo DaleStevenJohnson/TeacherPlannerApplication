@@ -7,17 +7,36 @@
         xmlns:view="clr-namespace:TeacherPlanner.Planner.Views"
         xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
         xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels" 
+        xmlns:constant="clr-namespace:TeacherPlanner.Constants" 
+        xml:lang="en-GB"
         mc:Ignorable="d"
         d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DefineTimetableWeeksViewModel}}"
         WindowStartupLocation="CenterOwner" 
         Title="Define Weeks" Height="600" Width="500" MinHeight="600" MinWidth="500" MaxHeight="600" MaxWidth="500">
     <Window.Resources>
-        <DataTemplate x:Key="DateRowTemplate" DataType="{x:Type model:DateRowModel}">
+        <DataTemplate x:Key="DateRowTemplate" DataType="{x:Type model:TimetableWeekModel}">
             <StackPanel Orientation="Horizontal">
-                <Label Width="240" Content="{Binding Path=DateString}"></Label>
-                <RadioButton Margin="20,0" GroupName="{Binding Path=DateString}" IsChecked="{Binding Week1}" VerticalAlignment="Center"/>
-                <RadioButton Margin="20,0" GroupName="{Binding Path=DateString}" IsChecked="{Binding Week2}" VerticalAlignment="Center"/>
-                <RadioButton Margin="20,0" GroupName="{Binding Path=DateString}" IsChecked="{Binding Holiday}" VerticalAlignment="Center"/>
+                <TextBlock Width="240" Text="{Binding Path=Date, StringFormat=yyyy/MM/dd}"></TextBlock>
+                <RadioButton Margin="20,0" GroupName="{Binding Path=Date, StringFormat=yyyy/MM/dd}" 
+                    IsChecked="{
+                        Binding Week, 
+                        Converter={StaticResource WeekToBooleanConverter}, 
+                        ConverterParameter={x:Static constant:Weeks.Week1}}" 
+                    VerticalAlignment="Center"/>
+                
+                <RadioButton Margin="20,0" GroupName="{Binding Path=Date, StringFormat=yyyy/MM/dd}" 
+                    IsChecked="{
+                        Binding Week, 
+                        Converter={StaticResource WeekToBooleanConverter}, 
+                        ConverterParameter={x:Static constant:Weeks.Week2}}" 
+                    VerticalAlignment="Center"/>
+
+                <RadioButton Margin="20,0" GroupName="{Binding Path=Date, StringFormat=yyyy/MM/dd}" 
+                    IsChecked="{
+                        Binding Week, 
+                        Converter={StaticResource WeekToBooleanConverter}, 
+                        ConverterParameter={x:Static constant:Weeks.Holiday}}" 
+                    VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
@@ -41,7 +60,7 @@
         </StackPanel>
         <ListView Grid.Row="1" Grid.Column="1" 
                   Name="Listbox" 
-                  ItemsSource="{Binding Path=Rows}" 
+                  ItemsSource="{Binding Path=TimetableWeeks}" 
                   ItemTemplate="{StaticResource DateRowTemplate}">
             
             
@@ -56,6 +75,7 @@
         <Button Grid.Column="1" Grid.Row="2" Margin="350, 10,10,10"
                 IsDefault="True"
                 Command="{Binding SaveTimeTableWeeksCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                 Content="Submit">
             
         </Button>
