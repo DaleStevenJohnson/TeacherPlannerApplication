@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
@@ -20,6 +22,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _newKeyDateFeedback;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
         private bool _newKeyDateIsWeekend;
+        private readonly AcademicYearModel _academicYear;
 
         public ICommand SwapIsAddingNewDateValueCommand { get; }
         public ICommand AddNewKeyDateCommand { get; }
@@ -28,10 +31,11 @@ namespace TeacherPlanner.Planner.ViewModels
         public event EventHandler KeyDatesListUpdatedEvent;
         public event EventHandler CloseWindowEvent;
 
-        public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates)
+        public KeyDatesWindowViewModel(ObservableCollection<KeyDateItemViewModel> keyDates, AcademicYearModel academicYear)
         {
             // Parameter Assignment
             KeyDates = keyDates;
+            _academicYear = academicYear;
 
             // Property Assignment
             ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Date", "Time" }, 2);
@@ -44,11 +48,6 @@ namespace TeacherPlanner.Planner.ViewModels
             NewKeyDateType = KeyDateTypes[0];
             NewKeyDateIsWeekend = false;
 
-            // Test Data
-            AddNewKeyDate("Year 12", "Event", DateTime.Now);
-            AddNewKeyDate("Reading", "CPD", DateTime.Now.AddDays(5));
-            AddNewKeyDate("Year 9", "Parent's Evening", DateTime.Now.AddDays(10));
-
             // Command Assignment
             SwapIsAddingNewDateValueCommand = new SimpleCommand(_ => OnSwapIsAddingNewDateValue());
             AddNewKeyDateCommand = new SimpleCommand(_ => OnAddNewKeyDate());
@@ -58,6 +57,7 @@ namespace TeacherPlanner.Planner.ViewModels
             // Event Subscription
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
 
+            GetKeyDates();
         }
 
         // Properties
@@ -142,10 +142,12 @@ namespace TeacherPlanner.Planner.ViewModels
             var selectedDates = KeyDates.Where(kd => kd.IsChecked).ToList();
             
             foreach (KeyDateItemViewModel keydate in selectedDates)
-                KeyDates.Remove(keydate);
-
+            {
+                if (DatabaseManager.TryRemoveKeyDate(keydate.ID))
+                    KeyDates.Remove(keydate);
+            }
+                
             KeyDatesListUpdatedEvent.Invoke(null, EventArgs.Empty);
-            // Todo - Remove Keydate from the Database
         }
 
         private void OnSwapIsAddingNewDateValue()
@@ -178,28 +180,37 @@ namespace TeacherPlanner.Planner.ViewModels
             }
         }
 
-        private void AddNewKeyDate(string description = null, string type = null, DateTime date = default)
+        private void GetKeyDates()
         {
-            KeyDateItemViewModel keydate;
-            if (description == null)
-                description = NewKeyDateDescription;
-
-            if (type == null)
-                type = NewKeyDateType;
-
-            if (date == DateTime.MinValue)
+            var dbModels = DatabaseManager.GetKeyDates(_academicYear.ID);
+            if (dbModels.Any())
             {
-                var hours = Int32.Parse(NewKeyDateTimeHour);
-                var minutes = Int32.Parse(NewKeyDateTimeMinute);
-                var day = Int32.Parse(NewKeyDateDate.ToString("dd"));
-                var month = Int32.Parse(NewKeyDateDate.ToString("MM"));
-                var year = Int32.Parse(NewKeyDateDate.ToString("yyyy"));
-                date = new DateTime(year, month, day, hours, minutes, 0);
+                foreach (var model in dbModels)
+                {
+                    KeyDates.Add(new KeyDateItemViewModel(model.ID, model.Description, model.Type, model.DateTime));
+                }
             }
-            
-            keydate = new KeyDateItemViewModel(description, type, date);
+        }
 
-            KeyDates.Add(keydate);
+        private void AddNewKeyDate()
+        {
+            var hours = Int32.Parse(NewKeyDateTimeHour);
+            var minutes = Int32.Parse(NewKeyDateTimeMinute);
+            var day = NewKeyDateDate.Day;
+            var month = NewKeyDateDate.Month;
+            var year = NewKeyDateDate.Year;
+            var date = new DateTime(year, month, day, hours, minutes, 0);
+
+            var dbModel = new KeyDate()
+            {
+                AcademicYearID = _academicYear.ID,
+                Description = NewKeyDateDescription,
+                Type = NewKeyDateType,
+                DateTime = date
+            };
+
+            if (DatabaseManager.TryAddKeyDate(dbModel, out var id))
+                KeyDates.Add(new KeyDateItemViewModel(id, NewKeyDateDescription, NewKeyDateType, date));
         }
     }
 }

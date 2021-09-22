@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Planner.ViewModels
 {
     public class KeyDateItemViewModel
     {
-        public KeyDateItemViewModel(string description, string keydatetype, DateTime date)
+        public KeyDateItemViewModel(int id, string description, string keydatetype, DateTime date)
         {
+            ID = id;
             Description = description;
             Type = keydatetype;
             Date = date;
@@ -17,13 +14,11 @@ namespace TeacherPlanner.Planner.ViewModels
         }
 
         // Properties
-
+        public int ID { get; }
         public bool IsChecked { get; set; }
         public string Description { get; }
         public string Type { get; }
         public DateTime Date { get; }
-        public string DateString { get => Date.ToString("yyyy/MM/dd"); }
-        public string TimeString { get => Date.ToString("HH:mm"); }
 
         // Methods
 
@@ -32,20 +27,16 @@ namespace TeacherPlanner.Planner.ViewModels
             return property.ToLower() switch
             {
                 "description" => Description,
-                "date" => DateString,
+                "date" => Date.ToString("yyyy/MM/dd"),
                 "type" => Type,
-                "time" => TimeString,
+                "time" => Date.ToString("HH:mm"),
                 _ => "Not Found",
             };
         }
 
         public override string ToString()
         {
-            return $"{Description} - {Type} - {TimeString}";
+            return $"{Description} - {Type} - {Date:HH:mm}";
         }
-
-     
-
-
     }
 }
