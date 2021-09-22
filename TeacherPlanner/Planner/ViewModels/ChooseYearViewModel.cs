@@ -17,8 +17,8 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class ChooseYearViewModel : ObservableObject
     {
-        private ObservableCollection<YearSelectModel> _yearSelectModels;
-        public event EventHandler<YearSelectModel> ChooseYearEvent;
+        private ObservableCollection<AcademicYearModel> _yearSelectModels;
+        public event EventHandler<AcademicYearModel> ChooseYearEvent;
         public ICommand AddYearCommand { get; }
         public ICommand SelectYearCommand { get; }
         public ChooseYearViewModel(UserModel usermodel)
@@ -37,7 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         }
         private UserModel UserModel { get; set; }
-        public ObservableCollection<YearSelectModel> YearSelectModels
+        public ObservableCollection<AcademicYearModel> YearSelectModels
         {
             get => _yearSelectModels;
             set => RaiseAndSetIfChanged(ref _yearSelectModels, value);
@@ -47,7 +47,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void OnSelectYear(object v)
         {
-            ChooseYearEvent.Invoke(null, (YearSelectModel)v);
+            ChooseYearEvent.Invoke(null, (AcademicYearModel)v);
         }
 
         // Private Methods
@@ -69,7 +69,7 @@ namespace TeacherPlanner.Planner.ViewModels
                     UserID = UserModel.ID,
                     Year = year
                 };
-                return DatabaseManager.TrySaveAcademicYear(academicYear);
+                return DatabaseManager.TryAddAcademicYear(academicYear);
             }
             return false;
         }
@@ -90,9 +90,9 @@ namespace TeacherPlanner.Planner.ViewModels
                 
         }
 
-        private ObservableCollection<YearSelectModel> GetAcademicYears()
+        private ObservableCollection<AcademicYearModel> GetAcademicYears()
         {
-            var yearSelectModels = new ObservableCollection<YearSelectModel>();
+            var yearSelectModels = new ObservableCollection<AcademicYearModel>();
             // Get currently stored Academic Years from database
             var academicYears = DatabaseManager.GetAcademicYears(UserModel.ID);
             
@@ -100,7 +100,7 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 foreach (var year in academicYears)
                 {
-                    var newYear = new YearSelectModel(year.Year, year.ID);
+                    var newYear = new AcademicYearModel(year.Year, year.ID);
                     yearSelectModels.Add(newYear);
                 }
             }

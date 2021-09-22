@@ -62,7 +62,7 @@ namespace Database
             return GetModelsFromDatabase<AcademicYear>(query, parameters);
         }
 
-        public static bool TrySaveAcademicYear(AcademicYear academicYear)
+        public static bool TryAddAcademicYear(AcademicYear academicYear)
         {
             var query = "INSERT INTO AcademicYears (year, user_id) VALUES (@Year, @UserID);";
             return InsertModelsIntoDatabase(query, academicYear);
@@ -83,9 +83,43 @@ namespace Database
 
         public static List<TimetableWeek> GetTimetableWeeks(int academicYearID)
         {
-            string query = "SELECT * FROM TimetableWeeks WHERE academic_year_id=@ID;";
-            var parameters = new Dictionary<string, object> { { "@ID", academicYearID } };
-            return GetModelsFromDatabase<TimetableWeek>(query, parameters);
+            return GetModelsFromDatabaseByAcademicYear<TimetableWeek>("TimetableWeeks", academicYearID);
+        }
+
+        public static bool TryAddTimetableWeek(TimetableWeek timetableWeek, out int id)
+        {
+            var query = "INSERT INTO TimetableWeeks (academic_year_id, week_beginning, week) VALUES (@AcademicYearID,  @WeekBeginning, @Week);";
+            var result = InsertModelsIntoDatabase(query, timetableWeek);
+            id = GetLastIDFromDatabase("TimetableWeeks");
+            return result;
+        }
+
+        public static bool TryUpdateTimetableWeek(TimetableWeek timetableWeek)
+        {
+            var query = "UPDATE TimetableWeeks SET week=@Week WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, timetableWeek);
+        }
+
+        //
+        // Keydates
+        //
+
+        public static List<KeyDate> GetKeyDates(int academicYearID)
+        {
+            return GetModelsFromDatabaseByAcademicYear<KeyDate>("KeyDates", academicYearID);
+        }
+
+        public static bool TryAddKeyDate(KeyDate keyDate, out int id)
+        {
+            var query = "INSERT INTO KeyDates (academic_year_id, description, type, datetime) VALUES (@AcademicYearID, @Description, @Type, @DateTime);";
+            var result = InsertModelsIntoDatabase(query, keyDate);
+            id = GetLastIDFromDatabase("KeyDates");
+            return result;
+        }
+
+        public static bool TryRemoveKeyDate(int id)
+        {
+            return RemoveFromDatabaseByID("KeyDates", id);
         }
 
 
@@ -93,7 +127,7 @@ namespace Database
         // Todo List
         //
 
-        public static bool TrySaveTodoList(TodoList todoList, out int id)
+        public static bool TryAddTodoList(TodoList todoList, out int id)
         {
             var query = "INSERT INTO TodoLists (academic_year_id, name) VALUES (@AcademicYearID, @Name);";
             var result = InsertModelsIntoDatabase(query, todoList);
@@ -103,17 +137,13 @@ namespace Database
 
         public static List<TodoList> GetTodoLists(int academicYearID)
         {
-            string query = "SELECT * FROM TodoLists WHERE academic_year_id=@ID;";
-            var parameters = new Dictionary<string, object> { { "@ID", academicYearID } };
-            return GetModelsFromDatabase<TodoList>(query, parameters);
+            return GetModelsFromDatabaseByAcademicYear<TodoList>("TodoLists", academicYearID);
         }
 
         public static bool RemoveTodoList(int id)
         {
             RemoveAllTodoListItems(id);
-            var query = $"DELETE FROM TodoLists WHERE id=@ID";
-            var parameters = new Dictionary<string, object> { { "@ID", id } };
-            return RemoveFromDatabase(query, parameters);
+            return RemoveFromDatabaseByID("TodoLists", id);
         }
 
         public static bool TryUpdateTodoList(TodoList todoList)
@@ -142,13 +172,11 @@ namespace Database
 
         public static bool RemoveTodoItem(int id)
         {
-            var query = $"DELETE FROM TodoItems WHERE id=@ID";
-            var parameters = new Dictionary<string, object> { { "@ID", id } };
-            return RemoveFromDatabase(query, parameters);
+            return RemoveFromDatabaseByID("TodoItems", id);
         }
 
 
-        public static bool TrySaveTodoItem(TodoItem todoItem, out int id)
+        public static bool TryAddTodoItem(TodoItem todoItem, out int id)
         {
             var query = "INSERT INTO TodoItems (todo_list_id, is_sub_item, parent_item, description, is_completed) VALUES (@TodoListID,  @IsSubItem, @ParentItem, @Description, @IsCompleted);";
             var result = InsertModelsIntoDatabase(query, todoItem);
@@ -163,7 +191,7 @@ namespace Database
         }
 
 
-
+        
 
         // Private Methods
 
@@ -172,6 +200,7 @@ namespace Database
             if (CheckTableExists(tablename))
             {
                 var query = $"SELECT id FROM {tablename} WHERE id=(SELECT max(id) FROM {tablename});";
+
                 using (IDbConnection connection = new SQLiteConnection(_connectionString))
                 {
                     return connection.QuerySingle<int>(query, new DynamicParameters());
@@ -187,6 +216,17 @@ namespace Database
             {
                 return connection.QuerySingle<int>(query, new { tableName }) == 1;
             }
+        }
+
+        private static bool RemoveFromDatabaseByID(string tablename, int id)
+        {
+            if (CheckTableExists(tablename))
+            {
+                var query = $"DELETE FROM {tablename} WHERE id=@ID";
+                var parameters = new Dictionary<string, object> { { "@ID", id } };
+                return RemoveFromDatabase(query, parameters);
+            }
+            return false;
         }
 
         private static bool RemoveFromDatabase(string query, Dictionary<string, object> parameters)
@@ -223,6 +263,17 @@ namespace Database
             return rowsAffected > 0;
         }
 
+        private static List<T> GetModelsFromDatabaseByAcademicYear<T>(string tablename, int id)
+        {
+            if (CheckTableExists(tablename))
+            {
+                string query = $"SELECT * FROM {tablename} WHERE academic_year_id=@ID;";
+                var parameters = new Dictionary<string, object> { { "@ID", id } };
+                return GetModelsFromDatabase<T>(query, parameters);
+            }
+            return new List<T>();
+        }
+
         private static List<T> GetModelsFromDatabase<T>(string query, Dictionary<string, object> parameters = null)
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
@@ -232,5 +283,7 @@ namespace Database
                 return output.AsList();
             }
         }
+
+        
     }
 }

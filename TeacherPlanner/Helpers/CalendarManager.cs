@@ -14,9 +14,9 @@ namespace TeacherPlanner.Helpers
         // Fields
         private DateTime _today;
         private bool _datesAreNeighbours = true;
-        private readonly YearSelectModel _academicYearModel;
+        private readonly AcademicYearModel _academicYearModel;
 
-        public CalendarManager(YearSelectModel academicYear)
+        public CalendarManager(AcademicYearModel academicYear)
         {
             _academicYearModel = academicYear;
             CurrentAcademicYear = academicYear.Year;

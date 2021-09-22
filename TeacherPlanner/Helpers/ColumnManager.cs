@@ -47,7 +47,7 @@ namespace TeacherPlanner.Helpers
 
         public IEnumerable<KeyDateItemViewModel> Sort(IEnumerable<KeyDateItemViewModel> keyDates)
         {
-            Func<KeyDateItemViewModel, string?> propertyExtractor = s => s.DateString;
+            Func<KeyDateItemViewModel, string?> propertyExtractor = s => s.Date.ToString("yyyy/MM/dd");
 
             if (_objectPropertyExtractors.TryGetValue(_currentSort.ColumnName, out var foundPropertyExtractor))
                 propertyExtractor = foundPropertyExtractor;

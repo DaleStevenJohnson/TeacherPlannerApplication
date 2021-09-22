@@ -114,7 +114,7 @@ namespace TeacherPlanner.ToDo.ViewModels
                 IsCompleted = false
             };
 
-            if (DatabaseManager.TrySaveTodoItem(dbModel, out var id))
+            if (DatabaseManager.TryAddTodoItem(dbModel, out var id))
             {
                 var model = new TodoSubItemModel(string.Empty, false, id);
                 var item = new TodoSubItemViewModel(model);

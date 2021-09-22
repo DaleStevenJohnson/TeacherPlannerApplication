@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace TeacherPlanner.Planner.Models
 {
-    public class YearSelectModel
+    public class AcademicYearModel
     {
-        public YearSelectModel(int year, int id)
+        public AcademicYearModel(int year, int id)
         {
             ID = id;
             Year = year;

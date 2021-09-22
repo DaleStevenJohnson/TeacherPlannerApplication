@@ -18,7 +18,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private Window _keyDatesWindow = null;
         private TimetableViewModel _timetableViewModel;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
-        private readonly YearSelectModel _academicYear;
+        private readonly AcademicYearModel _academicYear;
 
         // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
@@ -28,7 +28,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public event EventHandler<string> SwitchViewEvent;
         
-        public PlannerYearViewModel(UserModel userModel, YearSelectModel year)
+        public PlannerYearViewModel(UserModel userModel, AcademicYearModel year)
         {
             _academicYear = year;
             UserModel = userModel;
@@ -43,14 +43,13 @@ namespace TeacherPlanner.Planner.ViewModels
             ToDoViewModel = new TodoPageViewModel(UserModel, year);
             
             // keyDates view Model new up and event subscription
-            _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates);
+            _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates, _academicYear);
             _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
             _keyDatesWindowViewModel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
 
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
-            SpecialTestCommand = new SimpleCommand(_ => OnSpecialTest());
 
             //Method Calls
             //UpdateKeyDatesList();
@@ -79,7 +78,11 @@ namespace TeacherPlanner.Planner.ViewModels
         // Methods
         public void OnDefineTimetableWeeks()
         {
-            if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
+            var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow();
+            var viewModel = new DefineTimetableWeeksViewModel(UserModel, _academicYear);
+            defineTimetableWeeksWindow.DataContext = viewModel;
+
+            if (defineTimetableWeeksWindow.ShowDialog() ?? true)
                 PlannerViewModel.LoadNewDays();
         }
 
@@ -93,14 +96,7 @@ namespace TeacherPlanner.Planner.ViewModels
             SwitchViewEvent.Invoke(null, (string)v);
         }
 
-        private void OnSpecialTest()
-        {
-            
-            KeyDates.Add(new KeyDateItemViewModel("Description", "Event", DateTime.Now.AddDays(1)));
-            PlannerViewModel.LeftDay.UpdateTodaysKeyDates();
-            PlannerViewModel.RightDay.UpdateTodaysKeyDates();
-        }
-
+       
         private void OnKeyDatesClicked()
         {
             // Check to see whether the window is already open

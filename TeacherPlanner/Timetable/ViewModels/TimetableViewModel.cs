@@ -23,7 +23,7 @@ namespace TeacherPlanner.Timetable.ViewModels
         public ICommand ManageTimetableCommand { get; }
         public ICommand ApplySelectedTimetableCommand { get; }
         public event EventHandler<TimetableModel> TimetableChangedEvent;
-        public TimetableViewModel(UserModel userModel)
+        public TimetableViewModel(UserModel userModel, CalendarManager calendarManager)
         {
             ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
             ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
@@ -33,7 +33,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             UserModel = userModel;
             SelectedWeek = 1;
 
-            TimetableWeeksAreDefined = false;//CalendarManager.GetWeek(DateTime.Today) != -1;
+            TimetableWeeksAreDefined = calendarManager.GetWeek(DateTime.Today) != -1;
 
             if (TryGetImportedTimetable())
                 UpdateCurrentlyDisplayedTimetableWeek();

@@ -11,7 +11,7 @@
       d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ChooseYearViewModel}}"
       d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
-        <DataTemplate x:Key="YearSelectTemplate" DataType="{x:Type model:YearSelectModel}">
+        <DataTemplate x:Key="YearSelectTemplate" DataType="{x:Type model:AcademicYearModel}">
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource ButtonOverride}" HorizontalAlignment="Center" Background="Transparent" 
                            FontSize="50" FontWeight="Bold" FontFamily="{StaticResource BodyText}"

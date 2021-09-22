@@ -25,13 +25,13 @@ namespace TeacherPlanner.ToDo.ViewModels
         private bool _isAddingNewList;
         private bool _hasTodoLists;
         private int _selectedTab;
-        private readonly YearSelectModel _year;
+        private readonly AcademicYearModel _year;
 
         public ICommand AddTodoListCommand { get; }
         public ICommand ConfirmNewTodoListCommand { get; }
         public ICommand CancelNewTodoListCommand { get; }
         public ICommand RemoveTodoListCommand { get; }
-        public TodoPageViewModel(UserModel userModel, YearSelectModel year)
+        public TodoPageViewModel(UserModel userModel, AcademicYearModel year)
         {
             UserModel = userModel;
             _year = year;
@@ -151,7 +151,7 @@ namespace TeacherPlanner.ToDo.ViewModels
                     AcademicYearID = _year.ID
                 };
 
-                if (DatabaseManager.TrySaveTodoList(list, out var id))
+                if (DatabaseManager.TryAddTodoList(list, out var id))
                 {
                     var listModel = new TodoListViewModel(new TodoListModel(NewListName, id));
                     listModel.RemoveSelfEvent += (_, __) => OnRemoveTodoList(__);
