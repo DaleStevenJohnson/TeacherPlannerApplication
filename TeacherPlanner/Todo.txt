@@ -43,7 +43,7 @@ Key Dates
 + Move close button to command on VM
 + Sort DropDown Keydates list
 + Add Keydates updated event to propogate from keydates window to planner and dayview
-- Add Day column to KeyDatesWindow
+
 
 
 Fixes
@@ -59,11 +59,9 @@ Fixes
 + Add bookend end of academic year / start of academic year
 
 
-- Add Calendar Viewmodel
 + Investigate how to handle subscribe and unsubscribing to events
 - Add faint end of last month dates to calendar
 
-- Add reg period
 - Add day timings
 
 - Add Settings Config file & track user settings through storing on the usermodel
@@ -89,13 +87,21 @@ Timetable
 - Make timetable editable
 
 Codebase
-- Add DateTime to string Converter and bind actual DateTimes to the UI
+- Use StringFormat in Datetime bindings for WPF controls instead of string properties
 
 Database Implementation
-- Create a Class diagram
++ Create a Class diagram
+
++ Add Database models
++ Change KeyDateItemViewModel to contain an ObservableCollection of KeyDateItemModels
+
+Days Refactor
 - Change period control & notes control to one text box rather than 7
-- Add Domain models
-- Change KeyDateItemViewModel to contain an ObservableCollection of KeyDateItemModels
+- Add Methods to Database manager for Update, Select and Insert.
+- Add reg period & ensure reg classcode is in correct position
+- Ensure Enums are used for periods and days (DayOfWeek).
+- Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
+
 
 microsoft.data.sqllite
 dapper
