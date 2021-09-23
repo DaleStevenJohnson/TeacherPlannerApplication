@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Database.DatabaseModels;
+using TeacherPlanner.Constants;
 
 namespace TeacherPlanner.Timetable.Models
 {
     public class TimetableDayModel
     {
-        public TimetableDayModel()
+        public TimetableDayModel(List<TimetablePeriod> timetablePeriods)
         {
-            Registration = new TimetablePeriodModel();
-            Period1 = new TimetablePeriodModel();
-            Period2 = new TimetablePeriodModel();
-            Break = new TimetablePeriodModel();
-            Period3 = new TimetablePeriodModel();
-            Lunch = new TimetablePeriodModel();
-            Period4 = new TimetablePeriodModel();
-            Period5 = new TimetablePeriodModel();
-            Twilight = new TimetablePeriodModel();
+            Registration = new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Registration));
+            Period1 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period1));
+            Period2 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period2));
+            Break =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Break));
+            Period3 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period3));
+            Lunch =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Lunch));
+            Period4 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period4));
+            Period5 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period5));
+            Twilight =     new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Twilight));
         }
 
         public TimetablePeriodModel Registration { get; }
@@ -28,19 +31,19 @@ namespace TeacherPlanner.Timetable.Models
         public TimetablePeriodModel Period4 { get; }
         public TimetablePeriodModel Period5 { get; }
         public TimetablePeriodModel Twilight { get; }
-        public TimetablePeriodModel GetPeriod(string period)
+        public TimetablePeriodModel GetPeriod(PeriodCodes period)
         {
             return period switch
             {
-                "R" => Registration,
-                "1" => Period1,
-                "2" => Period2,
-                "B" => Break,
-                "3" => Period3,
-                "L" => Lunch,
-                "4" => Period4,
-                "5" => Period5,
-                "T" => Twilight,
+                PeriodCodes.Registration => Registration,
+                PeriodCodes.Period1 => Period1,
+                PeriodCodes.Period2 => Period2,
+                PeriodCodes.Break => Break,
+                PeriodCodes.Period3 => Period3,
+                PeriodCodes.Lunch => Lunch,
+                PeriodCodes.Period4 => Period4,
+                PeriodCodes.Period5 => Period5,
+                PeriodCodes.Twilight => Twilight,
                 _ => Registration,
             };
         }

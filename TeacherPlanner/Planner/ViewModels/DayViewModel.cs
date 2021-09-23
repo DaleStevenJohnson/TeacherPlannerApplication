@@ -254,7 +254,8 @@ namespace TeacherPlanner.Planner.ViewModels
             var week = 1;
             if (week == 1 || week == 2)
             {
-                var timetablePeriodModel = Timetable.GetPeriod(week, day, period.ToString());
+                // Todo maybe fix me
+                var timetablePeriodModel = Timetable.GetPeriod(week, day, (PeriodCodes)period);
                 return timetablePeriodModel.ClassCode;
             }
             else if (week == 3)

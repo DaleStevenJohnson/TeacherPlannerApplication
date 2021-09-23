@@ -48,19 +48,9 @@
                 </MenuItem>
 
                 <MenuItem Header="Timetable">
-                    <MenuItem Header="Import..." Command="{Binding TimetableViewModel.ImportTimetableCommand}"/>
+                    <MenuItem Header="Import..." Command="{Binding ImportTimetableCommand}"/>
                     <MenuItem Header="Define Weeks" Command="{Binding DefineTimetableWeeksCommand}"/>
                     <MenuItem Header="Change Year" Command="{Binding SwitchViewCommand}"/>
-                    <!--<MenuItem Header="Apply" IsEnabled="{Binding TimetableViewModel.HasImportedTimetables}"
-                              ItemsSource="{Binding Path=TimetableViewModel.ImportedTimetables}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="Header" Value="{Binding Name}"/>
-                                <Setter Property="Command" Value="{Binding DataContext.TimetableViewModel.ApplySelectedTimetableCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                <Setter Property="CommandParameter" Value="{Binding Name}"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>-->
                 </MenuItem>
 
                 <MenuItem Header="Todo List">

@@ -24,7 +24,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand DefineTimetableWeeksCommand { get; }
         public ICommand SwitchViewCommand { get; }
         public ICommand KeyDatesClickedCommand { get; }
-        public ICommand SpecialTestCommand { get; }
+        public ICommand ImportTimetableCommand { get; }
 
         public event EventHandler<string> SwitchViewEvent;
         
@@ -37,7 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             CalendarManager = new CalendarManager(year);
 
-            //TimetableViewModel = new TimetableViewModel(UserModel);
+            TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
             //PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);
             //TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
             ToDoViewModel = new TodoPageViewModel(UserModel, year);
@@ -50,6 +50,7 @@ namespace TeacherPlanner.Planner.ViewModels
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
+            ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable());
 
             //Method Calls
             //UpdateKeyDatesList();
@@ -116,6 +117,18 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnKeyDatesWindowClosed()
         {
             _keyDatesWindow = null;
+        }
+
+        private void OnImportTimetable()
+        {
+            var importWindow = new ImportTimetableWindow();
+            var importTimetableViewModel = new ImportTimetableWindowViewModel(_academicYear);
+            importWindow.DataContext = importTimetableViewModel;
+
+            if (importWindow.ShowDialog() ?? true)
+            {
+                TimetableViewModel.TryGetImportedTimetable();
+            }
         }
     }
 }

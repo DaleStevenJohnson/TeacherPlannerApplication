@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using Database;
+using Database.DatabaseModels;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,27 +20,29 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _timetableName;
         private string _timetableFile;// = FilesAndDirectories.SavedTimetableFileName;
         private string _userFeedback;
+        private readonly AcademicYearModel _academicYear;
 
         public ICommand ChooseTimetableFileCommand { get; }
         public ICommand ImportTimetableCommand { get;  }
 
-        public ImportTimetableWindowViewModel(UserModel userModel, Window window)
+        public ImportTimetableWindowViewModel(AcademicYearModel academicYear)
         {
             // Parameter Assignment
-            UserModel = userModel;
-            Window = window;
-            
+            _academicYear = academicYear;
 
             // Property Initialisation
-            ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
-            ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable(_));
             TimetableFile = string.Empty;
             TimetableName = string.Empty;
             UserFeedback = string.Empty;
+
+            // Command Assignment
+            ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
+            ImportTimetableCommand = new SimpleCommand(window => OnImportTimetable((Window)window));
+            
         }
-        public Window Window { get; }
-        public UserModel UserModel { get; }
-        public static TimetableModel CurrentTimetable { get; set; }
+        
+        // Properties
+
         public string TimetableName
         {
             get => _timetableName;
@@ -54,11 +58,15 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _timetableFile;
             set => RaiseAndSetIfChanged(ref _timetableFile, value);
         }
+
         public string UserFeedback
         {
             get => _userFeedback;
             set => RaiseAndSetIfChanged(ref _userFeedback, value);
         }
+
+        // Private Methods
+
         private void ChooseTimetableFile(object args)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -66,20 +74,11 @@ namespace TeacherPlanner.Planner.ViewModels
             if (openFileDialog.ShowDialog() == true)
             {
                 TimetableFile = openFileDialog.FileName;
-                TimetableName = FilesAndDirectories.SavedTimetableFileName;
-                //TimetableName = Path.GetFileName(openFileDialog.FileName);
+                TimetableName = Path.GetFileName(TimetableFile);
             }
         }
-        private string ParseTimetableName(string name)
-        {
-            string[] forbiddenCharacters = new string[] { "/", "`", @"\", "~", "#", "*", "\"", "'", ":", ";", ",", "?", "%", "$", "£", "=","+" };
-            for (int i = 0; i < forbiddenCharacters.Length; i++)
-            {
-                name = name.Replace(forbiddenCharacters[i], string.Empty);
-            }
-            return name;
-        }
-        private void OnImportTimetable(object args)
+     
+        private void OnImportTimetable(Window window)
         {
             // AND TimetableName is not already an existing Timetable name
             if (TimetableName == string.Empty)
@@ -90,11 +89,10 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 UserFeedback = "You have not selected a Timetable File";
             }
-            else if (TryImportTimetable(TimetableFile, TimetableName, UserModel))
+            else if (TryImportTimetable(TimetableFile))
             {
-                TryLoadTimetable(TimetableName);
-                Window.DialogResult = true;
-                Window.Close();
+                window.DialogResult = true;
+                window.Close();
             }
             else
             {
@@ -102,115 +100,107 @@ namespace TeacherPlanner.Planner.ViewModels
                 // TODO: Add hyperlink to help page 
             }
         }
-        /// <summary>
-        /// Takes a SIMS created timetable file, parses it, converts it 
-        /// and if both are successful, it saves the file locally for future use by the application
-        /// </summary>
-        /// <param name="timetableFilePath"></param>
-        private bool TryImportTimetable(string timetableFilePath, string name, UserModel userModel)
+        
+        private bool TryImportTimetable(string timetableFilePath)
         {
             string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
-            if (TryParseTimetableFileData(rawTimetableFileData))
-            {
-                string[][] convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
-                string path = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FilesAndDirectories.TimetableDirectory);
-                FileHandlingHelper.TryWriteDataToCSVFile(path, FilesAndDirectories.SavedTimetableFileName, convertedTimetableData, "o", true, userModel.Key);
-                return true;
-            }
-            else
+            
+            if (!TryParseTimetableFileData(rawTimetableFileData))
                 return false;
+            
+            var convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
+            foreach(var period in convertedTimetableData)
+            {
+                if (DatabaseManager.TimetablePeriodIsInDatabase(period, out var id))
+                {
+                    period.ID = id;
+                    if (!DatabaseManager.TryUpdateTimetablePeriod(period))
+                        return false;
+                }
+                else if (!DatabaseManager.TryAddTimetablePeriod(period, out _))
+                    return false;
+            }
+                
+            return true;
         }
-        /// <summary>
-        /// Takes a SIMS created timetable, strips out neccessary data and formats it in to the application's standard.
-        /// </summary>
-        /// <param name="rawTimetableData"></param>
-        /// <returns></returns>
-        private string[][] ConvertTimetableData(string[][] rawTimetableData)
+       
+        private List<TimetablePeriod> ConvertTimetableData(string[][] rawTimetableData)
         {
-            // 2 weeks, 5 days, 9 periods + 1 header row
-            string[][] convertedTimetableData = new string[(2*5*9)+1][];
             int row = 0;
-            convertedTimetableData[row] = new string[] { "Week", "Day", "Period", "Code", "Class", "Room"};
             int column = 0;
             int weeks = 2;
             string[] days = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
             int[] periodLocations = new int[] {5, 7, 9,11, 12,14, 15, 17,19 };
 
-            Dictionary<string, int> classCodeCounts = new Dictionary<string, int>();
+            var timetablePeriods = new List<TimetablePeriod>();
 
-            // Loop through and populate 2d array with array describing each period of the week
+            // 2 weeks
             for (int week = 1; week <= weeks; week++)
             {
+                // 5 days
                 for (int day = 0; day < days.Length; day++)
                 {
+                    // 9 periods (6 + Break, Lunch + Twilight)
                     column += 1;
                     for (int period = 0; period < periodLocations.Length; period++)
                     {
                         row += 1;
                         var periodLocation = periodLocations[period];
-
-                        var weekString = week.ToString();
-                        var dayString = days[day];
-                        var periodString = rawTimetableData[periodLocation][0];
-                        var codeString = weekString + dayString + periodString;
+                        // var periodString = rawTimetableData[periodLocation][0];
                         
+                        // SIMS exports with some odd characters at the end of classcode strings. 
+                        // This means having to remove the last character from the strings for them to display properly
+                        var roomNumber = periodLocation != 11 && periodLocation != 14 ? rawTimetableData[periodLocation + 1][column] : "";
+                        if (roomNumber.Length > 0)
+                            roomNumber = roomNumber.Substring(0, roomNumber.Length - 1);
                         
                         var classCode = rawTimetableData[periodLocation][column];
                         if (classCode.Length > 0)
                             classCode = classCode.Substring(0, classCode.Length - 1);
 
-                        var roomNumber = periodLocation != 11 && periodLocation != 14 ? rawTimetableData[periodLocation + 1][column] : "";
-                        if (roomNumber.Length > 0)
-                            roomNumber = roomNumber.Substring(0, roomNumber.Length - 1);
+                        var timetablePeriod = new TimetablePeriod()
+                        {
+                            AcademicYearID = _academicYear.ID,
+                            Week = week,
+                            Day = day + 1,
+                            Period = period,
+                            ClassCode = classCode,
+                            RoomCode = roomNumber,
+                        };
 
-                        // Count which specific occurance this particular period is
-                        if (classCodeCounts.ContainsKey(classCode))
-                            classCodeCounts[classCode] += 1;
-                        else
-                            classCodeCounts.Add(classCode, 1);
-
-                        convertedTimetableData[row] = new string[] {weekString, dayString, periodString, codeString, classCode, roomNumber, classCodeCounts[classCode].ToString(), ""};
+                        timetablePeriods.Add(timetablePeriod);
                     }
                 }
             }
-            // Add total occurance to each period
-            for (int i = 1; i < convertedTimetableData.Length; i++)
-            {
-                convertedTimetableData[i][7] = classCodeCounts[convertedTimetableData[i][4]].ToString();
-            }
-
-            return convertedTimetableData;
+            return timetablePeriods;
         }
 
-        /// <summary>
-        /// Checks that provided SIMS timetable data file is in the correct format
-        /// </summary>
-        /// <param name="timetableFileData"></param>
-        /// <returns></returns>
         private bool TryParseTimetableFileData(string[][] timetableFileData)
         {
             // This is probably not the most concise and elegant way to write this, but shows clearly each check performed on each line
             // of the csv data, so arguably is okay? right?
-            bool firstline = ParseEmptyStringArray(timetableFileData[0]);
-            bool secondline = timetableFileData[1][0].Contains("Timetable");
-            bool thirdline = timetableFileData[2][0] != string.Empty;
-            bool fourthline = ParseEmptyStringArray(timetableFileData[3]);
-            bool fifthline = timetableFileData[4][1] == "1Mon";
-            bool sixthline = timetableFileData[5][0] == "R";
-            bool seventhline = timetableFileData[6][0] == string.Empty && timetableFileData[6][1] != string.Empty;
-            bool eigthline = timetableFileData[7][0] == "1";
-            bool ninthline = timetableFileData[8][0] == string.Empty && timetableFileData[8][1] != string.Empty;
-            bool tenthline = timetableFileData[9][0] == "2";
-            bool eleventhline = timetableFileData[10][0] == string.Empty && timetableFileData[10][1] != string.Empty;
-            bool twentiethline = timetableFileData[19][0] == "T";
-            bool twentyfirstline = ParseEmptyStringArray(timetableFileData[20]);
-            bool twentysecondline = ParseEmptyStringArray(timetableFileData[21]);
-            bool twentythirdline = ParseEmptyStringArray(timetableFileData[22]);
-            // Sam will potentially laugh in disgust at the below return. If it's stoopid && it works, it's !stoopid...
-            // I am hoping there is a way to make the boolean expression more concise... Maybe using a list? Add each check to the list, instead of an individually named variable
-            // then at the end iterate through and && all values together...
-            return firstline && secondline && thirdline && fourthline && fifthline && sixthline && seventhline && eigthline && ninthline && tenthline && eleventhline && twentiethline && twentyfirstline && twentysecondline && twentythirdline;
+            bool valid = ParseEmptyStringArray(timetableFileData[0])
+            && timetableFileData[1][0].Contains("Timetable")
+            && timetableFileData[2][0] != string.Empty
+            && ParseEmptyStringArray(timetableFileData[3])
+            && timetableFileData[4][1] == "1Mon"
+            && timetableFileData[5][0] == "R"
+            && timetableFileData[6][0] == string.Empty 
+            && timetableFileData[6][1] != string.Empty
+            && timetableFileData[7][0] == "1"
+            && timetableFileData[8][0] == string.Empty 
+            && timetableFileData[8][1] != string.Empty
+            && timetableFileData[9][0] == "2"
+            && timetableFileData[10][0] == string.Empty 
+            && timetableFileData[10][1] != string.Empty
+            && timetableFileData[19][0] == "T"
+            && ParseEmptyStringArray(timetableFileData[20])
+            && ParseEmptyStringArray(timetableFileData[21])
+            && ParseEmptyStringArray(timetableFileData[22]);
+           
+            return valid;
         }
+
         private bool ParseEmptyStringArray(string[] stringArray)
         {
             for (int i = 0; i < stringArray.Length; i++)
@@ -220,12 +210,5 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             return true;
         }
-        private void TryLoadTimetable(string timetableName)
-        {
-            var filepath = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FilesAndDirectories.TimetableDirectory, timetableName);
-            var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filepath, true, UserModel.Key);
-            CurrentTimetable = new TimetableModel(timetableData);
-        }
     }
-
 }

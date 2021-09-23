@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Database;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -18,18 +20,18 @@ namespace TeacherPlanner.Timetable.ViewModels
         private Models.TimetableWeekModel _currentlyDisplayedTimetableWeek;
         private TimetableModel _currentTimetable;
         private int _selectedWeek;
+        private readonly AcademicYearModel _academicYear;
         public ICommand SwitchTimetableWeekCommand { get; }
-        public ICommand ImportTimetableCommand { get; }
         public ICommand ManageTimetableCommand { get; }
-        public ICommand ApplySelectedTimetableCommand { get; }
         public event EventHandler<TimetableModel> TimetableChangedEvent;
-        public TimetableViewModel(UserModel userModel, CalendarManager calendarManager)
+        public TimetableViewModel(UserModel userModel, CalendarManager calendarManager, AcademicYearModel academicYear)
         {
-            ImportTimetableCommand = new SimpleCommand(_ => OnTimetableImportClick());
-            ApplySelectedTimetableCommand = new SimpleCommand(timetableName => ApplySelectedTimetable((string) timetableName));
+            
             SwitchTimetableWeekCommand = new SimpleCommand(_ => OnSwitchTimetableWeek());
+            TimetableChangedEvent += (_, __) => CountOccurances();
 
 
+            _academicYear = academicYear;
             UserModel = userModel;
             SelectedWeek = 1;
 
@@ -63,56 +65,64 @@ namespace TeacherPlanner.Timetable.ViewModels
 
         // Public Methods
 
-        public void OnTimetableImportClick()
-        {
-            var importWindow = new ImportTimetableWindow();
-            var importTimetableViewModel = new ImportTimetableWindowViewModel(UserModel, importWindow);
-            importWindow.DataContext = importTimetableViewModel;
-
-            if (importWindow.ShowDialog() ?? true)
-            {
-                TryGetImportedTimetable();
-                UpdateCurrentlyDisplayedTimetableWeek();
-                TimetableChangedEvent.Invoke(null, CurrentTimetable);
-            }
-        }
+        
 
         public bool TryGetImportedTimetable()
         {
-            var directory = Path.Combine(FileHandlingHelper.LoggedInUserDataPath, FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.TimetableDirectory, UserModel.Key));
-            Directory.CreateDirectory(directory);
-            var filenames = Directory.GetFiles(directory);
-
-            for (var i = 0; i < filenames.Length; i++)
-            {
-                var filename = Path.GetFileName(filenames[i]);
-                if (filename == FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.SavedTimetableFileName, UserModel.Key))
-                {
-                    var timetableData = FileHandlingHelper.ReadDataFromCSVFile(filenames[i], true, UserModel.Key);
-                    CurrentTimetable = new TimetableModel(timetableData);
-                    TimetableIsImported = true;
-                    return true;
-                }
-            }
-            return false;
+            var dbModels = DatabaseManager.GetTimetablePeriods(_academicYear.ID);
+            
+            if (!dbModels.Any())
+                return false;
+            
+            CurrentTimetable = new TimetableModel(dbModels);
+            TimetableIsImported = true;
+            TimetableChangedEvent.Invoke(null, CurrentTimetable);
+            UpdateCurrentlyDisplayedTimetableWeek();
+            return true;
         }
 
-
         // Private Methods
+
 
         private void UpdateCurrentlyDisplayedTimetableWeek()
         {
             CurrentlyDisplayedTimetableWeek = SelectedWeek == 1 ? CurrentTimetable.Week1 : CurrentTimetable.Week2;
         }
+
         private void OnSwitchTimetableWeek()
         {
             SelectedWeek = SelectedWeek == 1 ? 2 : 1;
             UpdateCurrentlyDisplayedTimetableWeek();
         }
 
-        private void ApplySelectedTimetable(string filename)
+        private void CountOccurances()
         {
-            MessageBox.Show(filename);
+            Dictionary<string, int> classCodeCounts = new Dictionary<string, int>();
+            var timetablePeriods = new List<TimetablePeriodModel>();
+            for (int week = 1; week <= 2 ; week++)
+            {
+                for (int day = 1; day <= 5; day++)
+                {
+                    for (int period = 0; period <= 8; period++)
+                    {
+                        var timetablePeriod = CurrentTimetable.GetPeriod(week, day, (PeriodCodes)period);
+                        
+                        if (classCodeCounts.ContainsKey(timetablePeriod.ClassCode))
+                            classCodeCounts[timetablePeriod.ClassCode] += 1;
+                        else
+                            classCodeCounts.Add(timetablePeriod.ClassCode, 1);
+
+                        timetablePeriod.Occurance = classCodeCounts[timetablePeriod.ClassCode];
+                        timetablePeriods.Add(timetablePeriod);
+                    }
+                }
+            }
+
+            // Count which specific occurance this particular period is
+            foreach (var period in timetablePeriods)
+            {
+                period.Occurances = classCodeCounts[period.ClassCode];
+            }
         }
     }
 }

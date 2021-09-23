@@ -190,8 +190,48 @@ namespace Database
             return UpdateModelsInDatabase(query, todoItem);
         }
 
+        //
+        // Timetable Periods
+        //
 
-        
+        public static List<TimetablePeriod> GetTimetablePeriods(int academicYearID)
+        {
+            return GetModelsFromDatabaseByAcademicYear<TimetablePeriod>("TimetablePeriods", academicYearID);
+        }
+
+        public static bool TimetablePeriodIsInDatabase(TimetablePeriod timetablePeriod, out int id)
+        {
+            string query = "SELECT * FROM TimetablePeriods WHERE academic_year_ID=@AcademicYearID AND week=@Week AND day=@Day AND period=@Period;";
+            var parameters = new Dictionary<string, object> { {"@AcademicYearID", timetablePeriod.AcademicYearID }, { "@Week", timetablePeriod.Week }, { "@Day", timetablePeriod.Day}, { "@Period", timetablePeriod.Period} };
+            var result = GetModelsFromDatabase<TimetablePeriod>(query, parameters);
+            if (result.Any())
+            {
+                id = result.First().ID;
+                return true;
+            }
+            else
+            {
+                id = -1;
+                return false;
+            }
+            
+        }
+
+        public static bool TryAddTimetablePeriod(TimetablePeriod timetablePeriod, out int id)
+        {
+            var query = "INSERT INTO TimetablePeriods (academic_year_id, week, day, period, classcode, room) VALUES (@AcademicYearID, @Week, @Day, @Period, @ClassCode, @RoomCode);";
+            var result = InsertModelsIntoDatabase(query, timetablePeriod);
+            id = GetLastIDFromDatabase("TimetablePeriods");
+            return result;
+        }
+
+        public static bool TryUpdateTimetablePeriod(TimetablePeriod timetablePeriod)
+        {
+            var query = "UPDATE TimetablePeriods SET classcode=@ClassCode, room=@RoomCode WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, timetablePeriod);
+        }
+
+
 
         // Private Methods
 
