@@ -105,12 +105,13 @@
         
 
         <!--Periods-->
-        <local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period1}"/>
-        <local:PeriodView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period2}"/>
-        <local:PeriodView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period3}"/>
-        <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period4}"/>
-        <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period5}"/>
-        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel.Period6}"/>
+        
+        <local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
         
         <!--Key Dates Dropdown-->
         <StackPanel Grid.ColumnSpan="3" Grid.Row="1" 
@@ -131,7 +132,7 @@
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <local:NotesView Grid.Row="7" Grid.Column="0" DataContext="{Binding DayModel.NoteSectionModel}"/>
+                <local:NotesView Grid.Row="7" Grid.Column="0" DataContext="{Binding DayModel}"/>
                 <local:CalendarView Grid.Row="7" Grid.Column="1" Margin="0,20,20,20"
                                     DataContext="{Binding CalendarViewModel}"/>
             </Grid>

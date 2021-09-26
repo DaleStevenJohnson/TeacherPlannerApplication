@@ -15,8 +15,10 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="19*"/>
-                
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="3*"/>
+
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
@@ -35,7 +37,7 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="5"
-                Content="{Binding Path=Number}"
+                Content="{Binding Path=Number, Converter={StaticResource PeriodNumberConverter}}"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 Background="#AAAAAA"
@@ -63,7 +65,7 @@
             <!--Class Code / Form Group-->
             <Border  Grid.Row="6" Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Gray">
                 <TextBox 
-                    Text="{Binding Path=ClassCode}"
+                    Text="{Binding Path=Classcode}"
                     GotFocus="TextBoxMouseOver"
                     LostFocus="TextBoxOutOfFocus"
                     SelectionChanged="TextBoxSelectionChanged"
@@ -78,16 +80,83 @@
                 />
             </Border>
 
-            <!--Margin Text Boxes-->
+            
+                
+            <!--Margin Text Box-->
+            <TextBox
+                Grid.Row="0" Grid.Column="1" Grid.RowSpan="7"
+                Text="{Binding Path=MarginText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                FontSize="14.5"
+                LostFocus="TextBoxOutOfFocus"
+                MouseEnter="TextBoxMouseOver"
+                MouseLeave="TextBoxMouseOut"
+                SelectionChanged="TextBoxSelectionChanged"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                IsReadOnly="False"
+                TextAlignment="Left"
+                BorderBrush="Transparent"
+            />
 
 
-            <local:RowEntryView Grid.Row="0" Grid.Column="1" DataContext="{Binding Path=Row1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="1" Grid.Column="1" DataContext="{Binding Path=Row2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="2" Grid.Column="1" DataContext="{Binding Path=Row3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="3" Grid.Column="1" DataContext="{Binding Path=Row4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="4" Grid.Column="1" DataContext="{Binding Path=Row5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="5" Grid.Column="1" DataContext="{Binding Path=Row6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
-            <local:RowEntryView Grid.Row="6" Grid.Column="1" DataContext="{Binding Path=Row7, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
+            <Border Grid.Row="0" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+
+            <!--Main Text Box-->
+            <TextBox
+                Grid.Row="0" Grid.Column="2" Grid.RowSpan="7"
+                Text="{Binding Path=MainText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                FontSize="14.5"
+                LostFocus="TextBoxOutOfFocus"
+                MouseEnter="TextBoxMouseOver"
+                MouseLeave="TextBoxMouseOut"
+                SelectionChanged="TextBoxSelectionChanged"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                IsReadOnly="False"
+                TextAlignment="Left"
+                BorderBrush="Transparent"
+            />
+
+
+            <Border Grid.Row="0" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="1" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="2" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="3" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="4" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="5" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="6" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+
+            <!--Side Text Box-->
+            <TextBox
+                Grid.Row="0" Grid.Column="3" Grid.RowSpan="7"
+                Text="{Binding Path=SideText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                FontSize="14.5"
+                LostFocus="TextBoxOutOfFocus"
+                MouseEnter="TextBoxMouseOver"
+                MouseLeave="TextBoxMouseOut"
+                SelectionChanged="TextBoxSelectionChanged"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                IsReadOnly="False"
+                TextAlignment="Left"
+                BorderBrush="Transparent"
+            />
+
+
+            <Border Grid.Row="0" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="1" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="2" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="3" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="4" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="5" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="6" Grid.Column="3"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            
 
 
             

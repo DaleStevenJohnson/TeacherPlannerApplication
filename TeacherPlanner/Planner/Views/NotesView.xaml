@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
              mc:Ignorable="d" 
              xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
-             d:DataContext="{Binding Source={d:DesignInstance Type=model:NoteSectionModel}}"
+             d:DataContext="{Binding Source={d:DesignInstance Type=model:DayModel}}"
              d:DesignHeight="450" d:DesignWidth="800">
     
         <Grid>
@@ -35,96 +35,28 @@
                 FontSize="20"
                 Background="White"
                 Foreground="Black"/>
-            
-            <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                    LostFocus="TextBoxOutOfFocus"
-                    MouseEnter="TextBoxMouseOver"
-                    MouseLeave="TextBoxMouseOut"
-                    SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    IsReadOnly="True"
-                    TextAlignment="Left"
-                    BorderBrush="Transparent"
-                />
-            </Border>
 
-            <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+            <TextBox 
+                    Grid.Row="1" Grid.Column="1" Grid.RowSpan="6"
+                    Text="{Binding Path=Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                    FontSize="14.5"
                     LostFocus="TextBoxOutOfFocus"
                     MouseEnter="TextBoxMouseOver"
                     MouseLeave="TextBoxMouseOut"
                     SelectionChanged="TextBoxSelectionChanged"
                     AcceptsReturn="True"
                     TextWrapping="Wrap"
-                    IsReadOnly="True"
+                    IsReadOnly="False"
                     TextAlignment="Left"
                     BorderBrush="Transparent"
                 />
-            </Border>
 
-            <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                    LostFocus="TextBoxOutOfFocus"
-                    MouseEnter="TextBoxMouseOver"
-                    MouseLeave="TextBoxMouseOut"
-                    SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    IsReadOnly="True"
-                    TextAlignment="Left"
-                    BorderBrush="Transparent"
-                />
-            </Border>
+        <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+        <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+        <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+        <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+        <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+        <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
 
-            <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                    LostFocus="TextBoxOutOfFocus"
-                    MouseEnter="TextBoxMouseOver"
-                    MouseLeave="TextBoxMouseOut"
-                    SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    IsReadOnly="True"
-                    TextAlignment="Left"
-                    BorderBrush="Transparent"
-                />
-            </Border>
-
-            <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                    LostFocus="TextBoxOutOfFocus"
-                    MouseEnter="TextBoxMouseOver"
-                    MouseLeave="TextBoxMouseOut"
-                    SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    IsReadOnly="True"
-                    TextAlignment="Left"
-                    BorderBrush="Transparent"
-                />
-            </Border>
-            <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray">
-                <TextBox 
-                    Text="{Binding Path=Note6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                    LostFocus="TextBoxOutOfFocus"
-                    MouseEnter="TextBoxMouseOver"
-                    MouseLeave="TextBoxMouseOut"
-                    SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    IsReadOnly="True"
-                    TextAlignment="Left"
-                    BorderBrush="Transparent"
-                />
-            </Border>
-            
-
-        </Grid>
+    </Grid>
 </UserControl>

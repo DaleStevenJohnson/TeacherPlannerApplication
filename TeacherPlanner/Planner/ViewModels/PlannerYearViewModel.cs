@@ -38,8 +38,10 @@ namespace TeacherPlanner.Planner.ViewModels
             CalendarManager = new CalendarManager(year);
 
             TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
-            //PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);
-            //TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
+            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
+            
+            TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
+            
             ToDoViewModel = new TodoPageViewModel(UserModel, year);
             
             // keyDates view Model new up and event subscription
@@ -53,7 +55,7 @@ namespace TeacherPlanner.Planner.ViewModels
             ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable());
 
             //Method Calls
-            //UpdateKeyDatesList();
+            UpdateKeyDatesList();
 
 
         }

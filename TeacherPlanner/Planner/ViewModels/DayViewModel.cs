@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -17,8 +21,14 @@ namespace TeacherPlanner.Planner.ViewModels
         // Fields
         private DayModel _dayModel;
         private CalendarViewModel _calendarViewModel;
+        
         private bool _isKeyDate;
         private bool _keyDatesAreShowing;
+        
+        private readonly AcademicYearModel _academicYear;
+        public readonly UserModel _userModel;
+        private readonly CalendarManager _calendarManager;
+
         private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
         private ObservableCollection<KeyDateItemViewModel> _todaysKeyDates;
 
@@ -28,46 +38,25 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand ToggleKeyDatesCommand { get; }
 
         // Constructor
-        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side, ObservableCollection<KeyDateItemViewModel> keyDates)
+        public DayViewModel(UserModel userModel, DateTime date, TimetableModel timetable, string side, ObservableCollection<KeyDateItemViewModel> keyDates, AcademicYearModel academicYear, CalendarManager calendarManager)
         {
-            UserModel = userModel;
+            _userModel = userModel;
             Timetable = timetable;
             AllKeyDates = keyDates;
+            _academicYear = academicYear;
+            _calendarManager = calendarManager;
 
             DayModel = LoadAndPopulateNewDay(date);
-            
 
-            // Test Data
-            //KeyDates.Add(new KeyDateItemViewModel("Year 12", "Event", DateTime.Now.AddHours(-1)));
-            //KeyDates.Add(new KeyDateItemViewModel("Year 7", "Parent's Evening", DateTime.Now.AddHours(-3)));
-            //KeyDates.Add(new KeyDateItemViewModel("Year 10", "Report", DateTime.Now.AddHours(-5)));
-            
             IsKeyDate = false;
             KeyDatesAreShowing = false;
 
             TurnPageCommand = new SimpleCommand(numOfDays => OnTurnPage(numOfDays));
             ToggleKeyDatesCommand = new SimpleCommand(_ => OnToggleKeyDates());
 
-            if (side == "left")
-            {
-                Forward1 = AdvancePageState.LeftForward1;
-                Forward7 = AdvancePageState.LeftForward7;
-                ForwardMonth = AdvancePageState.LeftForwardMonth;
-                Backward1 = AdvancePageState.LeftBackward1;
-                Backward7 = AdvancePageState.LeftBackward7;
-                BackwardMonth = AdvancePageState.LeftBackwardMonth;
-            }
-            else
-            {
-                Forward1 = AdvancePageState.RightForward1;
-                Forward7 = AdvancePageState.RightForward7;
-                ForwardMonth = AdvancePageState.RightForwardMonth;
-                Backward1 = AdvancePageState.RightBackward1;
-                Backward7 = AdvancePageState.RightBackward7;
-                BackwardMonth = AdvancePageState.RightBackwardMonth;
-            }
 
 
+            SetAdvancePageStates(side);
             UpdateTodaysKeyDates();
         }
 
@@ -93,13 +82,13 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _todaysKeyDates, value);
         }
 
-        public UserModel UserModel { get; }
-        public AdvancePageState Forward1 { get; }
-        public AdvancePageState Forward7 { get; }
-        public AdvancePageState ForwardMonth { get; }
-        public AdvancePageState Backward1 { get; }
-        public AdvancePageState Backward7 { get; }
-        public AdvancePageState BackwardMonth { get; }
+        
+        public AdvancePageState Forward1 { get; private set; }
+        public AdvancePageState Forward7 { get; private set; }
+        public AdvancePageState ForwardMonth { get; private set; }
+        public AdvancePageState Backward1 { get; private set; }
+        public AdvancePageState Backward7 { get; private set; }
+        public AdvancePageState BackwardMonth { get; private set; }
         public CalendarViewModel CalendarViewModel 
         {
             get => _calendarViewModel;
@@ -113,6 +102,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         // Private Properties
         private TimetableModel Timetable { get; }
+        
 
         private ObservableCollection<KeyDateItemViewModel> AllKeyDates
         {
@@ -131,127 +121,111 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public DayModel LoadAndPopulateNewDay(DateTime date, bool overwriteClassCode = false)
         {
-            var filenameDate = date.ToString(Formats.FullDateFormat);
-            // Create path for where data should be stored for the provided date
-            var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt");
-            var path = Path.Combine(FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key), filename);
 
-            // Read data from file. If file does not exist, string[] data will be an empty array
-            var data = FileHandlingHelper.ReadDataFromFile(path, true, UserModel.Key);
-
-            // The file is saved with six periods and a notes section one after the other.
-            // The numbers below define sections of that file within the loop in order to select the correct part of the file
-            var periodRows = 7;
-            var jump = 8;
-            var position = 0;
-
-            // Update Calendar Model to a new Instance with the new date
-            CalendarViewModel = new CalendarViewModel(date, AllKeyDates);
-
-            DayModel newDayModel = new DayModel(date);
-            // If this is false, it means no save file exists, and we need to just go ahead and create a completely empty DayModel
-            if (data.Length > 0 && Timetable != null)
+            // Load Day from Database
+            var dayDBModel = DatabaseManager.GetDay(_academicYear.ID, date);
+            if (dayDBModel == null)
             {
-                // Repeat for all six periods
-                for (var i = 0; i < newDayModel.Periods.Length; i++)
+                var newDBDay = new Day()
                 {
-                    // Initialise empty array to store all data for this current period
-                    var periodData = new string[periodRows];
+                    AcademicYearID = _academicYear.ID,
+                    Date = date,
+                    Notes = null,
+                };
 
-                    // This is the index in the string[] data array where the class code is located
-                    var classCodeIndex = i * jump;
+                if (DatabaseManager.TryAddDay(newDBDay, out var id))
+                {
+                    dayDBModel = newDBDay;
+                    dayDBModel.ID = id;
+                }
+                else
+                {
+                    // Todo - implement this better
+                    MessageBox.Show("Error Loading Day");
+                    return null;
+                }
+            }
 
-                    // This is the index in the string[] data array where the periodData begins
-                    var startIndex = classCodeIndex + 1;
+            // Load Periods from Database
+            var PERIODS = 6;
+            var periodDBModels = DatabaseManager.GetPeriods(dayDBModel.ID);
+            var periodModels = new ObservableCollection<PeriodModel>();
+            
+            if (periodDBModels.Any())
+            {
+                for (var i = 0; i < PERIODS; i++)
+                {
+                    Period periodDBModel;
 
-                    // This keeps track of where we are in the periodData array,
-                    // as the loop below is going through the string[] data array
-                    var periodIndex = 0;
-
-                    // This loop populates the periodData array with all data for the current period
-                    for (var j = startIndex; j < startIndex + periodRows; j++)
+                    if (periodDBModels.Count >= i && periodDBModels[i].PeriodNumber == i)
                     {
-                        periodData[periodIndex] = data[j];
-                        periodIndex++;
+                        periodDBModel = periodDBModels[i];
                     }
-
-                    var classCode = data[classCodeIndex] == "" ? GetClassCodeFromTimetable(date, i + 1) : data[classCodeIndex];
-
-                    // The below method call gets the day model to create a new period using the data supplied
-                    newDayModel.LoadPeriodDataIntoNewPeriod(i + 1, classCode, periodData);
-
-                    // This keeps track of what line we are on in the data array
-                    // It will be needed once we finish adding periods, but still have
-                    // data to add from the string[] data array
-                    position = classCodeIndex + periodRows;
+                    else
+                    {
+                        periodDBModel = new Period()
+                        {
+                            DayID = dayDBModel.ID,
+                            TimetableClasscode = GetTimetablePeriodID(date, i),
+                            UserEnteredClasscode = null,
+                            PeriodNumber = i,
+                            MarginText = null,
+                            MainText = null,
+                            SideText = null
+                        };
+                    }
+                    
+                    var periodModel = new PeriodModel(periodDBModel);
+                    periodModels.Add(periodModel);
                 }
+            }
+            return new DayModel(dayDBModel, periodModels);
+        }
 
-                // Last in the file is the note data
-                // Establishes the expected size of the data
-                var noteRows = 6;
-                var noteData = new string[noteRows];
-                var noteIndex = 0;
-
-                // Loops through and compiles the note data into string[]
-                for (var j = position + 1; j < position + 1 + noteRows; j++)
+        internal void SaveDayToDatabase()
+        {
+            
+            // Add periods to Database
+            foreach (var period in DayModel.Periods)
+            {
+                var dbModel = period.GetDBModel();
+                if (!DatabaseManager.TryUpdatePeriod(dbModel))
                 {
-                    noteData[noteIndex] = data[j];
-                    noteIndex++;
+                    if (DatabaseManager.TryAddPeriod(dbModel, out var id))
+                    {
+                        period.ID = id;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error saving Period to Database");
+                    }
                 }
-
-                // data is added into the NoteSection Model attached to the new DayModel that will be returned from this method
-                newDayModel.NoteSectionModel.Load(noteData);
             }
-            else
+
+            // Add Day to Database
+
+            var day = DayModel.GetDBModel();
+
+            if (!DatabaseManager.TryUpdateDay(day))
             {
-                newDayModel.LoadEmptyPeriods();
-                newDayModel = LoadTimetableIntoNewDay(newDayModel, date);
-                newDayModel.LoadEmptyIntoNewNoteSection();
-            }
-            return newDayModel;
-        }
-
-        internal void SaveDayToFile()
-        {
-            var filenameDate = DayModel.Date.ToString(Formats.FullDateFormat);
-            var saveData = DayModel.PackageSaveData();
-            if (TryParseSaveData(saveData))
-            {
-                var filename = FileHandlingHelper.EncryptFileOrDirectory(filenameDate + ".txt", UserModel.Key);
-
-                // Final save path looks like this, for user Bob on 15th January 1970: \Bob\1970\197001\19700115.txt
-                var path = FileHandlingHelper.CreateMonthlyUserDataDirectory(filenameDate, UserModel.Key);
-
-                if (saveData != Formats.EmptyDaySaveData || File.Exists(Path.Combine(path, filename)))
+                if (DatabaseManager.TryAddDay(day, out var id))
                 {
-                    FileHandlingHelper.TryWriteDataToFile(path, filename, saveData, "o", true, UserModel.Key);
+                    DayModel.ID = id;
+                }
+                else
+                {
+                    // Todo make this better
+                    MessageBox.Show("Failed to Save Day to Database");
                 }
             }
         }
 
-        private bool TryParseSaveData(string saveData)
-        {
-            var periodsAreEmpty = RegexHelper.SearchForCount(RegexHelper.EmptyPeriodsSaveDataPattern, saveData, 42);
-            var notesAreEmpty = RegexHelper.SearchForCount(RegexHelper.EmptyNotesSaveDataPattern, saveData, 6);
-            return !(periodsAreEmpty && notesAreEmpty);
-        }
-
-        private DayModel LoadTimetableIntoNewDay(DayModel newDayModel, DateTime date)
-        {
-            for (var i = 0; i < newDayModel.Periods.Length; i++)
-            {
-                var periodModel = newDayModel.Periods[i];
-                periodModel.ClassCode = GetClassCodeFromTimetable(date, i + 1);
-            }
-            return newDayModel;
-        }
         private string GetClassCodeFromTimetable(DateTime date, int period)
         {
             if (Timetable == null)
                 return string.Empty;
             var day = (int)date.DayOfWeek;
-            //var week = CalendarManager.GetWeek(date);
-            var week = 1;
+            var week = _calendarManager.GetWeek(date);
             if (week == 1 || week == 2)
             {
                 // Todo maybe fix me
@@ -263,16 +237,54 @@ namespace TeacherPlanner.Planner.ViewModels
             return string.Empty;
         }
 
+        private int? GetTimetablePeriodID(DateTime date, int period)
+        {
+            if (Timetable == null)
+                return null;
+            
+            var day = (int)date.DayOfWeek;
+            var week = _calendarManager.GetWeek(date);
+            
+            if (week == 1 || week == 2)
+            {
+                // Todo maybe fix me
+                var timetablePeriodModel = Timetable.GetPeriod(week, day, (PeriodCodes)period);
+                return timetablePeriodModel.ID;
+            }
+
+            return null;
+        }
+
         private void OnTurnPage(object v)
         {
             TurnPageEvent.Invoke(null, (AdvancePageState)v);
         }
 
-        
-
         private void OnToggleKeyDates()
         {
             KeyDatesAreShowing = !KeyDatesAreShowing;
+        }
+
+        private void SetAdvancePageStates(string side)
+        {
+            if (side == "left")
+            {
+                Forward1 = AdvancePageState.LeftForward1;
+                Forward7 = AdvancePageState.LeftForward7;
+                ForwardMonth = AdvancePageState.LeftForwardMonth;
+                Backward1 = AdvancePageState.LeftBackward1;
+                Backward7 = AdvancePageState.LeftBackward7;
+                BackwardMonth = AdvancePageState.LeftBackwardMonth;
+            }
+            else
+            {
+                Forward1 = AdvancePageState.RightForward1;
+                Forward7 = AdvancePageState.RightForward7;
+                ForwardMonth = AdvancePageState.RightForwardMonth;
+                Backward1 = AdvancePageState.RightBackward1;
+                Backward7 = AdvancePageState.RightBackward7;
+                BackwardMonth = AdvancePageState.RightBackwardMonth;
+            }
         }
     }
 }

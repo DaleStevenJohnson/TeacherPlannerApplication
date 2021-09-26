@@ -80,7 +80,7 @@ namespace Database
         // Days
         //
 
-        public Day GetDay(int academic_year_id, DateTime date)
+        public static Day GetDay(int academic_year_id, DateTime date)
         {
             string query = $"SELECT * FROM Days WHERE academic_year_id=@ID AND date=@Date;";
             var parameters = new Dictionary<string, object> { { "@ID", academic_year_id }, { "@Date", date} };
@@ -106,7 +106,7 @@ namespace Database
         //
         // Periods
         //
-        public List<Period> GetPeriods(int day_id)
+        public static List<Period> GetPeriods(int day_id)
         {
             string query = $"SELECT * FROM Periods WHERE day_id=@ID;";
             var parameters = new Dictionary<string, object> { { "@ID", day_id} };
@@ -247,6 +247,17 @@ namespace Database
         public static List<TimetablePeriod> GetTimetablePeriods(int academicYearID)
         {
             return GetModelsFromDatabaseByAcademicYear<TimetablePeriod>("TimetablePeriods", academicYearID);
+        }
+
+        public static string GetTimetablePeriodClasscode(int id)
+        {
+            string query = $"SELECT * FROM TimetablePeriods WHERE id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", id } };
+            var result = GetModelsFromDatabase<TimetablePeriod>(query, parameters);
+            if (result.Any())
+                return result.First().ClassCode;
+            else
+                return null;
         }
 
         public static bool TimetablePeriodIsInDatabase(TimetablePeriod timetablePeriod, out int id)

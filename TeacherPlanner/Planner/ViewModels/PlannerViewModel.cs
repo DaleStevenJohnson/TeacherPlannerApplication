@@ -15,39 +15,41 @@ namespace TeacherPlanner.Planner.ViewModels
     {
         private DayViewModel _leftDay;
         private DayViewModel _rightDay;
+
         private bool _singlePageScrolling = false;
         private bool _isAtEndOfYear = false;
         private bool _isAtStartOfYear = false;
+
+        private readonly AcademicYearModel _academicYear;
+        private CalendarManager _calendarManager;
+
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
 
         public ICommand SaveCommand { get; }
         public ICommand GoToTodayCommand { get; }
-        public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager, ObservableCollection<KeyDateItemViewModel> keyDates)
+        public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager, ObservableCollection<KeyDateItemViewModel> keyDates, AcademicYearModel academicYear)
         {
             // Parameter Assignment
             UserModel = userModel;
             Timetable = timetable;
-            CalendarManager = calendarManager;
+            _calendarManager = calendarManager;
             KeyDates = keyDates;
+            _academicYear = academicYear;
 
             // Property Assignment
-            //LoadedDayModels = new DayModel[DAYLIMIT];
-
-            
             OverwriteClassCode = false;
 
-            LoadNewDays();
-
             // Command Assignment
-            //TurnPageForwardCommand = new SimpleCommand(numOfDays => OnTurnPageForward(Convert.ToInt32(numOfDays)));
-            //TurnPageBackwardCommand = new SimpleCommand(numOfDays => OnTurnPageBackward(Convert.ToInt32(numOfDays)));
             GoToTodayCommand = new SimpleCommand(_ => OnGoToToday());
             SaveCommand = new SimpleCommand(_ => OnSave());
+
+            // Method Calls
+            LoadNewDays();
         }
 
 		// Properties
 
-		public CalendarManager CalendarManager { get; }
+		
         public TimetableModel Timetable { get; set; }
         public bool IsAtEndOfYear
         {
@@ -98,10 +100,11 @@ namespace TeacherPlanner.Planner.ViewModels
             var advancePageState = (AdvancePageState)parameter;
 
             SaveCurrentlyDisplayedPageDays();
-            CalendarManager.ChangeCurrentDate(advancePageState);
+            _calendarManager.ChangeCurrentDate(advancePageState);
             LoadNewDays();
             //_debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }
+
         public void OnSave()
         {
             SaveCurrentlyDisplayedPageDays();
@@ -110,27 +113,27 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void LoadNewDays()
         {
-            LeftDay = new DayViewModel(UserModel, CalendarManager.CurrentDateLeft, Timetable, "left", KeyDates);
-            RightDay = new DayViewModel(UserModel, CalendarManager.CurrentDateRight, Timetable, "right", KeyDates);
+            LeftDay = new DayViewModel(UserModel, _calendarManager.CurrentDateLeft, Timetable, "left", KeyDates, _academicYear, _calendarManager);
+            RightDay = new DayViewModel(UserModel, _calendarManager.CurrentDateRight, Timetable, "right", KeyDates, _academicYear, _calendarManager);
             LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
-            IsAtStartOfYear = RightDay.CalendarViewModel.Date == CalendarManager.StartOfYearDateLimit;
-            IsAtEndOfYear = LeftDay.CalendarViewModel.Date == CalendarManager.EndOfYearDateLimit;
+            IsAtStartOfYear = RightDay.CalendarViewModel.Date == _calendarManager.StartOfYearDateLimit;
+            IsAtEndOfYear = LeftDay.CalendarViewModel.Date == _calendarManager.EndOfYearDateLimit;
         }
 
         // Private Methods
 
         private void SaveCurrentlyDisplayedPageDays()
         {
-            LeftDay.SaveDayToFile();
-            RightDay.SaveDayToFile();
+            LeftDay.SaveDayToDatabase();
+            RightDay.SaveDayToDatabase();
         }
 
         private void OnGoToToday()
         {
-            CalendarManager.CurrentDateLeft = CalendarManager.GetAdvancedDate(CalendarManager.Today, 0);
+            _calendarManager.CurrentDateLeft = _calendarManager.GetAdvancedDate(_calendarManager.Today, 0);
             //if (CalendarManager.DatesAreNeighbours)
-            CalendarManager.CurrentDateRight = CalendarManager.GetAdvancedDate(CalendarManager.CurrentDateLeft, 1);
+            _calendarManager.CurrentDateRight = _calendarManager.GetAdvancedDate(_calendarManager.CurrentDateLeft, 1);
             LoadNewDays();
         }
     }
