@@ -181,6 +181,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
 
             DayModel = new DayModel(dayDBModel, periodModels);
+            CalendarViewModel = new CalendarViewModel(date, _allKeyDates);
         }
 
         internal void SaveDayToDatabase()
@@ -223,6 +224,10 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private PeriodCodes GetPeriodCode(int period)
         {
+            foreach (var periodCode in (PeriodCodes[])Enum.GetValues(typeof(PeriodCodes)))
+            { 
+                
+            }
             switch (period)
             {
                 case 0:

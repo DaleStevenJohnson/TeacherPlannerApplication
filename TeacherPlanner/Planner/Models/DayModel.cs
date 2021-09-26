@@ -59,7 +59,7 @@ namespace TeacherPlanner.Planner.Models
             get => _notes;
             set
             {
-                if (ParseNotes(value))
+                if (TryParseNotes(value))
                     RaiseAndSetIfChanged(ref _notes, value);
             }
         }
@@ -83,7 +83,7 @@ namespace TeacherPlanner.Planner.Models
 
         // Private methods
 
-        private bool ParseNotes(string notes)
+        private bool TryParseNotes(string notes)
         {
             if (notes == null)
                 return false;
@@ -93,9 +93,9 @@ namespace TeacherPlanner.Planner.Models
                 return false;
 
             int linebreaks = 0;
-            for (int i = 0; i < notes.Length; i++)
+            for (int i = 0; i < notes.Length-4; i++)
             {
-                if (notes.Substring(i, 2) == "\n")
+                if (notes.Substring(i, 4) == Environment.NewLine)
                     linebreaks += 1;
             }
             

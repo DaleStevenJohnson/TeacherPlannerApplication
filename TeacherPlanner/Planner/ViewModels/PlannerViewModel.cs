@@ -119,7 +119,9 @@ namespace TeacherPlanner.Planner.ViewModels
             UpdateYearLimits();
         }
 
-        public void CreateNewDayViewModels()
+        // Private Methods
+
+        private void CreateNewDayViewModels()
         {
             LeftDay = new DayViewModel(UserModel, _calendarManager.CurrentDateLeft, Timetable, "left", KeyDates, _academicYear, _calendarManager);
             RightDay = new DayViewModel(UserModel, _calendarManager.CurrentDateRight, Timetable, "right", KeyDates, _academicYear, _calendarManager);
@@ -129,8 +131,6 @@ namespace TeacherPlanner.Planner.ViewModels
 
             UpdateYearLimits();
         }
-
-        // Private Methods
 
         private void UpdateYearLimits()
         {
