@@ -105,13 +105,21 @@
         
 
         <!--Periods-->
-        
-        <local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+
+        <ItemsControl ItemsSource="{Binding DayModel.Lessons}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="9">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:PeriodView/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!--<local:PeriodView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
         <local:PeriodView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
         <local:PeriodView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
         <local:PeriodView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
         <local:PeriodView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
-        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>
+        <local:PeriodView Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding DayModel}"/>-->
         
         <!--Key Dates Dropdown-->
         <StackPanel Grid.ColumnSpan="3" Grid.Row="1" 

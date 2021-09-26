@@ -45,8 +45,9 @@ namespace TeacherPlanner.Planner.ViewModels
             AllKeyDates = keyDates;
             _academicYear = academicYear;
             _calendarManager = calendarManager;
+            CalendarViewModel = new CalendarViewModel(date, keyDates);
 
-            DayModel = LoadAndPopulateNewDay(date);
+            
 
             IsKeyDate = false;
             KeyDatesAreShowing = false;
@@ -55,7 +56,7 @@ namespace TeacherPlanner.Planner.ViewModels
             ToggleKeyDatesCommand = new SimpleCommand(_ => OnToggleKeyDates());
 
 
-
+            LoadNewDayModel(date);
             SetAdvancePageStates(side);
             UpdateTodaysKeyDates();
         }
@@ -119,7 +120,9 @@ namespace TeacherPlanner.Planner.ViewModels
             CalendarViewModel.SetKeyDates();
         }
 
-        public DayModel LoadAndPopulateNewDay(DateTime date, bool overwriteClassCode = false)
+
+
+        public void LoadNewDayModel(DateTime date)
         {
 
             // Load Day from Database
@@ -142,44 +145,42 @@ namespace TeacherPlanner.Planner.ViewModels
                 {
                     // Todo - implement this better
                     MessageBox.Show("Error Loading Day");
-                    return null;
+                    return;
                 }
             }
 
             // Load Periods from Database
-            var PERIODS = 6;
+            var PERIODS = 9;
             var periodDBModels = DatabaseManager.GetPeriods(dayDBModel.ID);
             var periodModels = new ObservableCollection<PeriodModel>();
             
-            if (periodDBModels.Any())
+            for (var i = 0; i < PERIODS; i++)
             {
-                for (var i = 0; i < PERIODS; i++)
-                {
-                    Period periodDBModel;
+                Period periodDBModel;
 
-                    if (periodDBModels.Count >= i && periodDBModels[i].PeriodNumber == i)
-                    {
-                        periodDBModel = periodDBModels[i];
-                    }
-                    else
-                    {
-                        periodDBModel = new Period()
-                        {
-                            DayID = dayDBModel.ID,
-                            TimetableClasscode = GetTimetablePeriodID(date, i),
-                            UserEnteredClasscode = null,
-                            PeriodNumber = i,
-                            MarginText = null,
-                            MainText = null,
-                            SideText = null
-                        };
-                    }
-                    
-                    var periodModel = new PeriodModel(periodDBModel);
-                    periodModels.Add(periodModel);
+                if (periodDBModels.Count != 0 && i < periodDBModels.Count && periodDBModels[i].PeriodNumber == (int)GetPeriodCode(i))
+                {
+                    periodDBModel = periodDBModels[i];
                 }
+                else
+                {
+                    periodDBModel = new Period()
+                    {
+                        DayID = dayDBModel.ID,
+                        TimetableClasscode = GetTimetablePeriodID(date, i),
+                        UserEnteredClasscode = null,
+                        PeriodNumber = (int)GetPeriodCode(i),
+                        MarginText = null,
+                        MainText = null,
+                        SideText = null
+                    };
+                }
+                    
+                var periodModel = new PeriodModel(periodDBModel);
+                periodModels.Add(periodModel);
             }
-            return new DayModel(dayDBModel, periodModels);
+
+            DayModel = new DayModel(dayDBModel, periodModels);
         }
 
         internal void SaveDayToDatabase()
@@ -217,6 +218,34 @@ namespace TeacherPlanner.Planner.ViewModels
                     // Todo make this better
                     MessageBox.Show("Failed to Save Day to Database");
                 }
+            }
+        }
+
+        private PeriodCodes GetPeriodCode(int period)
+        {
+            switch (period)
+            {
+                case 0:
+                    return PeriodCodes.Registration;
+                case 1:
+                    return PeriodCodes.Period1;
+                case 2:
+                    return PeriodCodes.Period2;
+                case 3:
+                    return PeriodCodes.Break;
+                case 4:
+                    return PeriodCodes.Period3;
+                case 5:
+                    return PeriodCodes.Lunch;
+                case 6:
+                    return PeriodCodes.Period4;
+                case 7:
+                    return PeriodCodes.Period5;
+                case 8:
+                    return PeriodCodes.Twilight;
+                default:
+                    return PeriodCodes.Registration;
+
             }
         }
 

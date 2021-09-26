@@ -7,7 +7,8 @@
              xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
              d:DataContext="{Binding Source={d:DesignInstance Type=model:PeriodModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Height="121">
 
     
 
@@ -86,7 +87,7 @@
             <TextBox
                 Grid.Row="0" Grid.Column="1" Grid.RowSpan="7"
                 Text="{Binding Path=MarginText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                FontSize="14.5"
+                FontSize="12.7"
                 LostFocus="TextBoxOutOfFocus"
                 MouseEnter="TextBoxMouseOver"
                 MouseLeave="TextBoxMouseOut"
@@ -99,19 +100,19 @@
             />
 
 
-            <Border Grid.Row="0" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="0" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="2" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="3" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="4" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="5" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="6" Grid.Column="1"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
 
             <!--Main Text Box-->
             <TextBox
                 Grid.Row="0" Grid.Column="2" Grid.RowSpan="7"
                 Text="{Binding Path=MainText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                FontSize="14.5"
+                FontSize="12.7"
                 LostFocus="TextBoxOutOfFocus"
                 MouseEnter="TextBoxMouseOver"
                 MouseLeave="TextBoxMouseOut"
@@ -124,19 +125,19 @@
             />
 
 
-            <Border Grid.Row="0" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="1" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="2" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="3" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="4" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="5" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
-            <Border Grid.Row="6" Grid.Column="2"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>
+            <Border Grid.Row="0" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="1" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="2" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="3" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="4" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="5" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
+            <Border Grid.Row="6" Grid.Column="2"  BorderThickness="0,0,1,1" BorderBrush="Gray"/>
 
             <!--Side Text Box-->
             <TextBox
                 Grid.Row="0" Grid.Column="3" Grid.RowSpan="7"
                 Text="{Binding Path=SideText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                FontSize="14.5"
+                FontSize="12.7"
                 LostFocus="TextBoxOutOfFocus"
                 MouseEnter="TextBoxMouseOver"
                 MouseLeave="TextBoxMouseOut"

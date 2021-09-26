@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Database.DatabaseModels;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Planner.Models
@@ -12,6 +14,7 @@ namespace TeacherPlanner.Planner.Models
         
         private int _academicYearID;
         private int? _id = null;
+        private ObservableCollection<PeriodModel> _lessons;
 
         public DayModel(Day day, ObservableCollection<PeriodModel> periods)
         {
@@ -20,7 +23,7 @@ namespace TeacherPlanner.Planner.Models
 
             Date = day.Date;
             Notes = day.Notes;
-            Periods = Periods;
+            Periods = periods;
         }
 
         // Properties
@@ -34,11 +37,21 @@ namespace TeacherPlanner.Planner.Models
             }
         }
         public DateTime Date { get; }
-        
+
+        public ObservableCollection<PeriodModel> Lessons
+        {
+            get => _lessons;
+            set => RaiseAndSetIfChanged(ref _lessons, value);
+        }
+
         public ObservableCollection<PeriodModel> Periods 
         {
             get => _periods;
-            set => RaiseAndSetIfChanged(ref _periods, value);
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _periods, value))
+                    Lessons = new ObservableCollection<PeriodModel>(value.Where(p => p.Number < PeriodCodes.Break));
+            }
         }
 
         public string Notes 
@@ -72,6 +85,8 @@ namespace TeacherPlanner.Planner.Models
 
         private bool ParseNotes(string notes)
         {
+            if (notes == null)
+                return false;
 
             int MAX_CHARS = 72 * 6;
             if (notes.Length > MAX_CHARS)

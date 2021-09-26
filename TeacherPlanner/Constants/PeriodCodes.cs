@@ -6,14 +6,16 @@ namespace TeacherPlanner.Constants
 {
     public enum PeriodCodes
     {
-        Registration = 0,
+        
         Period1 = 1,
         Period2 = 2,
-        Break = 3,
-        Period3 = 4,
-        Lunch = 5,
-        Period4 = 6,
-        Period5 = 7,
-        Twilight = 8,
+        Period3 = 3,
+        Period4 = 4,
+        Period5 = 5,
+
+        Registration = 100,
+        Break = 101,
+        Lunch = 102,
+        Twilight = 103,
     }
 }

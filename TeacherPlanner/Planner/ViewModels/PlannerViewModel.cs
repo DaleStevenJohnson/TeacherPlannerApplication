@@ -44,7 +44,7 @@ namespace TeacherPlanner.Planner.ViewModels
             SaveCommand = new SimpleCommand(_ => OnSave());
 
             // Method Calls
-            LoadNewDays();
+            CreateNewDayViewModels();
         }
 
 		// Properties
@@ -113,15 +113,30 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void LoadNewDays()
         {
+            LeftDay.LoadNewDayModel(_calendarManager.CurrentDateLeft);
+            RightDay.LoadNewDayModel(_calendarManager.CurrentDateRight);
+
+            UpdateYearLimits();
+        }
+
+        public void CreateNewDayViewModels()
+        {
             LeftDay = new DayViewModel(UserModel, _calendarManager.CurrentDateLeft, Timetable, "left", KeyDates, _academicYear, _calendarManager);
             RightDay = new DayViewModel(UserModel, _calendarManager.CurrentDateRight, Timetable, "right", KeyDates, _academicYear, _calendarManager);
+
             LeftDay.TurnPageEvent += (_, __) => OnTurnPage(__);
             RightDay.TurnPageEvent += (_, __) => OnTurnPage(__);
-            IsAtStartOfYear = RightDay.CalendarViewModel.Date == _calendarManager.StartOfYearDateLimit;
-            IsAtEndOfYear = LeftDay.CalendarViewModel.Date == _calendarManager.EndOfYearDateLimit;
+
+            UpdateYearLimits();
         }
 
         // Private Methods
+
+        private void UpdateYearLimits()
+        {
+            IsAtStartOfYear = RightDay.CalendarViewModel.Date == _calendarManager.StartOfYearDateLimit;
+            IsAtEndOfYear = LeftDay.CalendarViewModel.Date == _calendarManager.EndOfYearDateLimit;
+        }
 
         private void SaveCurrentlyDisplayedPageDays()
         {

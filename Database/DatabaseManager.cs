@@ -115,7 +115,7 @@ namespace Database
 
         public static bool TryAddPeriod(Period period, out int id)
         {
-            var query = "INSERT INTO Periods (day_id, timetable_classcode, user_entered_classcode, period_number, margin_text, main_text, side_text) VALUES (@DayID,  @TimetableClasscode, @UserEnteredClasscode, @PeriodNumber, @MarginText, @MainText, @SideText);";
+            var query = "INSERT INTO Periods (day_id, timetable_period_classcode, user_entered_classcode, period_number, margin_text, main_text, side_text) VALUES (@DayID,  @TimetableClasscode, @UserEnteredClasscode, @PeriodNumber, @MarginText, @MainText, @SideText);";
             var result = InsertModelsIntoDatabase(query, period);
             id = GetLastIDFromDatabase("Periods");
             return result;
@@ -123,7 +123,7 @@ namespace Database
 
         public static bool TryUpdatePeriod(Period period)
         {
-            var query = "UPDATE Periods SET timetable_classcode=@TimetableClasscode, user_entered_classcode=@UserEnteredClasscode, period_number=@PeriodNumber, margin_text=@MarginText, main_text=@MainText, side_text=@SideText WHERE id=@ID;";
+            var query = "UPDATE Periods SET timetable_period_classcode=@TimetableClasscode, user_entered_classcode=@UserEnteredClasscode, period_number=@PeriodNumber, margin_text=@MarginText, main_text=@MainText, side_text=@SideText WHERE id=@ID;";
             return UpdateModelsInDatabase(query, period);
         }
 

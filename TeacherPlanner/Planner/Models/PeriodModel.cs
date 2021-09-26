@@ -1,5 +1,6 @@
 ﻿using Database;
 using Database.DatabaseModels;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Planner.Models
@@ -23,7 +24,7 @@ namespace TeacherPlanner.Planner.Models
             _dayID = period.DayID;
             _timetableClasscodeID = period.TimetableClasscode;
 
-            Number = period.PeriodNumber;
+            Number = (PeriodCodes)period.PeriodNumber;
             Classcode = ChooseCorrectClasscode(period.UserEnteredClasscode);
             
             MarginText = period.MarginText;
@@ -59,7 +60,7 @@ namespace TeacherPlanner.Planner.Models
             set => RaiseAndSetIfChanged(ref _sideText, value);
         }
 
-        public int Number { get; set; }
+        public PeriodCodes Number { get; set; }
         public string Classcode 
         {
             get => _classcode;
@@ -78,7 +79,7 @@ namespace TeacherPlanner.Planner.Models
                 ID = (int)ID,
                 DayID = _dayID,
                 TimetableClasscode = _timetableClasscodeID,
-                PeriodNumber = Number,
+                PeriodNumber = (int)Number,
                 UserEnteredClasscode = _userEnteredClasscode,
                 MarginText = MarginText,
                 MainText = MainText,
