@@ -76,6 +76,56 @@ namespace Database
             return result.Count != 0;
         }
 
+        //
+        // Days
+        //
+
+        public Day GetDay(int academic_year_id, DateTime date)
+        {
+            string query = $"SELECT * FROM Days WHERE academic_year_id=@ID AND date=@Date;";
+            var parameters = new Dictionary<string, object> { { "@ID", academic_year_id }, { "@Date", date} };
+            var models = GetModelsFromDatabase<Day>(query, parameters);
+            
+            return models.Any() == true ? models.First() : null;
+        }
+
+        public static bool TryAddDay(Day day, out int id)
+        {
+            var query = "INSERT INTO Days (academic_year_id, date, notes) VALUES (@AcademicYearID,  @Date, @Notes);";
+            var result = InsertModelsIntoDatabase(query, day);
+            id = GetLastIDFromDatabase("Days");
+            return result;
+        }
+
+        public static bool TryUpdateDay(Day day)
+        {
+            var query = "UPDATE Days SET notes=@Notes WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, day);
+        }
+
+        //
+        // Periods
+        //
+        public List<Period> GetPeriods(int day_id)
+        {
+            string query = $"SELECT * FROM Periods WHERE day_id=@ID;";
+            var parameters = new Dictionary<string, object> { { "@ID", day_id} };
+            return GetModelsFromDatabase<Period>(query, parameters);
+        }
+
+        public static bool TryAddPeriod(Period period, out int id)
+        {
+            var query = "INSERT INTO Periods (day_id, timetable_classcode, user_entered_classcode, period_number, margin_text, main_text, side_text) VALUES (@DayID,  @TimetableClasscode, @UserEnteredClasscode, @PeriodNumber, @MarginText, @MainText, @SideText);";
+            var result = InsertModelsIntoDatabase(query, period);
+            id = GetLastIDFromDatabase("Periods");
+            return result;
+        }
+
+        public static bool TryUpdatePeriod(Period period)
+        {
+            var query = "UPDATE Periods SET timetable_classcode=@TimetableClasscode, user_entered_classcode=@UserEnteredClasscode, period_number=@PeriodNumber, margin_text=@MarginText, main_text=@MainText, side_text=@SideText WHERE id=@ID;";
+            return UpdateModelsInDatabase(query, period);
+        }
 
         //
         // Timetable Weeks
