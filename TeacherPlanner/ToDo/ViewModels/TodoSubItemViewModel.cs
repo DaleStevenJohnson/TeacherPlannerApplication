@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.ToDo.Models;
 
@@ -9,39 +11,48 @@ namespace TeacherPlanner.ToDo.ViewModels
 {
     public class TodoSubItemViewModel : ObservableObject
     { 
-        private bool _isChecked;
+
+        // Events & Commands
         public event EventHandler<TodoSubItemViewModel> RemoveSelfEvent;
-        public event EventHandler CheckedEvent;
+        
         public ICommand OnCheckedCommand { get; set; }
         public ICommand RemoveSelfCommand { get; set; }
-        public TodoSubItemViewModel(TodoSubItemModel subItemModel = null)
+
+        public TodoSubItemViewModel(TodoSubItemModel subItemModel)
         {
-            Content = "";
-            IsChecked = false;
+            Model = subItemModel;
 
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
-
-            if (subItemModel != null)
-            {
-                Content = subItemModel.Content;
-                IsChecked = subItemModel.IsChecked;
-            }
+            Model.ValuesUpdatedEvent += (_, __) => UpdateDatabase();
         }
+
+        // Properties
+
+        public TodoSubItemModel Model { get; }
 
         public string Content { get; set; }
 
-        public bool IsChecked
+
+        private void UpdateDatabase()
         {
-            get => _isChecked;
-            set
+            var dbModel = new TodoItem()
             {
-                if (RaiseAndSetIfChanged(ref _isChecked, value))
-                    CheckedEvent.Invoke(null, null);
-            }
+                ID = Model.ID,
+                IsSubItem = true,
+                Description = Model.Content,
+                IsCompleted = Model.IsChecked,
+                
+                TodoListID = 0,
+                ParentItem = null,
+            };
+
+            DatabaseManager.TryUpdateTodoItem(dbModel);
         }
+
 
         public void OnRemoveSelf()
         {
+            Model.ValuesUpdatedEvent -= (_, __) => UpdateDatabase();
             RemoveSelfEvent.Invoke(null, this);
         }
     }

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
+using TeacherPlanner.Planner.Models;
 using TeacherPlanner.Planner.Views.SettingsWindows;
 using TeacherPlanner.Timetable.ViewModels;
 using TeacherPlanner.ToDo.ViewModels;
@@ -17,37 +18,41 @@ namespace TeacherPlanner.Planner.ViewModels
         private Window _keyDatesWindow = null;
         private TimetableViewModel _timetableViewModel;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
+        private readonly AcademicYearModel _academicYear;
 
         // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
         public ICommand SwitchViewCommand { get; }
         public ICommand KeyDatesClickedCommand { get; }
-        public ICommand SpecialTestCommand { get; }
+        public ICommand ImportTimetableCommand { get; }
 
         public event EventHandler<string> SwitchViewEvent;
         
-        public PlannerYearViewModel(UserModel userModel, string yearString)
+        public PlannerYearViewModel(UserModel userModel, AcademicYearModel year)
         {
+            _academicYear = year;
             UserModel = userModel;
-            FileHandlingHelper.SetDirectories(UserModel, yearString);
+            //FileHandlingHelper.SetDirectories(UserModel, yearString);
             KeyDates = new ObservableCollection<KeyDateItemViewModel>();
 
-            CalendarManager = new CalendarManager(yearString);
+            CalendarManager = new CalendarManager(year);
 
-            TimetableViewModel = new TimetableViewModel(UserModel);
-            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates);
+            TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
+            PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
+            
             TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
-            ToDoViewModel = new TodoPageViewModel(UserModel);
+            
+            ToDoViewModel = new TodoPageViewModel(UserModel, year);
             
             // keyDates view Model new up and event subscription
-            _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates);
+            _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates, _academicYear);
             _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
             _keyDatesWindowViewModel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
 
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
-            SpecialTestCommand = new SimpleCommand(_ => OnSpecialTest());
+            ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable());
 
             //Method Calls
             UpdateKeyDatesList();
@@ -76,8 +81,15 @@ namespace TeacherPlanner.Planner.ViewModels
         // Methods
         public void OnDefineTimetableWeeks()
         {
-            if (TimetableViewModel.DefineTimetableWeeks(UserModel) ?? true)
+            var defineTimetableWeeksWindow = new DefineTimetableWeeksWindow();
+            var viewModel = new DefineTimetableWeeksViewModel(UserModel, _academicYear);
+            defineTimetableWeeksWindow.DataContext = viewModel;
+
+            if (defineTimetableWeeksWindow.ShowDialog() ?? true)
+            {
+                //TimetableViewModel.TryGetImportedTimetable();
                 PlannerViewModel.LoadNewDays();
+            }
         }
 
         private void UpdateKeyDatesList()
@@ -90,14 +102,7 @@ namespace TeacherPlanner.Planner.ViewModels
             SwitchViewEvent.Invoke(null, (string)v);
         }
 
-        private void OnSpecialTest()
-        {
-            
-            KeyDates.Add(new KeyDateItemViewModel("Description", "Event", DateTime.Now.AddDays(1)));
-            PlannerViewModel.LeftDay.UpdateTodaysKeyDates();
-            PlannerViewModel.RightDay.UpdateTodaysKeyDates();
-        }
-
+       
         private void OnKeyDatesClicked()
         {
             // Check to see whether the window is already open
@@ -117,6 +122,18 @@ namespace TeacherPlanner.Planner.ViewModels
         private void OnKeyDatesWindowClosed()
         {
             _keyDatesWindow = null;
+        }
+
+        private void OnImportTimetable()
+        {
+            var importWindow = new ImportTimetableWindow();
+            var importTimetableViewModel = new ImportTimetableWindowViewModel(_academicYear);
+            importWindow.DataContext = importTimetableViewModel;
+
+            if (importWindow.ShowDialog() ?? true)
+            {
+                TimetableViewModel.TryGetImportedTimetable();
+            }
         }
     }
 }

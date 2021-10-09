@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.ToDo.Models;
 
@@ -12,90 +14,134 @@ namespace TeacherPlanner.ToDo.ViewModels
 
     public class TodoItemViewModel : ObservableObject
     {
-        private bool _isChecked;
         private bool _hasActiveSubItems;
 
         public ICommand AddSubItemCommand { get; }
         public ICommand RemoveSelfCommand { get; set; }
+        
         public event EventHandler<TodoItemViewModel> RemoveSelfEvent;
         public event EventHandler<TodoItemViewModel> CompletedStatusChangedEvent;
 
-        public TodoItemViewModel(TodoItemModel todoItemModel = null)
+        public TodoItemViewModel(TodoItemModel todoItemModel)
         {
-            SubItems = new ObservableCollection<TodoSubItemViewModel>();
-
             // Set properties to default
-            Content = "";
-            IsChecked = false;
-            
+            Model = todoItemModel;
 
             AddSubItemCommand = new SimpleCommand(_ => OnAddSubItem());
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
 
-            // If passed a model, populate properties from model
-            if (todoItemModel != null)
-            {
-                Content = todoItemModel.Content;
-                IsChecked = todoItemModel.IsChecked;
-                foreach (var item in todoItemModel.SubItems)
-                {
-                    OnAddSubItem();
-                }
-            }
-
-
+            Model.ValuesUpdatedEvent += (_, __) => OnTodoItemUpdated();
+            Model.CompletedStatusChangedEvent += (_, __) => OnCompletedStatusChanged();
             SetHasNoActiveSubItems();
         }
 
-        public string Content { get; set; }
-        public bool HasActiveSubItems 
+        // Properties
+        public TodoItemModel Model { get; }
+
+        public bool HasActiveSubItems
         {
             get => _hasActiveSubItems;
             set => RaiseAndSetIfChanged(ref _hasActiveSubItems, value);
-        }   
+        }
 
-        public bool IsChecked
+        // Methods
+        public void OnRemoveSelf()
         {
-            get => _isChecked;
-            set
+            Model.ValuesUpdatedEvent -= (_, __) => OnTodoItemUpdated();
+            RemoveSelfEvent.Invoke(null, this);
+        }
+
+        public void RemoveAllSubItems()
+        {
+            var newList = new List<TodoSubItemViewModel>(Model.SubItems);
+            foreach (var item in newList)
             {
-                if (RaiseAndSetIfChanged(ref _isChecked, value))
-                    CompletedStatusChangedEvent.Invoke(null, this);
+                RemoveSubItem(item);
+            }
+        }
+
+        public void GetSubItems(IEnumerable<TodoItem> items)
+        {
+            foreach (var subitem in items)
+            {
+                var subitemModel = new TodoSubItemModel(subitem.Description, subitem.IsCompleted, subitem.ID);
+                var subitemViewModel = new TodoSubItemViewModel(subitemModel);
+
+                subitemViewModel.RemoveSelfEvent += (_, todoItem) => RemoveSubItem(todoItem);
+                subitemViewModel.Model.ValuesUpdatedEvent += (_, __) => SetHasNoActiveSubItems();
+
+                Model.SubItems.Add(subitemViewModel);
             }
         }
 
 
-        public void OnRemoveSelf()
+        public void RemoveSubItem(TodoSubItemViewModel item)
         {
-            RemoveSelfEvent.Invoke(null, this);
+            if (DatabaseManager.RemoveTodoItem(item.Model.ID))
+            {
+                item.RemoveSelfEvent -= (_, todoItem) => RemoveSubItem(todoItem);
+                Model.SubItems.Remove(item);
+                SetHasNoActiveSubItems();
+            }
         }
 
-        public ObservableCollection<TodoSubItemViewModel> SubItems { get; }      
+
+        public void OnTodoItemUpdated()
+        {
+            UpdateDatabase();
+            SetHasNoActiveSubItems();
+            
+        }
+
+        public void SetHasNoActiveSubItems()
+        {
+            HasActiveSubItems = Model.SubItems.Any(i => i.Model.IsChecked == false);
+        }
+
+        private void OnCompletedStatusChanged()
+        {
+            CompletedStatusChangedEvent.Invoke(null, this);
+        }
 
         private void OnAddSubItem()
         {
-            var item = new TodoSubItemViewModel();
-            item.RemoveSelfEvent += (_, todoItem) => RemoveSubItem(todoItem);
-            item.CheckedEvent += (_, __) => SetHasNoActiveSubItems();
-            SubItems.Add(item);
-            SetHasNoActiveSubItems();
+            var dbModel = new TodoItem()
+            {
+                TodoListID = Model.ListID,
+                IsSubItem = true,
+                ParentItem = Model.ID,
+                Description = string.Empty,
+                IsCompleted = false
+            };
+
+            if (DatabaseManager.TryAddTodoItem(dbModel, out var id))
+            {
+                var model = new TodoSubItemModel(string.Empty, false, id);
+                var item = new TodoSubItemViewModel(model);
+                item.RemoveSelfEvent += (_, todoItem) => RemoveSubItem(todoItem);
+                item.Model.ValuesUpdatedEvent += (_, __) => SetHasNoActiveSubItems();
+                Model.SubItems.Add(item);
+                SetHasNoActiveSubItems();
+            }
         }
 
-        private void SetHasNoActiveSubItems()
+        
+
+        private void UpdateDatabase()
         {
-            HasActiveSubItems = SubItems.Any(i => i.IsChecked == false);
+            var dbModel = new TodoItem()
+            {
+                ID = Model.ID,
+                TodoListID = Model.ListID,
+                IsSubItem = false,
+                ParentItem = null,
+                Description = Model.Content,
+                IsCompleted = Model.IsChecked,
+            };
+
+            DatabaseManager.TryUpdateTodoItem(dbModel);
         }
 
-        private void RemoveSubItem(TodoSubItemViewModel item)
-        {
-            item.RemoveSelfEvent -= (_, todoItem) => RemoveSubItem(todoItem);
-            item.CheckedEvent -= (_, __) => SetHasNoActiveSubItems();
-            SubItems.Remove(item);
-            SetHasNoActiveSubItems();
-        }
+        
     }
-
-
-
-
 }

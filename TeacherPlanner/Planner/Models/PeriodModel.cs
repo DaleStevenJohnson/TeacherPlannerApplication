@@ -1,77 +1,129 @@
-﻿using TeacherPlanner.Helpers;
+﻿using Database;
+using Database.DatabaseModels;
+using TeacherPlanner.Constants;
+using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Planner.Models
 {
-    public class PeriodModel
+    public class PeriodModel : ObservableObject
     {
         private readonly string _delimiter = "`";
-        public PeriodModel(int number, string classcode)
+        private string _marginText;
+        private string _mainText;
+        private string _sideText;
+
+        private int? _id = null;
+        private int _dayID;
+        private int? _timetableClasscodeID;
+        private string _classcode;
+        private string _userEnteredClasscode;
+
+        public PeriodModel(Period period)
         {
-            Number = number;
-            ClassCode = classcode;
-            //Date = date;
-            Rows = new PeriodRowModel[7];
+            ID = period.ID;
+            _dayID = period.DayID;
+            _timetableClasscodeID = period.TimetableClasscode;
+
+            Number = (PeriodCodes)period.PeriodNumber;
+            Classcode = ChooseCorrectClasscode(period.UserEnteredClasscode);
+            
+            MarginText = period.MarginText;
+            MainText = period.MainText;
+            SideText = period.SideText;
         }
 
-        public string Date;
-        private PeriodRowModel[] Rows;
-        public PeriodRowModel Row1
+        public int? ID 
         {
-            get { return Rows[0]; }
-            set => Rows[0] = value;
-        }
-        public PeriodRowModel Row2
-        {
-            get { return Rows[1]; }
-            set => Rows[1] = value;
-        }
-        public PeriodRowModel Row3
-        {
-            get { return Rows[2]; }
-            set => Rows[2] = value;
-        }
-        public PeriodRowModel Row4
-        {
-            get { return Rows[3]; }
-            set => Rows[3] = value;
-        }
-        public PeriodRowModel Row5
-        {
-            get { return Rows[4]; }
-            set => Rows[4] = value;
-        }
-        public PeriodRowModel Row6
-        {
-            get { return Rows[5]; }
-            set => Rows[5] = value;
-        }
-        public PeriodRowModel Row7
-        {
-            get { return Rows[6]; }
-            set => Rows[6] = value;
-        }
-
-        public int Number { get; set; }
-        public string ClassCode { get; set; }
-
-        public void LoadData(string[] periodData)
-        {
-            for (int i = 0; i < Rows.Length; i++)
+            get => _id;
+            set
             {
-                string[] rowData = periodData[i].Split(_delimiter);
-                Rows[i] = new PeriodRowModel(rowData[0], rowData[1], rowData[2]);
+                if (_id == null)
+                    _id = value;
             }
         }
-        internal string PackageSaveData()
+        
+
+        public string MarginText
         {
-            string saveData = $"{ClassCode}";
-            for (int i = 0; i < Rows.Length; i++)
-            {
-                string[] content = FileHandlingHelper.SanitiseStrings(Rows[i].RowText);
-                string row = $"\n{content[0]}{_delimiter}{content[1]}{_delimiter}{content[2]}";
-                saveData += row;
-            }
-            return saveData;
+            get => _marginText;
+            set => RaiseAndSetIfChanged(ref _marginText, value);
         }
+
+        public string MainText
+        {
+            get => _mainText;
+            set => RaiseAndSetIfChanged(ref _mainText, value);
+        }
+
+        public string SideText
+        {
+            get => _sideText;
+            set => RaiseAndSetIfChanged(ref _sideText, value);
+        }
+
+        public PeriodCodes Number { get; set; }
+        public string Classcode 
+        {
+            get => _classcode;
+            set => RaiseAndSetIfChanged(ref _classcode, value);
+        }
+
+        private string UserEnteredClasscode
+        {
+            get => _userEnteredClasscode;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _userEnteredClasscode, value))
+                {
+                    if (value == string.Empty)
+                        Classcode = GetTimetablePeriodClasscode();
+                }
+            }
+        }
+
+        public void UpdateUserEnteredClassCode(string userinput)
+        {
+            UserEnteredClasscode = userinput;
+        }
+
+        public Period GetDBModel()
+        {
+            return new Period()
+            {
+                ID = (int)ID,
+                DayID = _dayID,
+                TimetableClasscode = _timetableClasscodeID,
+                PeriodNumber = (int)Number,
+                UserEnteredClasscode = UserEnteredClasscode,
+                MarginText = MarginText,
+                MainText = MainText,
+                SideText = SideText,
+            };
+        }
+
+        private string ChooseCorrectClasscode(string userEnteredClasscode)
+        {
+            if (userEnteredClasscode != null && userEnteredClasscode != string.Empty)
+            {
+                UserEnteredClasscode = userEnteredClasscode;
+                return userEnteredClasscode;
+            }
+            else if (_timetableClasscodeID != null)
+            {
+                return GetTimetablePeriodClasscode();
+            }
+            
+            return string.Empty;
+        }
+
+        private string GetTimetablePeriodClasscode()
+        {
+            var timetableClasscode = DatabaseManager.GetTimetablePeriodClasscode((int)_timetableClasscodeID);
+            if (timetableClasscode != null)
+                return timetableClasscode;
+            return string.Empty;
+        }
+
+        
     }
 }

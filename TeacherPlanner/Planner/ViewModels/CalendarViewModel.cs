@@ -11,9 +11,11 @@ namespace TeacherPlanner.Planner.ViewModels
     {
         private readonly int CALENDARSPACES = 42;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
+        private readonly CalendarManager _calendarManager;
 
-        public CalendarViewModel(DateTime date, ObservableCollection<KeyDateItemViewModel> keydates)
+        public CalendarViewModel(DateTime date, ObservableCollection<KeyDateItemViewModel> keydates, CalendarManager calendarManager)
         {
+            _calendarManager = calendarManager;
             Date = date;
             KeyDates = keydates;
             Dates = new CalendarDateModel[CALENDARSPACES];
@@ -46,7 +48,7 @@ namespace TeacherPlanner.Planner.ViewModels
             var date = new DateTime(yearInt, monthInt, 1);
             for (int i = 0, currentDayOfMonth = 1; i < CALENDARSPACES; i++)
             {
-                var week = CalendarManager.GetWeek(date);
+                var week = _calendarManager.GetWeek(date);
                 if (i >= firstDay && i < firstDay + daysInMonth)
                 {
                     var calendarDateModel = new CalendarDateModel(currentDayOfMonth.ToString(), week, date);

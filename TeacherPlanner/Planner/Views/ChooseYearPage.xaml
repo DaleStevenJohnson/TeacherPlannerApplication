@@ -11,14 +11,14 @@
       d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:ChooseYearViewModel}}"
       d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
-        <DataTemplate x:Key="YearSelectTemplate" DataType="{x:Type model:YearSelectModel}">
+        <DataTemplate x:Key="YearSelectTemplate" DataType="{x:Type model:AcademicYearModel}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Center" Background="Transparent" 
+                <Button Style="{StaticResource ButtonOverride}" HorizontalAlignment="Center" Background="Transparent" 
                            FontSize="50" FontWeight="Bold" FontFamily="{StaticResource BodyText}"
-                        Text="{Binding Path=AcademicYear}">
-                        <!--Command="{Binding DataContext.YearSelectedCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                        CommandParameter="{Binding AcademicYear}">-->
-                </TextBlock>
+                        Content="{Binding Path=AcademicYear}"
+                        Command="{Binding DataContext.SelectYearCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        CommandParameter="{Binding }"/>
+
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -56,12 +56,6 @@
                     <StackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseUp" Handler="ListViewItem_MouseUp" />
-                    <Setter Property="Cursor" Value="Hand"/>
-                </Style>
-            </ListView.ItemContainerStyle>
         </ListView>
         <Button Grid.Column="2" Grid.Row="4" Margin="600, 10,50,10"
                 Background="Transparent" BorderBrush="Transparent"

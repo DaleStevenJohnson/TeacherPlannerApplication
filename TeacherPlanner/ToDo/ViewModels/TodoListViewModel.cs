@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.ToDo.Models;
 
@@ -19,41 +21,54 @@ namespace TeacherPlanner.ToDo.ViewModels
 
         public TodoListViewModel(TodoListModel todoListModel)
         {
-            Header = todoListModel.Header;
+            // Property Assignment
+            Model = todoListModel;
 
-            ActiveTodoItems = new ObservableCollection<TodoItemViewModel>();
-            CompletedTodoItems = new ObservableCollection<TodoItemViewModel>();
+            // Command Assignment
             RemoveSelfCommand = new SimpleCommand(_ => OnRemoveSelf());
-
-            foreach (var item in todoListModel.TodoItems)
-            {
-                AddTodoItem(item);
-            }
-
-
             AddTodoItemCommand = new SimpleCommand(_ => AddTodoItem());
+
+            Model.ValuesUpdatedEvent += (_, __) => UpdateDatabase();
+
+            GetTodoItems();
         }
-        public string Header { get; set; }
-        public TodoListModel TodoListModel { get; }
-        public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
-        public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
+
+        // Properties
+        public TodoListModel Model { get; }
 
         public void OnRemoveSelf()
         {
             RemoveSelfEvent.Invoke(null, this);
         }
 
-        public void AddTodoItem(TodoItemModel item = null)
+        public void AddTodoItem()
         {
-            var newItem = item == null ? new TodoItemViewModel() : new TodoItemViewModel(item);
-            newItem.RemoveSelfEvent += (_, todoItem) => RemoveTodoItem(todoItem);
-            newItem.CompletedStatusChangedEvent += (_, todoItem) => OnTodoItemCompleted(todoItem);
-            OnTodoItemCompleted(newItem);
+            var dbModel = new TodoItem()
+            {
+                TodoListID = Model.ID,
+                IsSubItem = false,
+                ParentItem = null,
+                Description = string.Empty,
+                IsCompleted = false
+            };
+            
+            if (DatabaseManager.TryAddTodoItem(dbModel, out var id))
+            {
+                var model = new TodoItemModel(string.Empty, false, id, Model.ID);
+                var newItem = new TodoItemViewModel(model);
+
+                newItem.RemoveSelfEvent += (_, todoItem) => RemoveTodoItem(todoItem);
+
+                newItem.CompletedStatusChangedEvent += (_, todoItem) => OnTodoItemCompleted(todoItem);
+                OnTodoItemCompleted(newItem);
+            }
         }
+
+        
         
         public void RemoveTodoItem(TodoItemViewModel item)
         {
-            if (item.SubItems.Any())
+            if (item.Model.SubItems.Any())
             {
                 var result = MessageBox.Show(
                     "This todo task has sub-tasks - are you sure you want to delete?",
@@ -65,24 +80,58 @@ namespace TeacherPlanner.ToDo.ViewModels
                     return;
             }
 
-            item.RemoveSelfEvent -= (_, todoItem) => RemoveTodoItem(todoItem);
-            item.CompletedStatusChangedEvent -= (_, todoItem) => OnTodoItemCompleted(todoItem);
-            ActiveTodoItems.Remove(item);
+            item.RemoveAllSubItems();
+
+            if (DatabaseManager.RemoveTodoItem(item.Model.ID))
+            {
+                item.RemoveSelfEvent -= (_, todoItem) => RemoveTodoItem(todoItem);
+                item.CompletedStatusChangedEvent -= (_, todoItem) => OnTodoItemCompleted(todoItem);
+                Model.ActiveTodoItems.Remove(item);
+            }
+        }
+
+
+        private void GetTodoItems()
+        {
+            var items = DatabaseManager.GetTodoItems(Model.ID);
+            foreach (var item in items.Where(i => !i.IsSubItem))
+            {
+                var model = new TodoItemModel(item.Description, item.IsCompleted, item.ID, Model.ID);
+                var viewmodel = new TodoItemViewModel(model);
+                
+                viewmodel.RemoveSelfEvent += (_, todoItem) => RemoveTodoItem(todoItem);
+                viewmodel.CompletedStatusChangedEvent += (_, todoItem) => OnTodoItemCompleted(todoItem);
+
+                viewmodel.GetSubItems(items.Where(si => si.ParentItem == model.ID));
+
+                OnTodoItemCompleted(viewmodel);
+            }
+        }
+
+        private void UpdateDatabase()
+        {
+            var dbModel = new TodoList()
+            {
+                ID = Model.ID,
+                Name = Model.Header,
+                AcademicYearID = 0,
+            };
+
+            DatabaseManager.TryUpdateTodoList(dbModel);
         }
 
         private void OnTodoItemCompleted(TodoItemViewModel item)
         {
-            if (item.IsChecked)
+            if (item.Model.IsChecked)
             {
-                ActiveTodoItems.Remove(item);
-                CompletedTodoItems.Add(item);
+                Model.ActiveTodoItems.Remove(item);
+                Model.CompletedTodoItems.Add(item);
             }
             else
             {
-                CompletedTodoItems.Remove(item);
-                ActiveTodoItems.Add(item);
+                Model.CompletedTodoItems.Remove(item);
+                Model.ActiveTodoItems.Add(item);
             }
-
         }
     }
 

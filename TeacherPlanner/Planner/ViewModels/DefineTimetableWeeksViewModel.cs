@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -11,79 +15,68 @@ namespace TeacherPlanner.Planner.ViewModels
 {
     public class DefineTimetableWeeksViewModel : ObservableObject
     {
-        public Action CloseAction { get; }
+        private ObservableCollection<TimetableWeekModel> _timetableWeeks;
+        private readonly AcademicYearModel _academicYearModel;
+        private readonly UserModel _userModel;
         public ICommand SaveTimeTableWeeksCommand { get; }
-        private string _rootpath;
-        private string _filename;
-        private string _filepath;
-        private DateRowModel[] _rows;
-
-        public DefineTimetableWeeksViewModel(Window window, UserModel userModel)
+        public DefineTimetableWeeksViewModel(UserModel userModel, AcademicYearModel academicYear)
         {
             // Parameter Assignment
-            Window = window;
-            UserModel = userModel;
-            CloseAction = new Action(window.Close);
+            _userModel = userModel;
+            _academicYearModel = academicYear;
 
-            // Any potential Encyption of filenames and directories happens here in the constructor only
-            _rootpath = FileHandlingHelper.LoggedInUserConfigPath;
-            _filename = FileHandlingHelper.EncryptFileOrDirectory(FilesAndDirectories.TimetableWeeksFileName, UserModel.Key);
-            _filepath = Path.Combine(_rootpath, _filename);
-
-            SaveTimeTableWeeksCommand = new SimpleCommand(_ => OnSaveTimeTableWeeks());
+            SaveTimeTableWeeksCommand = new SimpleCommand(window => OnSaveTimeTableWeeks((Window)window));
 
             if (TryGetTimeTableWeeks(out var dateRows))
-                Rows = dateRows;
+                TimetableWeeks = dateRows;
             else
-                Rows = CreateTimeTableWeeks();
+                TimetableWeeks = CreateTimeTableWeeks();
         }
-        private UserModel UserModel { get; }
-        private Window Window { get; }
-        public DateRowModel[] Rows 
+        
+        // Properties
+
+        public ObservableCollection<TimetableWeekModel> TimetableWeeks
         {
-            get => _rows;
-            set => RaiseAndSetIfChanged(ref _rows, value);
+            get => _timetableWeeks;
+            set => RaiseAndSetIfChanged(ref _timetableWeeks, value);
         }
 
-        private bool TryGetTimeTableWeeks(out DateRowModel[] dateRows)
+        
+        // Methods
+        private bool TryGetTimeTableWeeks(out ObservableCollection<TimetableWeekModel> timetableWeeks)
         {
-            dateRows = new DateRowModel[0];
-            if (!File.Exists(_filepath))
-                return false;
-            // TODO: Replace the new List with the loaded data
-            dateRows = LoadDateRows();
-            return true;
+            var dbModels = DatabaseManager.GetTimetableWeeks(_academicYearModel.ID);
+
+            timetableWeeks = new ObservableCollection<TimetableWeekModel>(
+                dbModels
+                .ConvertAll(w => new TimetableWeekModel(w.ID, w.WeekBeginning, w.Week)));
+
+            return timetableWeeks.Any();
         }
-        private DateRowModel[] LoadDateRows()
-        {
-            string[][] weeks = FileHandlingHelper.ReadDataFromCSVFile(_filepath);
-            DateRowModel[] dateRows = new DateRowModel[weeks.Length];
-            for (int i = 0; i < weeks.Length; i++)
-            {
-                string[] week = weeks[i];
-                string[] dateString = week[0].Split("/");
-                bool week1 = week[1].ToLower() == "true";
-                bool week2 = week[2].ToLower() == "true";
-                bool holiday = week[3].ToLower() == "true";
-                
-                DateTime date = new DateTime(Int32.Parse(dateString[0]), Int32.Parse(dateString[1]), Int32.Parse(dateString[2]));
-                dateRows[i] = new DateRowModel(date, week1, week2, holiday);
-            }
-            return dateRows;
-        }
-        private DateRowModel[] CreateTimeTableWeeks()
+        
+        private ObservableCollection<TimetableWeekModel> CreateTimeTableWeeks()
         {
             var schoolYear = GetSchoolYear();
             DateTime date = GetFirstMonday(schoolYear);
             int weeks = 50;
-            var rows = new DateRowModel[weeks];
+            var timetableWeeks = new ObservableCollection<TimetableWeekModel>();
 
             for (int i = 0; i < weeks; i++)
             {
-                rows[i] = new DateRowModel(date.AddDays(i * 7));
+                var weekBeginning = date.AddDays(i * 7);
+
+                var dbModel = new TimetableWeek()
+                { 
+                    AcademicYearID = _academicYearModel.ID,
+                    WeekBeginning = weekBeginning,
+                    Week = 0,
+                };
+
+                if (DatabaseManager.TryAddTimetableWeek(dbModel, out var id))
+                    timetableWeeks.Add(new TimetableWeekModel(id, weekBeginning));
             }
 
-            return rows;
+            return timetableWeeks;
         }
   
         private DateTime GetFirstMonday(int schoolYear)
@@ -98,30 +91,31 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private int GetSchoolYear()
         {
-            int month = Int32.Parse(DateTime.Today.ToString("MM"));
-            int year = Int32.Parse(DateTime.Today.ToString("yyyy"));
+            int month = DateTime.Today.Month;
+            int year = DateTime.Today.Year;
             return month < 8 ? year - 1 : year;
         }
 
-        private void OnSaveTimeTableWeeks()
+        private void OnSaveTimeTableWeeks(Window window)
         {
             SaveTimeTableWeeks();
-            // LoadNewDays - From Planner View Model
-            Window.DialogResult = true;
-            Window.Close();
+            window.DialogResult = true;
+            window.Close();
         }
         private void SaveTimeTableWeeks()
         {
-            int length = Rows.Length;
-            string[][] weeks = new string[length][];
-
-            // TODO: Write Rows property to file
-            for (int i = 0; i < length; i++)
+            foreach (var week in TimetableWeeks)
             {
-                string[] rowData = Rows[i].Package();
-                weeks[i] = rowData;
+                var dbModel = new TimetableWeek()
+                {
+                    ID = week.ID,
+                    AcademicYearID = _academicYearModel.ID,
+                    WeekBeginning = week.Date,
+                    Week = (int)week.Week
+                };
+
+                DatabaseManager.TryUpdateTimetableWeek(dbModel);
             }
-            FileHandlingHelper.TryWriteDataToCSVFile(_rootpath, _filename, weeks);
         }
     }
 }

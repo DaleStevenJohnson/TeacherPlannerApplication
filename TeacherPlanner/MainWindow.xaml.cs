@@ -5,6 +5,9 @@ using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.Planner.Views.SettingsWindows;
 using TeacherPlanner.Planner.Views;
 using System.Windows.Controls;
+using TeacherPlanner.Login.Models;
+using Database;
+using Database.DatabaseModels;
 
 namespace TeacherPlanner
 {
@@ -29,7 +32,10 @@ namespace TeacherPlanner
             {
                 Application.Current.Shutdown();
             }
-            var mainViewModel = new MainViewModel(accountManagementViewModel.LoginViewModel.UserModel);
+
+            var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
+            var mainViewModel = new MainViewModel(user);
+            
             this.DataContext = mainViewModel;
             this.DataContextChanged += (sender, args) =>
             {

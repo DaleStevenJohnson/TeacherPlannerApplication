@@ -1,23 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using Database.DatabaseModels;
+using TeacherPlanner.Helpers;
+using TeacherPlanner.ToDo.ViewModels;
 
 namespace TeacherPlanner.ToDo.Models
 {
-    public class TodoListModel
+    public class TodoListModel : ObservableObject
     {
-        private List<TodoItemModel> _todoItems;
-        public TodoListModel(string header)
+        private string _header;
+
+        public event EventHandler ValuesUpdatedEvent;
+        public TodoListModel(string header, int id)
         {
+            ID = id;
             Header = header;
-            TodoItems = new List<TodoItemModel>
-            {
-                new TodoItemModel(){Content = "Item 1"},
-                new TodoItemModel(){Content = "Item 2"},
-                new TodoItemModel(){Content = "Item 3"}
-            };
+            ActiveTodoItems = new ObservableCollection<TodoItemViewModel>();
+            CompletedTodoItems = new ObservableCollection<TodoItemViewModel>();
         }
-        public string Header { get; set; }
-        public List<TodoItemModel> TodoItems { get; set; }
+        public int ID { get; }
+        public string Header 
+        {
+            get => _header;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _header, value) && ValuesUpdatedEvent != null)
+                    ValuesUpdatedEvent.Invoke(null, EventArgs.Empty);
+            }
+        }
+        public ObservableCollection<TodoItemViewModel> ActiveTodoItems { get; set; }
+        public ObservableCollection<TodoItemViewModel> CompletedTodoItems { get; set; }
     }
 }

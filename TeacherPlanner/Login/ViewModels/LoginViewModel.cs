@@ -3,6 +3,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
@@ -25,8 +27,7 @@ namespace TeacherPlanner.Login.ViewModels
             get => _username;
             set => RaiseAndSetIfChanged(ref _username, value.Trim().ToLower());
         }
-        public UserModel UserModel { get; set; }
-        public UserControl CurrentPage { get; set; }
+        public User User { get; set; }
         public ICommand LoginButtonClickedCommand { get; }
         
         private void OnLoginButtonClicked(object parameter)
@@ -35,39 +36,23 @@ namespace TeacherPlanner.Login.ViewModels
             var window = (Window)values[0];
             var passwordBox = (PasswordBox)values[1];
 
-            LoggedIn = Authenticate(Username, passwordBox.Password.Trim());
+            User = Authenticate(Username, passwordBox.Password.Trim());
             if (LoggedIn)
-            {
-                UserModel = new UserModel(Username, passwordBox.Password.Trim());
-                FileHandlingHelper.LoggedInUserDataPath = Path.Combine(FileHandlingHelper.UserDataPath, UserModel.Username);
-                //MessageBox.Show("Success");
                 window.Close();
-            }
             else
-            {
                 MessageBox.Show("Invalid Credentials");
-            }
         }
 
-        private string[] GetAccountHashes()
+        private User Authenticate(string username, string password)
         {
-            var path = Path.Combine(FileHandlingHelper.ApplicationConfigPath, FilesAndDirectories.AccountDataFileName);
-            if (File.Exists(path))
-                return File.ReadAllLines(path);
-            else
-                return new string[0];
-        }
-        private bool Authenticate(string username, string password)
-        {
-            var data = GetAccountHashes();
-            for (int i = 0; i < data.Length; i++)
+            var user = DatabaseManager.GetUserAccount(username);
+            if (user != null && SecurePasswordHasher.Verify(password, user.Password))
             {
-                if (SecurePasswordHasher.Verify(username + password, data[i]))
-                {
-                    return true;
-                }
+                LoggedIn = true;
+                return user;
             }
-            return false;
+            LoggedIn = false;
+            return null;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using TeacherPlanner.Planner.Models;
 
 namespace TeacherPlanner.Planner.Views
 {
@@ -18,7 +19,6 @@ namespace TeacherPlanner.Planner.Views
         {
             TextBox textBox = sender as TextBox;
             textBox.Background = Brushes.LightGray;
-            textBox.IsReadOnly = false;
             textBox.BorderBrush = Brushes.Black;
 
         }
@@ -27,9 +27,7 @@ namespace TeacherPlanner.Planner.Views
         {
             TextBox textBox = sender as TextBox;
             textBox.Background = Brushes.White;
-            //DEBUGGER.Text = $"{PageViewModel.LeftDay.Periods[0].MarginFields[0]}";
             textBox.BorderBrush = Brushes.Transparent;
-            textBox.IsReadOnly = true;
         }
 
         public void TextBoxMouseOut(object sender, RoutedEventArgs e)
@@ -42,9 +40,14 @@ namespace TeacherPlanner.Planner.Views
 
         public void TextBoxSelectionChanged(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            //DEBUGGER.Text = $"{textBox.Name}";
+            
         }
 
+        private void TextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            PeriodModel context = (PeriodModel)DataContext;
+            context.UpdateUserEnteredClassCode(textBox.Text);
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace TeacherPlanner
 
             ChooseYearViewModel = new ChooseYearViewModel(UserModel);
 
-            ChoosePlannerYearCommand = new SimpleCommand(yearString => OnChoosePlannerYear((string)yearString));
+            ChoosePlannerYearCommand = new SimpleCommand(year => OnChoosePlannerYear((AcademicYearModel)year));
             SwitchViewCommand = new SimpleCommand(_ => SwitchView());
             
             ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
@@ -42,16 +42,18 @@ namespace TeacherPlanner
         public UserModel UserModel { get; }
         private void OnChoosePlannerYear(object parameter)
         {
-            var yearString = (string)parameter;
-            PlannerYearViewModel = new PlannerYearViewModel(UserModel, yearString);
+            var year = (AcademicYearModel)parameter;
+            PlannerYearViewModel = new PlannerYearViewModel(UserModel, year);
             PlannerYearViewModel.SwitchViewEvent += (_, __) => SwitchView();
             SwitchView();
 
-            if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
-                PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
+
+            // todo - uncomment this
+            //if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
+             //   PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
             
-            if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
-                PlannerYearViewModel.OnDefineTimetableWeeks();
+          //  if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
+            //    PlannerYearViewModel.OnDefineTimetableWeeks();
         }
 
 

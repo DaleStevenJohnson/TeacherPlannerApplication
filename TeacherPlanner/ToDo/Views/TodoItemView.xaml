@@ -27,7 +27,7 @@
             <Style>
                 <Setter Property="Grid.Background" Value="LightSteelBlue" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                    <DataTrigger Binding="{Binding Model.IsChecked}" Value="True">
                         <Setter Property="Grid.Background" Value="#D0D0D0"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -38,7 +38,7 @@
             Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-            IsChecked="{Binding IsChecked}"
+            IsChecked="{Binding Model.IsChecked}"
             IsEnabled="{Binding HasActiveSubItems, Converter={StaticResource InverseBooleanConverter}}"
         >
             <CheckBox.LayoutTransform>
@@ -50,11 +50,11 @@
         <!--User Text Entry-->
         <TextBox
             Grid.Column="1"
-            Text="{Binding Content}"
+            Text="{Binding Model.Content}"
             Margin="5"
             FontSize="25"
             VerticalContentAlignment="Center"
-            IsReadOnly="{Binding IsChecked}"
+            IsReadOnly="{Binding Model.IsChecked}"
         />
         
         
@@ -69,7 +69,7 @@
             BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Add_Button_MouseEnter" MouseLeave="Add_Button_MouseLeave"
             Command="{Binding AddSubItemCommand}"
-            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
+            IsEnabled="{Binding Model.IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             />
         
         <!--DELETE Button-->
@@ -80,7 +80,7 @@
             Background="Transparent" BorderBrush="Transparent" BorderThickness="0" 
             MouseEnter="Delete_Button_MouseEnter" MouseLeave="Delete_Button_MouseLeave"
             Command="{Binding RemoveSelfCommand}"
-            IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}}"
+            IsEnabled="{Binding Model.IsChecked, Converter={StaticResource InverseBooleanConverter}}"
             Visibility="{Binding 
                 RelativeSource=
                     {

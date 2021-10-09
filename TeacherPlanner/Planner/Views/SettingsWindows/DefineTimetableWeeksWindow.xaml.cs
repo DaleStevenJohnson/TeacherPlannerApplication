@@ -19,11 +19,9 @@ namespace TeacherPlanner.Planner.Views.SettingsWindows
     /// </summary>
     public partial class DefineTimetableWeeksWindow : Window
     {
-        public DefineTimetableWeeksWindow(UserModel userModel)
+        public DefineTimetableWeeksWindow()
         {
             InitializeComponent();
-            var viewModel = new DefineTimetableWeeksViewModel(this, userModel);
-            this.DataContext = viewModel;
         }
     }
 }

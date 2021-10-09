@@ -14,7 +14,7 @@
         <!--This Controls the name of the list-->
         <DataTemplate x:Key="TodoListTemplate" DataType="{x:Type viewmodel:TodoListViewModel}">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding Header}" 
+                <TextBox Text="{Binding Model.Header}" 
                      FontFamily="{StaticResource BodyText}" FontSize="20"
                      Background="Transparent">
                     

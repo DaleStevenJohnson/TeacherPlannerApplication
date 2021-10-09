@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Database.DatabaseModels;
+using TeacherPlanner.Constants;
 
 namespace TeacherPlanner.Timetable.Models
 {
     public class TimetableWeekModel
     {
-        public TimetableWeekModel(string weekNumber)
+        public TimetableWeekModel(List<TimetablePeriod> timetablePeriods, int week)
         {
-            WeekNumber = weekNumber;
-            Monday = new TimetableDayModel();
-            Tuesday = new TimetableDayModel();
-            Wednesday = new TimetableDayModel();
-            Thursday = new TimetableDayModel();
-            Friday = new TimetableDayModel();
+            
+            WeekNumber = week;
+            Monday = new TimetableDayModel(timetablePeriods.Where(t => t.Day == (int)DayOfWeek.Monday).ToList());
+            Tuesday = new TimetableDayModel(timetablePeriods.Where(t => t.Day == (int)DayOfWeek.Tuesday).ToList());
+            Wednesday = new TimetableDayModel(timetablePeriods.Where(t => t.Day == (int)DayOfWeek.Wednesday).ToList());
+            Thursday = new TimetableDayModel(timetablePeriods.Where(t => t.Day == (int)DayOfWeek.Thursday).ToList());
+            Friday = new TimetableDayModel(timetablePeriods.Where(t => t.Day == (int)DayOfWeek.Friday).ToList());
         }
-        public string WeekNumber { get; }
+        public int WeekNumber { get; }
         public TimetableDayModel Monday { get; }
         public TimetableDayModel Tuesday { get; }
         public TimetableDayModel Wednesday { get; }
         public TimetableDayModel Thursday { get; }
         public TimetableDayModel Friday { get; }
-        public TimetablePeriodModel GetPeriod(int day, string period)
+        public TimetablePeriodModel GetPeriod(int day, PeriodCodes period)
         {
             return day switch
             {

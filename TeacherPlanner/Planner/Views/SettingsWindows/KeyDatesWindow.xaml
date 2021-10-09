@@ -84,8 +84,8 @@
             <StackPanel Orientation="Horizontal">
                 <Label Width="300" Content="{Binding Path=Description}"/>
                 <Label Width="150" Content="{Binding Path=Type}"/>
-                <Label Width="100" Content="{Binding Path=DateString}"/>
-                <Label Width="75" Content="{Binding Path=TimeString}"/>
+                <TextBlock Width="100" Text="{Binding Path=Date, StringFormat=yyyy/MM/dd}"/>
+                <TextBlock Width="75" Text="{Binding Path=Date, StringFormat=HH:mm}"/>
                 
             </StackPanel>
         </DataTemplate>
@@ -100,11 +100,11 @@
         </DataTemplate>
 
         <DataTemplate x:Key="DateCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
-            <ContentControl Content="{Binding DateString}" />
+            <TextBlock Text="{Binding Path=Date, StringFormat=yyyy/MM/dd}" />
         </DataTemplate>
 
         <DataTemplate x:Key="TimeCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
-            <ContentControl Content="{Binding TimeString}" />
+            <TextBlock Text="{Binding Path=Date, StringFormat=HH:mm}" />
         </DataTemplate>
 
         <DataTemplate x:Key="RemoveCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
