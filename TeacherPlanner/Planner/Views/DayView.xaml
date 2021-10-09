@@ -21,7 +21,7 @@
         </Style>
 
         <DataTemplate x:Key="KeyDateDropDownTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
-            <Label Content="{Binding }" Style="{StaticResource Label.DateHeading.Default}" Foreground="PaleGoldenrod"/>
+            <Label Content="{Binding }" Style="{StaticResource Label.DateHeading.Default}" Foreground="{Binding Type, Converter={StaticResource KeyDateTypeToColourConverter}}"/>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
@@ -85,6 +85,7 @@
             <Label
                 Grid.Column="1"
                 Style="{StaticResource Label.DateHeading.Default}"
+                Foreground="{Binding IsDeadline, Converter={StaticResource BooleanToRedConverter }}"
                 Content="{Binding CalendarViewModel.DisplayDate}"/>
 
             

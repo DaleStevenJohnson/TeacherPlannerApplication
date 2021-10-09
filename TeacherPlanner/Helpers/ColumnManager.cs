@@ -62,7 +62,7 @@ namespace TeacherPlanner.Helpers
 
         private void SetSortingColumn(object columnObject)
         {
-            var sortingColumn = (SortingColumn)columnObject;
+            var sortingColumn = columnObject as SortingColumn;
             if (sortingColumn == null)
                 return;
 

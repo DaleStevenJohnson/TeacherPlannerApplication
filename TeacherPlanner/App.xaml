@@ -33,6 +33,8 @@
         <converter:SortingColumnToPathConverter x:Key="SortDirectionToIconPathConverter"/>
         <converter:WeekToBooleanConverter x:Key="WeekToBooleanConverter"/>
         <converter:PeriodNumberConverter x:Key="PeriodNumberConverter"/>
+        <converter:BooleanToRedConverter x:Key="BooleanToRedConverter"/>
+        <converter:KeyDateTypeToColourConverter x:Key="KeyDateTypeToColourConverter"/>
 
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">

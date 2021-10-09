@@ -99,6 +99,10 @@
             <ContentControl Content="{Binding Type}" />
         </DataTemplate>
 
+        <DataTemplate x:Key="DaysUntilCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+            <ContentControl Content="{Binding DaysUntil}" />
+        </DataTemplate>
+
         <DataTemplate x:Key="DateCellTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
             <TextBlock Text="{Binding Path=Date, StringFormat=yyyy/MM/dd}" />
         </DataTemplate>
@@ -153,27 +157,32 @@
                         <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
                                         Header="{Binding ColumnManager.ColumnHeaders[0]}"
                                         CellTemplate="{StaticResource DescriptionCellTemplate}"
-                                        Width="300"/>
+                                        Width="250"/>
 
 
                         <!-- Type-->
                         <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
                                         Header="{Binding ColumnManager.ColumnHeaders[1]}"
                                         CellTemplate="{StaticResource TypeCellTemplate}"
-                                        Width="150"/>
+                                        Width="105"/>
 
+                        <!-- DaysUntil-->
+                        <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[2]}"
+                                        CellTemplate="{StaticResource DaysUntilCellTemplate}"
+                                        Width="105"/>
 
                         <!-- Date -->
                         <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
-                                        Header="{Binding ColumnManager.ColumnHeaders[2]}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[3]}"
                                         CellTemplate="{StaticResource DateCellTemplate}"
-                                        Width="100"/>
+                                        Width="90"/>
 
                         <!-- Time -->
                         <GridViewColumn HeaderTemplate="{DynamicResource ColumnHeaderTemplate}"
-                                        Header="{Binding ColumnManager.ColumnHeaders[3]}"
+                                        Header="{Binding ColumnManager.ColumnHeaders[4]}"
                                         CellTemplate="{StaticResource TimeCellTemplate}"
-                                        Width="75"/>
+                                        Width="65"/>
 
                         <GridViewColumn CellTemplate="{StaticResource RemoveCellTemplate}" Header="Remove"/>
 
@@ -252,7 +261,7 @@
                 <StackPanel Style="{StaticResource AddNew.StackPanel.Default}">
                     <Label Content="Type:"
                            Style="{StaticResource AddNew.Label.Default}"/>
-                    <ComboBox ItemsSource="{Binding KeyDateTypes}" 
+                    <ComboBox ItemsSource="{Binding KeyDateTypesList}" 
                               ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
                               SelectedItem="{Binding NewKeyDateType}" 
                               Style="{StaticResource AddNew.ComboBox.Default}"
