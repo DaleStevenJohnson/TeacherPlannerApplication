@@ -163,7 +163,7 @@ namespace TeacherPlanner.Planner.ViewModels
                             AcademicYearID = _academicYear.ID,
                             Week = week,
                             Day = day + 1,
-                            Period = period,
+                            Period = (int)PeriodCodesConverter.ConvertIntToPeriodCodes(period),
                             ClassCode = classCode,
                             RoomCode = roomNumber,
                         };
@@ -174,6 +174,9 @@ namespace TeacherPlanner.Planner.ViewModels
             }
             return timetablePeriods;
         }
+
+
+        
 
         private bool TryParseTimetableFileData(string[][] timetableFileData)
         {

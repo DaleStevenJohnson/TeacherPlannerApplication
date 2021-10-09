@@ -15,8 +15,8 @@ namespace TeacherPlanner.Planner.Models
         private int? _id = null;
         private int _dayID;
         private int? _timetableClasscodeID;
-        private string _userEnteredClasscode;
         private string _classcode;
+        private string _userEnteredClasscode;
 
         public PeriodModel(Period period)
         {
@@ -41,6 +41,7 @@ namespace TeacherPlanner.Planner.Models
                     _id = value;
             }
         }
+        
 
         public string MarginText
         {
@@ -64,13 +65,26 @@ namespace TeacherPlanner.Planner.Models
         public string Classcode 
         {
             get => _classcode;
-            set
-            {
-                if (RaiseAndSetIfChanged(ref _classcode, value))
-                    _userEnteredClasscode = value;
-            } 
+            set => RaiseAndSetIfChanged(ref _classcode, value);
         }
 
+        private string UserEnteredClasscode
+        {
+            get => _userEnteredClasscode;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _userEnteredClasscode, value))
+                {
+                    if (value == string.Empty)
+                        Classcode = GetTimetablePeriodClasscode();
+                }
+            }
+        }
+
+        public void UpdateUserEnteredClassCode(string userinput)
+        {
+            UserEnteredClasscode = userinput;
+        }
 
         public Period GetDBModel()
         {
@@ -80,7 +94,7 @@ namespace TeacherPlanner.Planner.Models
                 DayID = _dayID,
                 TimetableClasscode = _timetableClasscodeID,
                 PeriodNumber = (int)Number,
-                UserEnteredClasscode = _userEnteredClasscode,
+                UserEnteredClasscode = UserEnteredClasscode,
                 MarginText = MarginText,
                 MainText = MainText,
                 SideText = SideText,
@@ -91,17 +105,25 @@ namespace TeacherPlanner.Planner.Models
         {
             if (userEnteredClasscode != null && userEnteredClasscode != string.Empty)
             {
-                _userEnteredClasscode = userEnteredClasscode;
+                UserEnteredClasscode = userEnteredClasscode;
                 return userEnteredClasscode;
             }
             else if (_timetableClasscodeID != null)
             {
-                var timetableClasscode = DatabaseManager.GetTimetablePeriodClasscode((int)_timetableClasscodeID);
-                if (timetableClasscode != null)
-                    return timetableClasscode;
+                return GetTimetablePeriodClasscode();
             }
             
             return string.Empty;
         }
+
+        private string GetTimetablePeriodClasscode()
+        {
+            var timetableClasscode = DatabaseManager.GetTimetablePeriodClasscode((int)_timetableClasscodeID);
+            if (timetableClasscode != null)
+                return timetableClasscode;
+            return string.Empty;
+        }
+
+        
     }
 }

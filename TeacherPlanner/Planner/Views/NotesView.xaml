@@ -49,6 +49,8 @@
                     IsReadOnly="False"
                     TextAlignment="Left"
                     BorderBrush="Transparent"
+                    MaxLength="500"
+                    
                 />
 
         <Border Grid.Row="1" Grid.Column="1"  BorderThickness="0,0,0,1" BorderBrush="Gray"/>

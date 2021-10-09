@@ -45,7 +45,7 @@ namespace TeacherPlanner.Planner.ViewModels
             AllKeyDates = keyDates;
             _academicYear = academicYear;
             _calendarManager = calendarManager;
-            CalendarViewModel = new CalendarViewModel(date, keyDates);
+            CalendarViewModel = new CalendarViewModel(date, keyDates, calendarManager);
 
             
 
@@ -124,6 +124,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public void LoadNewDayModel(DateTime date)
         {
+            KeyDatesAreShowing = false;
 
             // Load Day from Database
             var dayDBModel = DatabaseManager.GetDay(_academicYear.ID, date);
@@ -157,19 +158,22 @@ namespace TeacherPlanner.Planner.ViewModels
             for (var i = 0; i < PERIODS; i++)
             {
                 Period periodDBModel;
+                var periodCodeInt = (int)PeriodCodesConverter.ConvertIntToPeriodCodes(i);
 
-                if (periodDBModels.Count != 0 && i < periodDBModels.Count && periodDBModels[i].PeriodNumber == (int)GetPeriodCode(i))
+
+                if (periodDBModels.Count != 0 && i < periodDBModels.Count && periodDBModels[i].PeriodNumber == periodCodeInt)
                 {
                     periodDBModel = periodDBModels[i];
+                    periodDBModel.TimetableClasscode = GetTimetablePeriodID(date, periodCodeInt);
                 }
                 else
                 {
                     periodDBModel = new Period()
                     {
                         DayID = dayDBModel.ID,
-                        TimetableClasscode = GetTimetablePeriodID(date, i),
+                        TimetableClasscode = GetTimetablePeriodID(date, periodCodeInt),
                         UserEnteredClasscode = null,
-                        PeriodNumber = (int)GetPeriodCode(i),
+                        PeriodNumber = periodCodeInt,
                         MarginText = null,
                         MainText = null,
                         SideText = null
@@ -181,7 +185,8 @@ namespace TeacherPlanner.Planner.ViewModels
             }
 
             DayModel = new DayModel(dayDBModel, periodModels);
-            CalendarViewModel = new CalendarViewModel(date, _allKeyDates);
+            CalendarViewModel = new CalendarViewModel(date, _allKeyDates, _calendarManager);
+            UpdateTodaysKeyDates();
         }
 
         internal void SaveDayToDatabase()
@@ -222,37 +227,7 @@ namespace TeacherPlanner.Planner.ViewModels
             }
         }
 
-        private PeriodCodes GetPeriodCode(int period)
-        {
-            foreach (var periodCode in (PeriodCodes[])Enum.GetValues(typeof(PeriodCodes)))
-            { 
-                
-            }
-            switch (period)
-            {
-                case 0:
-                    return PeriodCodes.Registration;
-                case 1:
-                    return PeriodCodes.Period1;
-                case 2:
-                    return PeriodCodes.Period2;
-                case 3:
-                    return PeriodCodes.Break;
-                case 4:
-                    return PeriodCodes.Period3;
-                case 5:
-                    return PeriodCodes.Lunch;
-                case 6:
-                    return PeriodCodes.Period4;
-                case 7:
-                    return PeriodCodes.Period5;
-                case 8:
-                    return PeriodCodes.Twilight;
-                default:
-                    return PeriodCodes.Registration;
-
-            }
-        }
+       
 
         private string GetClassCodeFromTimetable(DateTime date, int period)
         {
@@ -273,7 +248,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private int? GetTimetablePeriodID(DateTime date, int period)
         {
-            if (Timetable == null)
+            if (Timetable.Week1 == null || Timetable.Week2 == null)
                 return null;
             
             var day = (int)date.DayOfWeek;

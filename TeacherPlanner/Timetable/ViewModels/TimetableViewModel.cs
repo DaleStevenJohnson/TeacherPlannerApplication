@@ -30,7 +30,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             SwitchTimetableWeekCommand = new SimpleCommand(_ => OnSwitchTimetableWeek());
             TimetableChangedEvent += (_, __) => CountOccurances();
 
-
+            CurrentTimetable = new TimetableModel();
             _academicYear = academicYear;
             UserModel = userModel;
             SelectedWeek = 1;
@@ -74,7 +74,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             if (!dbModels.Any())
                 return false;
             
-            CurrentTimetable = new TimetableModel(dbModels);
+            CurrentTimetable.Update(dbModels);
             TimetableIsImported = true;
             TimetableChangedEvent.Invoke(null, CurrentTimetable);
             UpdateCurrentlyDisplayedTimetableWeek();
@@ -103,9 +103,9 @@ namespace TeacherPlanner.Timetable.ViewModels
             {
                 for (int day = 1; day <= 5; day++)
                 {
-                    for (int period = 0; period <= 8; period++)
+                    foreach(PeriodCodes period in Enum.GetValues(typeof(PeriodCodes)))
                     {
-                        var timetablePeriod = CurrentTimetable.GetPeriod(week, day, (PeriodCodes)period);
+                        var timetablePeriod = CurrentTimetable.GetPeriod(week, day, period);
                         
                         if (classCodeCounts.ContainsKey(timetablePeriod.ClassCode))
                             classCodeCounts[timetablePeriod.ClassCode] += 1;

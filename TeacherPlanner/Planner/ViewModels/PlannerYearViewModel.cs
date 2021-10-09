@@ -86,7 +86,10 @@ namespace TeacherPlanner.Planner.ViewModels
             defineTimetableWeeksWindow.DataContext = viewModel;
 
             if (defineTimetableWeeksWindow.ShowDialog() ?? true)
+            {
+                //TimetableViewModel.TryGetImportedTimetable();
                 PlannerViewModel.LoadNewDays();
+            }
         }
 
         private void UpdateKeyDatesList()

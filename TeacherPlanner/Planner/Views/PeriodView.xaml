@@ -69,10 +69,12 @@
                     Text="{Binding Path=Classcode}"
                     GotFocus="TextBoxMouseOver"
                     LostFocus="TextBoxOutOfFocus"
+                    KeyUp="TextBox_KeyUp"
                     SelectionChanged="TextBoxSelectionChanged"
-                    AcceptsReturn="True"
+                    AcceptsReturn="False"
+                    MaxLength="10"
                     TextWrapping="Wrap"
-                    IsReadOnly="True"
+                    IsReadOnly="False"
                     TextAlignment="Center"
                     BorderBrush="Transparent"
                     FontFamily="{StaticResource BodyText}"
@@ -97,6 +99,7 @@
                 IsReadOnly="False"
                 TextAlignment="Left"
                 BorderBrush="Transparent"
+                MaxLength="35"
             />
 
 
@@ -122,6 +125,7 @@
                 IsReadOnly="False"
                 TextAlignment="Left"
                 BorderBrush="Transparent"
+                MaxLength="600"
             />
 
 
@@ -147,6 +151,7 @@
                 IsReadOnly="False"
                 TextAlignment="Left"
                 BorderBrush="Transparent"
+                MaxLength="105"
             />
 
 
