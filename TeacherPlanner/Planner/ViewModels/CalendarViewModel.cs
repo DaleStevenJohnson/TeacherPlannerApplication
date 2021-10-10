@@ -70,7 +70,10 @@ namespace TeacherPlanner.Planner.ViewModels
             {
                 foreach (CalendarDateModel date in Dates)
                 {
-                    date.IsKeyDate = KeyDates.Any(kd => kd.Date.Date == date.Date.Date);
+                    var todaysKeyDates = KeyDates.Where(kd => kd.Date.Date == date.Date.Date);
+                    date.IsKeyDate = todaysKeyDates.Any();
+                    if (date.IsKeyDate)
+                        date.IsDeadline = todaysKeyDates.Any(kd => kd.Type == KeyDateTypes.Deadline.GetKeyDateTypeName());
                 }
             }
         }

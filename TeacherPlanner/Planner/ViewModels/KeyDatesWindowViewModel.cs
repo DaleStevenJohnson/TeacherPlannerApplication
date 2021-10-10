@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using Database;
 using Database.DatabaseModels;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Planner.Models;
 
@@ -22,6 +23,7 @@ namespace TeacherPlanner.Planner.ViewModels
         private string _newKeyDateFeedback;
         private ObservableCollection<KeyDateItemViewModel> _keyDates;
         private bool _newKeyDateIsWeekend;
+        private ObservableCollection<KeyDateItemViewModel> _deadlines;
         private readonly AcademicYearModel _academicYear;
 
         public ICommand SwapIsAddingNewDateValueCommand { get; }
@@ -35,17 +37,23 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             // Parameter Assignment
             KeyDates = keyDates;
+            
             _academicYear = academicYear;
 
             // Property Assignment
-            ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Date", "Time" }, 2);
-            KeyDateTypes = new List<string> { "Parent's Evening", "Report", "Event", "CPD", "Meeting", "Other" };
+            ColumnManager = new ColumnManager(new string[] { "Description", "Type", "Days Until", "Date", "Time" }, 2);
+            KeyDateTypesList = new List<string>();
+            foreach (KeyDateTypes keyDateType in Enum.GetValues(typeof(KeyDateTypes)))
+            {
+                KeyDateTypesList.Add(keyDateType.GetKeyDateTypeName());
+            }
+
             IsAddingNewKeyDate = false;
             Today = DateTime.Today;
             NewKeyDateDate = Today;
             NewKeyDateTimeHour = "12";
             NewKeyDateTimeMinute = "00";
-            NewKeyDateType = KeyDateTypes[0];
+            NewKeyDateType = KeyDateTypesList[0];
             NewKeyDateIsWeekend = false;
 
             // Command Assignment
@@ -56,13 +64,14 @@ namespace TeacherPlanner.Planner.ViewModels
 
             // Event Subscription
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
+       
 
             GetKeyDates();
         }
 
         // Properties
 
-        public List<string> KeyDateTypes { get; }
+        public List<string> KeyDateTypesList { get; }
         public IEnumerable<string> HoursList { get; } = new List<string> { "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18" };
         public IEnumerable<string> MinuteList { get; } = new List<string> { "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" };
         public bool IsAddingNewKeyDate
@@ -76,6 +85,8 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _keyDates;
             set => RaiseAndSetIfChanged(ref _keyDates, value);
         }
+
+       
 
         public ColumnManager ColumnManager { get; set; }
 

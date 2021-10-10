@@ -88,6 +88,7 @@ Timetable
 
 Codebase
 - Use StringFormat in Datetime bindings for WPF controls instead of string properties
+- Update enums to use extension method with dictionary (see KeyDateTypes) rather than big switch statements.
 
 Database Implementation
 + Create a Class diagram
@@ -96,11 +97,11 @@ Database Implementation
 + Change KeyDateItemViewModel to contain an ObservableCollection of KeyDateItemModels
 
 Days Refactor
-- Change period control & notes control to one text box rather than 7
-- Add Methods to Database manager for Update, Select and Insert.
-- Add reg period & ensure reg classcode is in correct position
-- Ensure Enums are used for periods and days (DayOfWeek).
-- Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
++ Change period control & notes control to one text box rather than 7
++ Add Methods to Database manager for Update, Select and Insert.
++ Add reg period & ensure reg classcode is in correct position
++ Ensure Enums are used for periods and days (DayOfWeek).
++ Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
 
 
 microsoft.data.sqllite

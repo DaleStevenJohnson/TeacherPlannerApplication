@@ -24,13 +24,15 @@ namespace TeacherPlanner.Planner.ViewModels
         
         private bool _isKeyDate;
         private bool _keyDatesAreShowing;
-        
+        private bool _isDeadline;
+
         private readonly AcademicYearModel _academicYear;
         public readonly UserModel _userModel;
         private readonly CalendarManager _calendarManager;
 
         private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
         private ObservableCollection<KeyDateItemViewModel> _todaysKeyDates;
+        
 
         // Events / Commands / Actions
         public event EventHandler<AdvancePageState> TurnPageEvent;
@@ -50,6 +52,7 @@ namespace TeacherPlanner.Planner.ViewModels
             
 
             IsKeyDate = false;
+            IsDeadline = false;
             KeyDatesAreShowing = false;
 
             TurnPageCommand = new SimpleCommand(numOfDays => OnTurnPage(numOfDays));
@@ -69,6 +72,12 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             get => _isKeyDate;
             set => RaiseAndSetIfChanged(ref _isKeyDate, value);
+        }
+
+        public bool IsDeadline
+        {
+            get => _isDeadline;
+            set => RaiseAndSetIfChanged(ref _isDeadline, value);
         }
 
         public bool KeyDatesAreShowing
@@ -117,6 +126,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             TodaysKeyDates = new ObservableCollection<KeyDateItemViewModel>(AllKeyDates.Where(kd => kd.Date.Date == CalendarViewModel.Date.Date).OrderBy(keydate => keydate.Date));
             IsKeyDate = TodaysKeyDates.Any();
+            IsDeadline = TodaysKeyDates.Where(kd => kd.Type == KeyDateTypes.Deadline.GetKeyDateTypeName()).Any();
             CalendarViewModel.SetKeyDates();
         }
 
