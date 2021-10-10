@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TeacherPlanner.Planner.Views.SettingsWindows
+namespace TeacherPlanner.PlannerYear.Views
 {
     /// <summary>
     /// Interaction logic for ImportTimetableWindow.xaml

@@ -4,6 +4,7 @@ using System.Linq;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Planner.Models;
+using TeacherPlanner.PlannerYear.ViewModels;
 
 namespace TeacherPlanner.Planner.ViewModels
 {

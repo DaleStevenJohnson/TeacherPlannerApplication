@@ -8,9 +8,9 @@ using Database;
 using Database.DatabaseModels;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
-using TeacherPlanner.Planner.Models;
+using TeacherPlanner.PlannerYear.Models;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class KeyDatesWindowViewModel : ObservableObject
     {
@@ -37,7 +37,7 @@ namespace TeacherPlanner.Planner.ViewModels
         {
             // Parameter Assignment
             KeyDates = keyDates;
-            
+
             _academicYear = academicYear;
 
             // Property Assignment
@@ -64,7 +64,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             // Event Subscription
             ColumnManager.SortingChanged += (_, __) => SortKeyDates();
-       
+
 
             GetKeyDates();
         }
@@ -86,7 +86,7 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _keyDates, value);
         }
 
-       
+
 
         public ColumnManager ColumnManager { get; set; }
 
@@ -151,13 +151,13 @@ namespace TeacherPlanner.Planner.ViewModels
         public void RemoveKeyDates()
         {
             var selectedDates = KeyDates.Where(kd => kd.IsChecked).ToList();
-            
+
             foreach (KeyDateItemViewModel keydate in selectedDates)
             {
                 if (DatabaseManager.TryRemoveKeyDate(keydate.ID))
                     KeyDates.Remove(keydate);
             }
-                
+
             KeyDatesListUpdatedEvent.Invoke(null, EventArgs.Empty);
         }
 

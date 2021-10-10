@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 
-namespace TeacherPlanner.Planner.Models
+namespace TeacherPlanner.PlannerYear.Models
 {
     public class AcademicYearModel
     {

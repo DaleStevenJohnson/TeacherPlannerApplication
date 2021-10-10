@@ -12,6 +12,7 @@ using System.Windows;
 using Database;
 using TeacherPlanner.Planner.Models;
 using Database.DatabaseModels;
+using TeacherPlanner.PlannerYear.Models;
 
 namespace TeacherPlanner.ToDo.ViewModels
 {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TeacherPlanner.Constants;
 
-namespace TeacherPlanner.Planner.Models
+namespace TeacherPlanner.PlannerYear.Models
 {
     public class TimetableWeekModel
     {

@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using Database;
 using Database.DatabaseModels;
-using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.Models;
+using TeacherPlanner.PlannerYear.Models;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class ChooseYearViewModel : ObservableObject
     {
@@ -54,14 +49,14 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private void OnAddNewAcademicYear()
         {
-            if (AddAcademicYearToDatabase())   
+            if (AddAcademicYearToDatabase())
                 YearSelectModels = GetAcademicYears();
         }
 
         private bool AddAcademicYearToDatabase()
         {
             var year = GetNextAcademicYear();
-            
+
             if (!DatabaseManager.CheckIfAcademicYearExists(UserModel.ID, year))
             {
                 var academicYear = new AcademicYear()
@@ -87,7 +82,7 @@ namespace TeacherPlanner.Planner.ViewModels
                     .Last()
                     .Year + 1;
             }
-                
+
         }
 
         private ObservableCollection<AcademicYearModel> GetAcademicYears()
@@ -95,7 +90,7 @@ namespace TeacherPlanner.Planner.ViewModels
             var yearSelectModels = new ObservableCollection<AcademicYearModel>();
             // Get currently stored Academic Years from database
             var academicYears = DatabaseManager.GetAcademicYears(UserModel.ID);
-            
+
             if (academicYears.Any())
             {
                 foreach (var year in academicYears)

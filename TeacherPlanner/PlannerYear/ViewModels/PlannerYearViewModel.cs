@@ -4,12 +4,13 @@ using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.Models;
-using TeacherPlanner.Planner.Views.SettingsWindows;
+using TeacherPlanner.Planner.ViewModels;
+using TeacherPlanner.PlannerYear.Models;
+using TeacherPlanner.PlannerYear.Views;
 using TeacherPlanner.Timetable.ViewModels;
 using TeacherPlanner.ToDo.ViewModels;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class PlannerYearViewModel : ObservableObject
     {
@@ -27,7 +28,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public ICommand ImportTimetableCommand { get; }
 
         public event EventHandler<string> SwitchViewEvent;
-        
+
         public PlannerYearViewModel(UserModel userModel, AcademicYearModel year)
         {
             _academicYear = year;
@@ -39,11 +40,11 @@ namespace TeacherPlanner.Planner.ViewModels
 
             TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
-            
-            TimetableViewModel.TimetableChangedEvent += (_,timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
-            
+
+            TimetableViewModel.TimetableChangedEvent += (_, timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
+
             ToDoViewModel = new TodoPageViewModel(UserModel, year);
-            
+
             // keyDates view Model new up and event subscription
             _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates, _academicYear);
             _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
@@ -66,7 +67,7 @@ namespace TeacherPlanner.Planner.ViewModels
         public UserModel UserModel { get; }
         public PlannerViewModel PlannerViewModel { get; }
         public TodoPageViewModel ToDoViewModel { get; }
-        public TimetableViewModel TimetableViewModel 
+        public TimetableViewModel TimetableViewModel
         {
             get => _timetableViewModel;
             set => RaiseAndSetIfChanged(ref _timetableViewModel, value);
@@ -76,7 +77,7 @@ namespace TeacherPlanner.Planner.ViewModels
             get => _keyDates;
             set => RaiseAndSetIfChanged(ref _keyDates, value);
         }
-        
+
 
         // Methods
         public void OnDefineTimetableWeeks()
@@ -102,7 +103,7 @@ namespace TeacherPlanner.Planner.ViewModels
             SwitchViewEvent.Invoke(null, (string)v);
         }
 
-       
+
         private void OnKeyDatesClicked()
         {
             // Check to see whether the window is already open

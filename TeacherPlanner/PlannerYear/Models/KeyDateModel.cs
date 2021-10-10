@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace TeacherPlanner.Planner.Models
+namespace TeacherPlanner.PlannerYear.Models
 {
     public class KeyDateModel
     {

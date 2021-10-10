@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.Models;
 using TeacherPlanner.Planner.ViewModels;
-using TeacherPlanner.Timetable.ViewModels;
-using TeacherPlanner.ToDo.ViewModels;
+using TeacherPlanner.PlannerYear.Models;
+using TeacherPlanner.PlannerYear.ViewModels;
 
 namespace TeacherPlanner
 {
@@ -15,7 +13,7 @@ namespace TeacherPlanner
         private MainViewState _currentView;
         PlannerYearViewModel _plannerYearViewModel;
         public ICommand ChoosePlannerYearCommand { get; }
-        public ICommand SwitchViewCommand { get;  }
+        public ICommand SwitchViewCommand { get; }
         public MainViewModel(UserModel userModel)
         {
             UserModel = userModel;
@@ -25,10 +23,10 @@ namespace TeacherPlanner
 
             ChoosePlannerYearCommand = new SimpleCommand(year => OnChoosePlannerYear((AcademicYearModel)year));
             SwitchViewCommand = new SimpleCommand(_ => SwitchView());
-            
-            ChooseYearViewModel.ChooseYearEvent += (_,__) => OnChoosePlannerYear(__);
+
+            ChooseYearViewModel.ChooseYearEvent += (_, __) => OnChoosePlannerYear(__);
         }
-        public MainViewState CurrentView 
+        public MainViewState CurrentView
         {
             get => _currentView;
             set => RaiseAndSetIfChanged(ref _currentView, value);
@@ -50,9 +48,9 @@ namespace TeacherPlanner
 
             // todo - uncomment this
             //if (PlannerYearViewModel.TimetableViewModel.TryGetImportedTimetable() == false)
-             //   PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
-            
-          //  if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
+            //   PlannerYearViewModel.TimetableViewModel.OnTimetableImportClick();
+
+            //  if (PlannerYearViewModel.TimetableViewModel.TimetableWeeksAreDefined == false)
             //    PlannerYearViewModel.OnDefineTimetableWeeks();
         }
 
@@ -62,6 +60,6 @@ namespace TeacherPlanner
             //TODO update this if any other states are added
             CurrentView = CurrentView == MainViewState.ChooseYearPage ? MainViewState.PlannerPage : MainViewState.ChooseYearPage;
         }
-        
+
     }
 }

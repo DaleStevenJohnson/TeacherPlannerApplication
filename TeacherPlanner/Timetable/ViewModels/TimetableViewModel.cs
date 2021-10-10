@@ -11,6 +11,7 @@ using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
 using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.Planner.Views.SettingsWindows;
+using TeacherPlanner.PlannerYear.Models;
 using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Timetable.ViewModels

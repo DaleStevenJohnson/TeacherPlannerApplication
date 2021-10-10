@@ -1,9 +1,6 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Input;
-using TeacherPlanner.Planner.Models;
-using TeacherPlanner.Planner.ViewModels;
 
-namespace TeacherPlanner.Planner.Views
+namespace TeacherPlanner.PlannerYear.Views
 {
     /// <summary>
     /// Interaction logic for ChooseYearPage.xaml

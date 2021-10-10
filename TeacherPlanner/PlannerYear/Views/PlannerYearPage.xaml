@@ -1,14 +1,15 @@
-﻿<UserControl x:Class="TeacherPlanner.Planner.Views.PlannerYearPage"
+﻿<UserControl x:Class="TeacherPlanner.PlannerYear.Views.PlannerYearPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
       xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
-      xmlns:local="clr-namespace:TeacherPlanner"
-      xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+      xmlns:local="clr-namespace:TeacherPlanner.PlannerYear.Views"
+      xmlns:model="clr-namespace:TeacherPlanner.PlannerYear.Models"
       xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
       xmlns:timetableview="clr-namespace:TeacherPlanner.Timetable.Views"
+      xmlns:lessonsequenceview="clr-namespace:TeacherPlanner.LessonSequence.Views"
       mc:Ignorable="d"
       d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:PlannerYearViewModel}}"
       d:DesignHeight="1080" d:DesignWidth="1920" 
@@ -72,6 +73,9 @@
             </TabControl.Resources>
             <TabItem Header="Planner" Style="{StaticResource TabItem.NoBorder}">
                 <plannerview:PlannerPageView DataContext="{Binding PlannerViewModel}"/>
+            </TabItem>
+            <TabItem Header="Lesson Sequencer" Style="{StaticResource TabItem.NoBorder}">
+                <lessonsequenceview:LessonSequenceView DataContext="{Binding LessonSequenceViewModel}"/>
             </TabItem>
             <TabItem Name="Timetable" Header="Timetable" Style="{StaticResource TabItem.NoBorder}">
                 <timetableview:TimetableView DataContext="{Binding TimetableViewModel}"/>

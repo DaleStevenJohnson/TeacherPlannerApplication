@@ -1,29 +1,25 @@
-﻿using Database;
-using Database.DatabaseModels;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Database;
+using Database.DatabaseModels;
+using Microsoft.Win32;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
-using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.Models;
-using TeacherPlanner.Timetable.Models;
+using TeacherPlanner.PlannerYear.Models;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class ImportTimetableWindowViewModel : ObservableObject
     {
-
         private string _timetableName;
         private string _timetableFile;// = FilesAndDirectories.SavedTimetableFileName;
         private string _userFeedback;
         private readonly AcademicYearModel _academicYear;
 
         public ICommand ChooseTimetableFileCommand { get; }
-        public ICommand ImportTimetableCommand { get;  }
+        public ICommand ImportTimetableCommand { get; }
 
         public ImportTimetableWindowViewModel(AcademicYearModel academicYear)
         {
@@ -38,9 +34,9 @@ namespace TeacherPlanner.Planner.ViewModels
             // Command Assignment
             ChooseTimetableFileCommand = new SimpleCommand(_ => ChooseTimetableFile(_));
             ImportTimetableCommand = new SimpleCommand(window => OnImportTimetable((Window)window));
-            
+
         }
-        
+
         // Properties
 
         public string TimetableName
@@ -77,7 +73,7 @@ namespace TeacherPlanner.Planner.ViewModels
                 TimetableName = Path.GetFileName(TimetableFile);
             }
         }
-     
+
         private void OnImportTimetable(Window window)
         {
             // AND TimetableName is not already an existing Timetable name
@@ -100,16 +96,16 @@ namespace TeacherPlanner.Planner.ViewModels
                 // TODO: Add hyperlink to help page 
             }
         }
-        
+
         private bool TryImportTimetable(string timetableFilePath)
         {
             string[][] rawTimetableFileData = FileHandlingHelper.ReadDataFromCSVFile(timetableFilePath);
-            
+
             if (!TryParseTimetableFileData(rawTimetableFileData))
                 return false;
-            
+
             var convertedTimetableData = ConvertTimetableData(rawTimetableFileData);
-            foreach(var period in convertedTimetableData)
+            foreach (var period in convertedTimetableData)
             {
                 if (DatabaseManager.TimetablePeriodIsInDatabase(period, out var id))
                 {
@@ -120,17 +116,17 @@ namespace TeacherPlanner.Planner.ViewModels
                 else if (!DatabaseManager.TryAddTimetablePeriod(period, out _))
                     return false;
             }
-                
+
             return true;
         }
-       
+
         private List<TimetablePeriod> ConvertTimetableData(string[][] rawTimetableData)
         {
             int row = 0;
             int column = 0;
             int weeks = 2;
             string[] days = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-            int[] periodLocations = new int[] {5, 7, 9,11, 12,14, 15, 17,19 };
+            int[] periodLocations = new int[] { 5, 7, 9, 11, 12, 14, 15, 17, 19 };
 
             var timetablePeriods = new List<TimetablePeriod>();
 
@@ -147,13 +143,13 @@ namespace TeacherPlanner.Planner.ViewModels
                         row += 1;
                         var periodLocation = periodLocations[period];
                         // var periodString = rawTimetableData[periodLocation][0];
-                        
+
                         // SIMS exports with some odd characters at the end of classcode strings. 
                         // This means having to remove the last character from the strings for them to display properly
                         var roomNumber = periodLocation != 11 && periodLocation != 14 ? rawTimetableData[periodLocation + 1][column] : "";
                         if (roomNumber.Length > 0)
                             roomNumber = roomNumber.Substring(0, roomNumber.Length - 1);
-                        
+
                         var classCode = rawTimetableData[periodLocation][column];
                         if (classCode.Length > 0)
                             classCode = classCode.Substring(0, classCode.Length - 1);
@@ -176,7 +172,7 @@ namespace TeacherPlanner.Planner.ViewModels
         }
 
 
-        
+
 
         private bool TryParseTimetableFileData(string[][] timetableFileData)
         {
@@ -188,19 +184,19 @@ namespace TeacherPlanner.Planner.ViewModels
             && ParseEmptyStringArray(timetableFileData[3])
             && timetableFileData[4][1] == "1Mon"
             && timetableFileData[5][0] == "R"
-            && timetableFileData[6][0] == string.Empty 
+            && timetableFileData[6][0] == string.Empty
             && timetableFileData[6][1] != string.Empty
             && timetableFileData[7][0] == "1"
-            && timetableFileData[8][0] == string.Empty 
+            && timetableFileData[8][0] == string.Empty
             && timetableFileData[8][1] != string.Empty
             && timetableFileData[9][0] == "2"
-            && timetableFileData[10][0] == string.Empty 
+            && timetableFileData[10][0] == string.Empty
             && timetableFileData[10][1] != string.Empty
             && timetableFileData[19][0] == "T"
             && ParseEmptyStringArray(timetableFileData[20])
             && ParseEmptyStringArray(timetableFileData[21])
             && ParseEmptyStringArray(timetableFileData[22]);
-           
+
             return valid;
         }
 
