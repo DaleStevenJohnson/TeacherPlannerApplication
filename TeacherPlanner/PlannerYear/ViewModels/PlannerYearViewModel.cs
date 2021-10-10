@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.LessonSequence.ViewModels;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.ViewModels;
 using TeacherPlanner.PlannerYear.Models;
@@ -40,7 +41,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
 
             TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
-
+            LessonSequenceViewModel = new LessonSequenceViewModel(_academicYear, TimetableViewModel.CurrentTimetable, CalendarManager);
             TimetableViewModel.TimetableChangedEvent += (_, timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
 
             ToDoViewModel = new TodoPageViewModel(UserModel, year);
@@ -66,6 +67,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
         public CalendarManager CalendarManager { get; private set; }
         public UserModel UserModel { get; }
         public PlannerViewModel PlannerViewModel { get; }
+        public LessonSequenceViewModel LessonSequenceViewModel { get; }
         public TodoPageViewModel ToDoViewModel { get; }
         public TimetableViewModel TimetableViewModel
         {

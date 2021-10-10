@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="TeacherPlanner.LessonSequence.Views.ClassPeriodView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.LessonSequence.Views"
+             xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
+             xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
+             d:DataContext="{Binding Source={d:DesignInstance Type=model:DayModel}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="0" Grid.Row="0" Background="Black"/>
+        <TextBlock
+                Grid.Column="1"
+                Style="{StaticResource TextBlock.DateHeading.Default}"
+                Foreground="white"
+                Text="{Binding Path=Date, StringFormat=dddd\, dd MMMM}"/>
+
+        <ItemsControl ItemsSource="{Binding Periods}" Grid.Row="1" Grid.Column="0">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <plannerview:PeriodView/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        
+    </Grid>
+</UserControl>

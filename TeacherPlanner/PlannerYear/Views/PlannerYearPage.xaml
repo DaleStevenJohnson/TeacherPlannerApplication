@@ -7,7 +7,7 @@
       xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
       xmlns:local="clr-namespace:TeacherPlanner.PlannerYear.Views"
       xmlns:model="clr-namespace:TeacherPlanner.PlannerYear.Models"
-      xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+      xmlns:viewmodel="clr-namespace:TeacherPlanner.PlannerYear.ViewModels"
       xmlns:timetableview="clr-namespace:TeacherPlanner.Timetable.Views"
       xmlns:lessonsequenceview="clr-namespace:TeacherPlanner.LessonSequence.Views"
       mc:Ignorable="d"

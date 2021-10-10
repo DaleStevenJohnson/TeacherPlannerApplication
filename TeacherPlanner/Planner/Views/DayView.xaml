@@ -10,17 +10,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="960">
     <UserControl.Resources>
-        <Style x:Key="Label.DateHeading.Default" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="Black"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0"/>
-        </Style>
-
         <DataTemplate x:Key="KeyDateDropDownTemplate" DataType="{x:Type planneryearviewmodel:KeyDateItemViewModel}">
             <Label Content="{Binding }" Style="{StaticResource Label.DateHeading.Default}" Foreground="{Binding Type, Converter={StaticResource KeyDateTypeToColourConverter}}"/>
         </DataTemplate>
@@ -83,11 +72,11 @@
             
 
             
-            <Label
+            <TextBlock
                 Grid.Column="1"
-                Style="{StaticResource Label.DateHeading.Default}"
+                Style="{StaticResource TextBlock.DateHeading.Default}"
                 Foreground="{Binding IsDeadline, Converter={StaticResource BooleanToRedConverter }}"
-                Content="{Binding CalendarViewModel.DisplayDate}"/>
+                Text="{Binding DayModel.Date, StringFormat=dddd\, dd MMMM}"/>
 
             
             <Button

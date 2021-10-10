@@ -103,6 +103,10 @@ Days Refactor
 + Ensure Enums are used for periods and days (DayOfWeek).
 + Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
 
+Lesson Sequencer
+- Add user controls
+- Change timetable weeks defintions to include all weeks of allowed academic year
+- Check for empty days and remove them
 
 microsoft.data.sqllite
 dapper

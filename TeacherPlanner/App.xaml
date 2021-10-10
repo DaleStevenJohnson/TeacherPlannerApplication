@@ -84,7 +84,20 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
+        <Style x:Key="TextBlock.DateHeading.Default" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <!--<Setter Property="VerticalContentAlignment" Value="Center"/>-->
+            <!--<Setter Property="HorizontalContentAlignment" Value="Center"/>-->
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+
         <Style x:Key="ButtonOverride" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
