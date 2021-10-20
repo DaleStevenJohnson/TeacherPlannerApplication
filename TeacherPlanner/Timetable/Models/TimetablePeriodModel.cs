@@ -21,5 +21,13 @@ namespace TeacherPlanner.Timetable.Models
         public string Room { get; set; }
         public int Occurance { get; set; }
         public int Occurances { get; set; }
+
+        public void Clear()
+        {
+            ClassCode = "";
+            Room = "";
+            Occurance = 0;
+            Occurances = 0;
+        }
     }
 }

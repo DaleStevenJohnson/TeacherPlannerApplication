@@ -2,30 +2,88 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
+using Database;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
 using TeacherPlanner.PlannerYear.Models;
 using TeacherPlanner.Timetable.Models;
+using TeacherPlanner.Timetable.ViewModels;
 
 namespace TeacherPlanner.LessonSequence.ViewModels
 {
-    public class LessonSequenceViewModel
+    public class LessonSequenceViewModel : ObservableObject
     {
         private readonly AcademicYearModel _academicYear;
         private readonly TimetableModel _timetable;
         private readonly CalendarManager _calendarManager;
-        public LessonSequenceViewModel(AcademicYearModel academicYear, TimetableModel timetable, CalendarManager calendarManager)
+        private string _selectedClassCode;
+        private DateTime _selectedDate;
+        private ObservableCollection<DayModel> _lessonSequence;
+        private TimetableViewModel _selectedClassCodeTimetable;
+
+        public ICommand ChangeDateCommand { get; }
+        public ICommand ChangeDateToTodayCommand { get; }
+        public LessonSequenceViewModel(AcademicYearModel academicYear, TimetableModel timetable, CalendarManager calendarManager, UserModel userModel)
         {
             _academicYear = academicYear;
             _timetable = timetable;
             _calendarManager = calendarManager;
 
-            LessonSequence = GetLessonSequence(new DateTime(2021, 8, 21), "12B/Cp1");
+
+            ClassCodes = new ObservableCollection<string>(_timetable.GetUniqueClassCodes());
+            // Need to use backing field here to avoid hitting the setter and
+            // getting into an annoying chicken and egg situation
+            _selectedClassCode = ClassCodes[0];
+            _selectedDate = DateTime.Today;
+            LessonSequence = GetLessonSequence(SelectedDate, SelectedClassCode);
+            SelectedClassCodeTimetable = new TimetableViewModel(userModel, calendarManager, academicYear);
+
+            ChangeDateCommand = new SimpleCommand(daysToAdd => IncrementDate(Int32.Parse((string)daysToAdd)));
+            ChangeDateToTodayCommand = new SimpleCommand(_ => OnChangeDateToToday());
         }
 
-        public ObservableCollection<DayModel> LessonSequence { get; set; }
+        public ObservableCollection<DayModel> LessonSequence 
+        {
+            get => _lessonSequence;
+            set => RaiseAndSetIfChanged(ref _lessonSequence, value);
+        }
 
+        public ObservableCollection<string> ClassCodes { get; }
+
+        public TimetableViewModel SelectedClassCodeTimetable 
+        {
+            get => _selectedClassCodeTimetable;
+            set => RaiseAndSetIfChanged(ref _selectedClassCodeTimetable, value);
+        }
+
+        public DateTime SelectedDate 
+        {
+            get => _selectedDate;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _selectedDate, value))
+                {
+                    UpdateLessonSequence();
+                }
+            }
+
+        }
+
+        public string SelectedClassCode 
+        {
+            get => _selectedClassCode;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _selectedClassCode, value))
+                {
+                    UpdateLessonSequence();
+                    UpdateSelectedClassCodeTimetable();
+                }
+            }
+        }
         public ObservableCollection<DayModel> GetLessonSequence(DateTime date, string classcode)
         {
             // Identify all the lessons needed
@@ -39,6 +97,28 @@ namespace TeacherPlanner.LessonSequence.ViewModels
 
             // Some periods will not already be stored, so they will need creating.
             return days;
+        }
+
+        private void UpdateLessonSequence()
+        {
+            LessonSequence = GetLessonSequence(SelectedDate, SelectedClassCode);
+        }
+
+        private void IncrementDate(int increment)
+        {
+            SelectedDate = SelectedDate.AddDays(increment);
+        }
+
+        private void OnChangeDateToToday()
+        {
+            SelectedDate = DateTime.Today;
+        }
+
+        private void UpdateSelectedClassCodeTimetable()
+        {
+            var dbModels = DatabaseManager.GetTimetablePeriods(_academicYear.ID);
+            SelectedClassCodeTimetable.CurrentTimetable.Update(dbModels);
+            SelectedClassCodeTimetable.CurrentTimetable.Filter(new List<string>() { SelectedClassCode });
         }
 
         private List<DateTime> GetLessonSequenceDates(DateTime date, string classcode)
@@ -108,7 +188,6 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             }
             return date;
         }
-
 
     }
 }

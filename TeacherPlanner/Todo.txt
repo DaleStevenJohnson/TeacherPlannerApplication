@@ -104,9 +104,15 @@ Days Refactor
 + Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
 
 Lesson Sequencer
-- Add user controls
++ Add user controls
 - Change timetable weeks defintions to include all weeks of allowed academic year
 - Check for empty days and remove them
++ Add events for when data is updated between the planner and the lesson sequence
+- Add saving of data added
+- Make the selected lessons cleverer
+	- Do not allow dates in defined holiday to appear
+	- When scrolling, it should move back and forth on days with that classcode, not just back and forward weekdays
+- IDEA - add minimalist timetable to bottom right of page, only displaying lessons for selected classcode.
 
 microsoft.data.sqllite
 dapper

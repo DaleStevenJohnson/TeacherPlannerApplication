@@ -41,7 +41,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
 
             TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
-            LessonSequenceViewModel = new LessonSequenceViewModel(_academicYear, TimetableViewModel.CurrentTimetable, CalendarManager);
+            LessonSequenceViewModel = new LessonSequenceViewModel(_academicYear, TimetableViewModel.CurrentTimetable, CalendarManager, UserModel);
             TimetableViewModel.TimetableChangedEvent += (_, timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
 
             ToDoViewModel = new TodoPageViewModel(UserModel, year);

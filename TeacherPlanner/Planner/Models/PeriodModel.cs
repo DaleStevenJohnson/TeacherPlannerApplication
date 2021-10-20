@@ -7,7 +7,6 @@ namespace TeacherPlanner.Planner.Models
 {
     public class PeriodModel : ObservableObject
     {
-        private readonly string _delimiter = "`";
         private string _marginText;
         private string _mainText;
         private string _sideText;
