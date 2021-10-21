@@ -153,28 +153,32 @@ namespace TeacherPlanner.LessonSequence.ViewModels
         {
             atEndOfYearLimit = false;
             var dates = new List<DateTime>();
-            for (int i = 0; i < 10; i++)
-            {
+            //var timetablePeriods = DatabaseManager.GetTimetablePeriodsFromClasscode(classcode);
+            while (dates.Count < 7)
+            { 
                 date = AdvanceDate(date, advanceAmount);
-                if (date < _calendarManager.StartOfYearDateLimit)
+                int timetableWeek = _calendarManager.GetWeek(date);
+                if (timetableWeek == 1 || timetableWeek == 2)
                 {
-                    if (date > _calendarManager.EndOfYearDateLimit)
-                        atEndOfYearLimit = true;
-                    return dates;
-                }
-
-                var week = _calendarManager.GetWeek(date);
-                var day = (int)date.DayOfWeek;
-                for (int j = 1; j < 6; j++)
-                {
-                    var period = _timetable.GetPeriod(week, day, (PeriodCodes)j);
-                    if (period.ClassCode == classcode)
+                    if (date < _calendarManager.StartOfYearDateLimit)
                     {
-                        dates.Add(date);
+                        if (date > _calendarManager.EndOfYearDateLimit)
+                            atEndOfYearLimit = true;
+                        return dates;
                     }
+
+                    var day = (int)date.DayOfWeek;
+                    for (int j = 1; j < 6; j++)
+                    {
+                        var period = _timetable.GetPeriod(timetableWeek, day, (PeriodCodes)j);
+                        if (period.ClassCode == classcode)
+                        {
+                            dates.Add(date);
+                        }
+                    }
+                    if (dates.Count > 0)
+                        return dates;
                 }
-                if (dates.Count > 0)
-                    return dates;
             }
             return dates;
         }
