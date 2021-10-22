@@ -42,7 +42,6 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             SelectedClassCodeTimetable = new TimetableViewModel(userModel, calendarManager, academicYear);
 
             ChangeDateCommand = new SimpleCommand(daysToAdd => IncrementDate(Int32.Parse((string)daysToAdd)));
-            ChangeDateToTodayCommand = new SimpleCommand(_ => OnChangeDateToToday());
         }
 
         public ObservableCollection<DayModel> LessonSequence 
@@ -106,12 +105,37 @@ namespace TeacherPlanner.LessonSequence.ViewModels
 
         private void IncrementDate(int increment)
         {
-            SelectedDate = SelectedDate.AddDays(increment);
-        }
-
-        private void OnChangeDateToToday()
-        {
-            SelectedDate = DateTime.Today;
+            switch (increment)
+            {
+                case -1:
+                    SelectedDate = LessonSequence[0].Date;
+                    break;
+                case 1:
+                    SelectedDate = LessonSequence[2].Date;
+                    break;
+                case 7:
+                    SelectedDate = LessonSequence.Last().Date;
+                    break;
+                case -7:
+                    var date = SelectedDate;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var dates = FindDateOfNextLessons(date, SelectedClassCode, out _, -1);
+                        if (dates != null)
+                        {
+                            date = dates[0].Date;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    SelectedDate = date;
+                    break;
+                default:
+                    SelectedDate = DateTime.Today;
+                    break;
+            }
         }
 
         private void UpdateSelectedClassCodeTimetable()
@@ -130,14 +154,17 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             var dates = FindDateOfNextLessons(date, classcode, out _, -1);
 
             // If there were no lessons previously, find the date of the next upcoming future lesson(s)
-            if (!dates.Any())
+            if (dates == null || !dates.Any())
                 dates = FindDateOfNextLessons(date.AddDays(-1), classcode, out _);
 
             // Keep searching for lessons until 6 have been found in total.
             while (dates.Count < 7)
             {
                 var nextLessons = FindDateOfNextLessons(dates.Last(), classcode, out var atEndOfYearLimit);
-                
+
+                if (nextLessons == null)
+                    break;
+
                 foreach(var d in nextLessons)
                 {
                     dates.Add(d);
@@ -158,6 +185,8 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             { 
                 date = AdvanceDate(date, advanceAmount);
                 int timetableWeek = _calendarManager.GetWeek(date);
+                if (timetableWeek == 0)
+                    return null;
                 if (timetableWeek == 1 || timetableWeek == 2)
                 {
                     if (date < _calendarManager.StartOfYearDateLimit)

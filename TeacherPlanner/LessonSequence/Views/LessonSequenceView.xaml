@@ -39,7 +39,7 @@
             <StackPanel Orientation="Horizontal" Margin="164,10">
                 <Button Width="50" Height="50" Margin="25" Content="-7" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="-7"/>
                 <Button Width="50" Height="50" Margin="25" Content="-1" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="-1"/>
-                <Button Width="50" Height="50" Margin="25" Content="⌂" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateToTodayCommand}"/>
+                <Button Width="50" Height="50" Margin="25" Content="⌂" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="999"/>
                 <Button Width="50" Height="50" Margin="25" Content="+1" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="1"/>
                 <Button Width="50" Height="50" Margin="25" Content="+7" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="7"/>
             </StackPanel>
