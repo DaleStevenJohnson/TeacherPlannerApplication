@@ -61,7 +61,7 @@
 
             </Menu>
         </DockPanel>
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" SelectionChanged="TabControl_SelectionChanged">
             <TabControl.BorderBrush>
                 <SolidColorBrush Color="Transparent"/>
             </TabControl.BorderBrush>

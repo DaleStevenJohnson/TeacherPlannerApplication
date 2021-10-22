@@ -29,6 +29,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         public ICommand SaveCommand { get; }
         public ICommand GoToTodayCommand { get; }
+        public event EventHandler PlannerUpdatedEvent;
         public PlannerViewModel(UserModel userModel, TimetableModel timetable, CalendarManager calendarManager, ObservableCollection<KeyDateItemViewModel> keyDates, AcademicYearModel academicYear)
         {
             // Parameter Assignment
@@ -110,7 +111,8 @@ namespace TeacherPlanner.Planner.ViewModels
         public void OnSave()
         {
             SaveCurrentlyDisplayedPageDays();
-            MessageBox.Show("Saved");
+            PlannerUpdatedEvent.Invoke(null, EventArgs.Empty);
+            MessageBox.Show("Saved to Database", "Planner", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void LoadNewDays()

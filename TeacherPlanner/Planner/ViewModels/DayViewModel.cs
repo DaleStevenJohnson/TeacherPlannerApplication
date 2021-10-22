@@ -150,38 +150,10 @@ namespace TeacherPlanner.Planner.ViewModels
         {
 
             // Add periods to Database
-            foreach (var period in DayModel.Periods)
-            {
-                var dbModel = period.GetDBModel();
-                if (!DatabaseManager.TryUpdatePeriod(dbModel))
-                {
-                    if (DatabaseManager.TryAddPeriod(dbModel, out var id))
-                    {
-                        period.ID = id;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error saving Period to Database");
-                    }
-                }
-            }
+            DayModel.Periods = DatabaseModelManager.TryUpdatePeriods(DayModel.Periods);
 
             // Add Day to Database
-
-            var day = DayModel.GetDBModel();
-
-            if (!DatabaseManager.TryUpdateDay(day))
-            {
-                if (DatabaseManager.TryAddDay(day, out var id))
-                {
-                    DayModel.ID = id;
-                }
-                else
-                {
-                    // Todo make this better
-                    MessageBox.Show("Failed to Save Day to Database");
-                }
-            }
+            DayModel.ID = DatabaseModelManager.TryUpdateDay(DayModel);
         }
 
 

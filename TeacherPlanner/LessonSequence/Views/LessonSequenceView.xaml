@@ -9,7 +9,11 @@
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:LessonSequenceViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
+
+    
     <Grid>
+        
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="10*"/>
@@ -59,9 +63,17 @@
                 </ComboBox>
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal" Margin="325, 10">
+                <Button Content="Save" Width="100" Style="{StaticResource ButtonOverride}" Command="{Binding UpdatePeriodsCommand}"/>
+            </StackPanel>
+
             <timetable:TimetableView Margin="0, 100" DataContext="{Binding SelectedClassCodeTimetable}"></timetable:TimetableView>
         </StackPanel>
 
 
     </Grid>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding UpdatePeriodsCommand}"/>
+    </UserControl.InputBindings>
 </UserControl>

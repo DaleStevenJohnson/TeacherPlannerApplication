@@ -47,7 +47,7 @@ namespace TeacherPlanner.Helpers
             // Load Days from Database
             foreach (var date in dates)
             {
-                var day = DatabaseModelManager.GetDayDBModel(date, academicYearID);
+                var day = GetDayDBModel(date, academicYearID);
                 var allPeriodModels = GetTodaysPeriodModels(day, timetable, calendarManager);
                 var periodModels = new ObservableCollection<PeriodModel>();
                 foreach (var period in allPeriodModels)
@@ -121,5 +121,43 @@ namespace TeacherPlanner.Helpers
             return null;
         }
 
+        public static ObservableCollection<PeriodModel> TryUpdatePeriods(ObservableCollection<PeriodModel> periods)
+        {
+            foreach (var period in periods)
+            {
+                var dbModel = period.GetDBModel();
+                if (!DatabaseManager.TryUpdatePeriod(dbModel))
+                {
+                    if (DatabaseManager.TryAddPeriod(dbModel, out var id))
+                    {
+                        period.ID = id;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error saving Period to Database");
+                    }
+                }
+            }
+            return periods;
+        }
+
+        public static int? TryUpdateDay(DayModel dayModel)
+        {
+            var day = dayModel.GetDBModel();
+
+            if (!DatabaseManager.TryUpdateDay(day))
+            {
+                if (DatabaseManager.TryAddDay(day, out var id))
+                {
+                    return dayModel.ID;
+                }
+                else
+                {
+                    // Todo make this better
+                    MessageBox.Show("Failed to Save Day to Database");
+                }
+            }
+            return null;
+        }
     }
 }

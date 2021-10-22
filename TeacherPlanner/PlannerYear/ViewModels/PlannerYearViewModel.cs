@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.LessonSequence.ViewModels;
@@ -29,7 +32,6 @@ namespace TeacherPlanner.PlannerYear.ViewModels
         public ICommand ImportTimetableCommand { get; }
 
         public event EventHandler<string> SwitchViewEvent;
-
         public PlannerYearViewModel(UserModel userModel, AcademicYearModel year)
         {
             _academicYear = year;
@@ -50,6 +52,9 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             _keyDatesWindowViewModel = new KeyDatesWindowViewModel(KeyDates, _academicYear);
             _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
             _keyDatesWindowViewModel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
+
+            LessonSequenceViewModel.PeriodsUpdatedEvent += (_, __) => PlannerViewModel.LoadNewDays();
+            PlannerViewModel.PlannerUpdatedEvent += (_, __) => LessonSequenceViewModel.UpdateLessonSequence();
 
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
             SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
@@ -93,6 +98,29 @@ namespace TeacherPlanner.PlannerYear.ViewModels
                 //TimetableViewModel.TryGetImportedTimetable();
                 PlannerViewModel.LoadNewDays();
             }
+        }
+
+        public void OnTabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //MessageBox.Show("Tab Changed");
+            var tabControl = sender as TabControl;
+            TabItem[] tabItems = new TabItem[e.RemovedItems.Count];
+            e.RemovedItems.CopyTo(tabItems, 0);
+            if (tabItems.Any())
+            {
+                var header = tabItems[0].Header.ToString();
+                if (header == "Planner")
+                {
+                    PlannerViewModel.OnSave();
+                    LessonSequenceViewModel.UpdateLessonSequence();
+                }
+                else if (header == "Lesson Sequencer")
+                {
+                    LessonSequenceViewModel.OnUpdatePeriods();
+                    PlannerViewModel.LoadNewDays();
+                }
+            }
+            e.Handled = true;
         }
 
         private void UpdateKeyDatesList()

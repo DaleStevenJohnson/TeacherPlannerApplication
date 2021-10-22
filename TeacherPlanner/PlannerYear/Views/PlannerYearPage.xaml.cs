@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeacherPlanner.Helpers;
+using TeacherPlanner.PlannerYear.ViewModels;
 
 namespace TeacherPlanner.PlannerYear.Views
 {
@@ -30,6 +31,12 @@ namespace TeacherPlanner.PlannerYear.Views
         {
             FocusManager.SetFocusedElement(this, null);
             Keyboard.ClearFocus();
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vm = this.DataContext as PlannerYearViewModel;
+            vm.OnTabChanged(sender, e);
         }
     }
 }

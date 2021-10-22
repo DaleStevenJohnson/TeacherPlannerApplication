@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Database;
 using TeacherPlanner.Constants;
@@ -26,6 +27,8 @@ namespace TeacherPlanner.LessonSequence.ViewModels
 
         public ICommand ChangeDateCommand { get; }
         public ICommand ChangeDateToTodayCommand { get; }
+        public ICommand UpdatePeriodsCommand { get; }
+        public event EventHandler PeriodsUpdatedEvent;
         public LessonSequenceViewModel(AcademicYearModel academicYear, TimetableModel timetable, CalendarManager calendarManager, UserModel userModel)
         {
             _academicYear = academicYear;
@@ -42,6 +45,7 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             SelectedClassCodeTimetable = new TimetableViewModel(userModel, calendarManager, academicYear);
 
             ChangeDateCommand = new SimpleCommand(daysToAdd => IncrementDate(Int32.Parse((string)daysToAdd)));
+            UpdatePeriodsCommand = new SimpleCommand(_ => OnUpdatePeriods());
         }
 
         public ObservableCollection<DayModel> LessonSequence 
@@ -98,10 +102,27 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             return days;
         }
 
-        private void UpdateLessonSequence()
+        public void UpdateLessonSequence()
         {
             LessonSequence = GetLessonSequence(SelectedDate, SelectedClassCode);
         }
+
+        public void OnUpdatePeriods()
+        {
+
+            foreach(DayModel day in LessonSequence)
+            {
+                // Add periods to Database
+                day.Periods = DatabaseModelManager.TryUpdatePeriods(day.Periods);
+
+                // Add Day to Database
+                day.ID = DatabaseModelManager.TryUpdateDay(day);
+            }
+            PeriodsUpdatedEvent.Invoke(null, EventArgs.Empty);
+            MessageBox.Show("Saved to Database", "Lesson Sequencer", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+       
 
         private void IncrementDate(int increment)
         {
