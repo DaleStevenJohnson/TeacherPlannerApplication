@@ -39,6 +39,7 @@ Codebase
 
 Lesson Sequencer
 - Change controls to use grid instead of stackpanel
+- Add tickbox to Sequencer controls to give option for user entered classcodes
 
 /\ ## ~ ~ ~ ~ ~ Notes ~ ~ ~ ~ ~ ## /\
 =====================================
