@@ -26,22 +26,17 @@ namespace TeacherPlanner
             {
                 Application.Current.Shutdown();
             }
-
-            var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
-            var mainViewModel = new MainViewModel(user);
-
-            this.DataContext = mainViewModel;
-            this.DataContextChanged += (sender, args) =>
+            else
             {
-                this.DataContext = args.NewValue;
-            };
+                var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
+                var mainViewModel = new MainViewModel(user);
 
-
-            //var chooseYearViewModel = new ChooseYearViewModel();
-            //UserControl chooseYearPage = new ChooseYearPage() { DataContext = chooseYearViewModel};
-            //this.AddLogicalChild(chooseYearPage);
+                this.DataContext = mainViewModel;
+                this.DataContextChanged += (sender, args) =>
+                {
+                    this.DataContext = args.NewValue;
+                };
+            }
         }
-
-
     }
 }
