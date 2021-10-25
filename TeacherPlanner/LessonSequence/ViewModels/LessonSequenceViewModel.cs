@@ -86,9 +86,7 @@ namespace TeacherPlanner.LessonSequence.ViewModels
                 if (RaiseAndSetIfChanged(ref _selectedClassCode, value))
                 {
                     UpdateLessonSequence();
-                    UpdateSelectedClassCodeTimetable();
-                    SelectedClassCodeTimetable.OnSwitchTimetableWeek();
-                    SelectedClassCodeTimetable.OnSwitchTimetableWeek();
+                    SelectedClassCodeTimetable.UpdateAndRefreshCurrentlyDisplayedTimetableWeek(value);
                 }
             }
         }
@@ -199,12 +197,7 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             }
         }
 
-        private void UpdateSelectedClassCodeTimetable()
-        {
-            var dbModels = DatabaseManager.GetTimetablePeriods(_academicYear.ID);
-            SelectedClassCodeTimetable.CurrentTimetable.Update(dbModels);
-            SelectedClassCodeTimetable.CurrentTimetable.Filter(new List<string>() { SelectedClassCode });
-        }
+        
 
         private List<DateTime> GetLessonSequenceDates(DateTime date, string classcode)
         {

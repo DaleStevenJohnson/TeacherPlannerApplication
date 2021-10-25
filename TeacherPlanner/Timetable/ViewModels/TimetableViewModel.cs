@@ -77,8 +77,18 @@ namespace TeacherPlanner.Timetable.ViewModels
             return true;
         }
 
-        // Private Methods
+        public void UpdateAndRefreshCurrentlyDisplayedTimetableWeek(string classcode = "")
+        {
+            UpdateCurrentlyDisplayedTimetable(classcode);
+            UpdateCurrentlyDisplayedTimetableWeek();
+        }
 
+        private void UpdateCurrentlyDisplayedTimetable(string classcode)
+        {
+            var dbModels = DatabaseManager.GetTimetablePeriods(_academicYear.ID);
+            CurrentTimetable.Update(dbModels);
+            CurrentTimetable.Filter(new List<string>() { classcode });
+        }   
 
         private void UpdateCurrentlyDisplayedTimetableWeek()
         {
@@ -90,6 +100,8 @@ namespace TeacherPlanner.Timetable.ViewModels
             SelectedWeek = SelectedWeek == 1 ? 2 : 1;
             UpdateCurrentlyDisplayedTimetableWeek();
         }
+
+        // Private Methods
 
         private void CountOccurances()
         {
