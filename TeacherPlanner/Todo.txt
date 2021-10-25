@@ -112,9 +112,9 @@ Lesson Sequencer
 + Make the selected lessons cleverer
 	+ Do not allow dates in defined holiday to appear
 	+ When scrolling, it should move back and forth on days with that classcode, not just back and forward weekdays
-- IDEA - add minimalist timetable to bottom right of page, only displaying lessons for selected classcode.
-- Update timetable to have no title and have better font sizes
-- Make timetable observable so it updates properly on classcode change.
++ IDEA - add minimalist timetable to bottom right of page, only displaying lessons for selected classcode.
++ Update timetable to have no title and have better font sizes
++ Make timetable observable so it updates properly on classcode change.
 - Change contriols to use grid instead of stackpanel
 
 microsoft.data.sqllite

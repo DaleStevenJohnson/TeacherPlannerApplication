@@ -15,12 +15,17 @@ namespace TeacherPlanner.Login.ViewModels
         private string _username;
         private string _feedbackForCreateUsername;
         private string _feedbackForCreatePassword;
+        private bool _validCredentials;
+        private bool _usernameIsValidFormat;
+        private bool _passwordIsValidFormat;
+
         public CreateAccountViewModel()
         {
             CreateAccountButtonClickedCommand = new SimpleCommand(password => OnCreateAccountButtonClicked());
             OnPasswordChangeCommand = new SimpleCommand(password => OnPasswordChange(password));
             FeedbackForCreateUsername = string.Empty;
             FeedbackForCreatePassword = string.Empty;
+            UsernameIsValidFormat = false;
         }
         public string Username 
         { 
@@ -33,8 +38,33 @@ namespace TeacherPlanner.Login.ViewModels
         }
         
         private string PasswordHash { get; set; }
-        public bool UsernameIsValidFormat { get; set; } = false;
-        public bool PasswordIsValidFormat { get; set; } = false;
+        public bool UsernameIsValidFormat 
+        {
+            get => _usernameIsValidFormat;
+            set
+            {
+                _usernameIsValidFormat = value;
+                ValidCredentials = value && PasswordIsValidFormat;
+            }
+        }
+        public bool PasswordIsValidFormat
+        {
+            get => _passwordIsValidFormat;
+            set
+            {
+                _passwordIsValidFormat = value;
+                ValidCredentials = value && UsernameIsValidFormat;
+            }
+        }
+
+
+
+        public bool ValidCredentials
+        {
+            get => _validCredentials;
+            set => RaiseAndSetIfChanged(ref _validCredentials, value);
+        }
+
         public ICommand CreateAccountButtonClickedCommand { get; }
         public ICommand OnPasswordChangeCommand { get; }
         public string FeedbackForCreateUsername 
