@@ -87,6 +87,8 @@ namespace TeacherPlanner.LessonSequence.ViewModels
                 {
                     UpdateLessonSequence();
                     UpdateSelectedClassCodeTimetable();
+                    SelectedClassCodeTimetable.OnSwitchTimetableWeek();
+                    SelectedClassCodeTimetable.OnSwitchTimetableWeek();
                 }
             }
         }

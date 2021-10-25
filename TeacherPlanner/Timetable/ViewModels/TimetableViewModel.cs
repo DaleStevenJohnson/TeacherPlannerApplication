@@ -85,7 +85,7 @@ namespace TeacherPlanner.Timetable.ViewModels
             CurrentlyDisplayedTimetableWeek = SelectedWeek == 1 ? CurrentTimetable.Week1 : CurrentTimetable.Week2;
         }
 
-        private void OnSwitchTimetableWeek()
+        public void OnSwitchTimetableWeek()
         {
             SelectedWeek = SelectedWeek == 1 ? 2 : 1;
             UpdateCurrentlyDisplayedTimetableWeek();
