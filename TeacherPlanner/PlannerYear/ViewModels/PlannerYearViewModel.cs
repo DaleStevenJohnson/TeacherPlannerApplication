@@ -104,21 +104,16 @@ namespace TeacherPlanner.PlannerYear.ViewModels
         {
             //MessageBox.Show("Tab Changed");
             var tabControl = sender as TabControl;
-            TabItem[] tabItems = new TabItem[e.RemovedItems.Count];
-            e.RemovedItems.CopyTo(tabItems, 0);
-            if (tabItems.Any())
+            var header = ControlExtensions.GetHeaderOfPreviouslySelectedTab(e);
+            if (header == "Planner")
             {
-                var header = tabItems[0].Header.ToString();
-                if (header == "Planner")
-                {
-                    PlannerViewModel.OnSave();
-                    LessonSequenceViewModel.UpdateLessonSequence();
-                }
-                else if (header == "Lesson Sequencer")
-                {
-                    LessonSequenceViewModel.OnUpdatePeriods();
-                    PlannerViewModel.LoadNewDays();
-                }
+                PlannerViewModel.OnSave();
+                LessonSequenceViewModel.UpdateLessonSequence();
+            }
+            else if (header == "Lesson Sequencer")
+            {
+                LessonSequenceViewModel.OnUpdatePeriods();
+                PlannerViewModel.LoadNewDays();
             }
             e.Handled = true;
         }

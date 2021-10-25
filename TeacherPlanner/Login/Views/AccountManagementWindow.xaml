@@ -40,7 +40,7 @@
             </Label.Background>
         </Label>
 
-        <TabControl Grid.Row="2" Grid.Column="1">
+        <TabControl Grid.Row="2" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged">
             <TabControl.Resources>
                 <Style TargetType="{x:Type TabPanel}">
                     <Setter Property="Background" Value="Yellow"/>

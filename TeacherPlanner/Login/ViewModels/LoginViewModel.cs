@@ -40,7 +40,13 @@ namespace TeacherPlanner.Login.ViewModels
             if (LoggedIn)
                 window.Close();
             else
+            {
+                Username = "";
+                passwordBox.Password = "";
+                var usernameBox = (TextBox)values[2];
+                usernameBox.Focus();
                 MessageBox.Show("Invalid Credentials");
+            }
         }
 
         private User Authenticate(string username, string password)

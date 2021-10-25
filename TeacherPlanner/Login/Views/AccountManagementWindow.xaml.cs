@@ -45,6 +45,10 @@ namespace TeacherPlanner.Login.Views
             box.Background = Brushes.LightGray;
         }
 
-        
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vm = this.DataContext as AccountManagementViewModel;
+            vm.OnTabChanged(sender, e);
+        }
     }
 }
