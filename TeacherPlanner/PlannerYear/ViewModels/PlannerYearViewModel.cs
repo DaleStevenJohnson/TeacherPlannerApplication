@@ -107,12 +107,12 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             var header = ControlExtensions.GetHeaderOfPreviouslySelectedTab(e);
             if (header == "Planner")
             {
-                PlannerViewModel.OnSave();
+                PlannerViewModel.OnSave(false);
                 LessonSequenceViewModel.UpdateLessonSequence();
             }
             else if (header == "Lesson Sequencer")
             {
-                LessonSequenceViewModel.OnUpdatePeriods();
+                LessonSequenceViewModel.OnUpdatePeriods(false);
                 PlannerViewModel.LoadNewDays();
             }
             e.Handled = true;

@@ -58,7 +58,7 @@
             <StackPanel Orientation="Horizontal" Margin="250, 10">
                 <Label Style="{StaticResource DefaultLabelBody}" Content="Class:"/>
                 <ComboBox  Margin="10" Width="100" Height="25" ItemsSource="{Binding ClassCodes}" 
-                          SelectedItem="{Binding SelectedClassCode}">
+                          SelectedItem="{Binding SelectedClassCode}" SelectionChanged="ComboBox_SelectionChanged">
                     
                 </ComboBox>
             </StackPanel>

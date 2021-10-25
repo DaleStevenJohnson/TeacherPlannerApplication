@@ -108,11 +108,12 @@ namespace TeacherPlanner.Planner.ViewModels
             //_debug.Text = $"{LeftDay.Period1.Row1.LeftText}";
         }
 
-        public void OnSave()
+        public void OnSave(bool notify = true)
         {
             SaveCurrentlyDisplayedPageDays();
             PlannerUpdatedEvent.Invoke(null, EventArgs.Empty);
-            MessageBox.Show("Saved to Database", "Planner", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (notify)
+                MessageBox.Show("Saved to Database", "Planner", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void LoadNewDays()

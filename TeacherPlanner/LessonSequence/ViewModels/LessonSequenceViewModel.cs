@@ -107,7 +107,7 @@ namespace TeacherPlanner.LessonSequence.ViewModels
             LessonSequence = GetLessonSequence(SelectedDate, SelectedClassCode);
         }
 
-        public void OnUpdatePeriods()
+        public void OnUpdatePeriods(bool notify = true)
         {
 
             foreach(DayModel day in LessonSequence)
@@ -119,7 +119,8 @@ namespace TeacherPlanner.LessonSequence.ViewModels
                 day.ID = DatabaseModelManager.TryUpdateDay(day);
             }
             PeriodsUpdatedEvent.Invoke(null, EventArgs.Empty);
-            MessageBox.Show("Saved to Database", "Lesson Sequencer", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (notify)
+                MessageBox.Show("Saved to Database", "Lesson Sequencer", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
        

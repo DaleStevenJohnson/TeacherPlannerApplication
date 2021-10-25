@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Database.DatabaseModels;
 using TeacherPlanner.Constants;
+using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Timetable.Models
 {
@@ -74,7 +75,9 @@ namespace TeacherPlanner.Timetable.Models
                     }
                 }
             }
-            return classcodes.OrderBy(i => new string(i.TakeWhile(char.IsDigit).ToArray())).ToList();
+            var myComparer = new CustomComparer();
+            classcodes.Sort(myComparer);
+            return classcodes;
         }
     }
 }
