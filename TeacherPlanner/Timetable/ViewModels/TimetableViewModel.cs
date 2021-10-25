@@ -20,13 +20,13 @@ namespace TeacherPlanner.Timetable.ViewModels
         public ICommand SwitchTimetableWeekCommand { get; }
         public ICommand ManageTimetableCommand { get; }
         public event EventHandler<TimetableModel> TimetableChangedEvent;
-        public TimetableViewModel(UserModel userModel, CalendarManager calendarManager, AcademicYearModel academicYear)
+        public TimetableViewModel(UserModel userModel, CalendarManager calendarManager, AcademicYearModel academicYear, TimetableDisplayModes timetableDisplayMode)
         {
 
             SwitchTimetableWeekCommand = new SimpleCommand(_ => OnSwitchTimetableWeek());
             TimetableChangedEvent += (_, __) => CountOccurances();
 
-            CurrentTimetable = new TimetableModel();
+            CurrentTimetable = new TimetableModel(timetableDisplayMode);
             _academicYear = academicYear;
             UserModel = userModel;
             SelectedWeek = 1;

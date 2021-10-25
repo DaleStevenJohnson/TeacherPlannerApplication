@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.LessonSequence.ViewModels;
 using TeacherPlanner.Login.Models;
@@ -41,7 +42,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
 
             CalendarManager = new CalendarManager(year);
 
-            TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear);
+            TimetableViewModel = new TimetableViewModel(UserModel, CalendarManager, _academicYear, TimetableDisplayModes.Normal);
             PlannerViewModel = new PlannerViewModel(UserModel, TimetableViewModel.CurrentTimetable, CalendarManager, KeyDates, _academicYear);
             LessonSequenceViewModel = new LessonSequenceViewModel(_academicYear, TimetableViewModel.CurrentTimetable, CalendarManager, UserModel);
             TimetableViewModel.TimetableChangedEvent += (_, timetableModel) => PlannerViewModel.UpdateCurrentTimetable(timetableModel);
@@ -97,6 +98,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             {
                 //TimetableViewModel.TryGetImportedTimetable();
                 PlannerViewModel.LoadNewDays();
+                LessonSequenceViewModel.Update();
             }
         }
 
@@ -159,6 +161,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             if (importWindow.ShowDialog() ?? true)
             {
                 TimetableViewModel.TryGetImportedTimetable();
+                LessonSequenceViewModel.Update();
             }
         }
     }

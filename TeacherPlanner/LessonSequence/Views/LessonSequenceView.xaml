@@ -67,7 +67,7 @@
                 <Button Content="Save" Width="100" Style="{StaticResource ButtonOverride}" Command="{Binding UpdatePeriodsCommand}"/>
             </StackPanel>
 
-            <timetable:TimetableView Margin="0, 100" DataContext="{Binding SelectedClassCodeTimetable}"></timetable:TimetableView>
+            <timetable:TimetableWeekView Margin="0, 100" DataContext="{Binding SelectedClassCodeTimetable}"></timetable:TimetableWeekView>
         </StackPanel>
 
 

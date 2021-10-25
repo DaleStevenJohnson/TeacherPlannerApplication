@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using Database;
 using Database.DatabaseModels;
@@ -158,6 +159,12 @@ namespace TeacherPlanner.Helpers
                 }
             }
             return null;
+        }
+
+        public static bool WeekModelsExist(int academicYear)
+        {
+            var results = DatabaseManager.GetTimetableWeeks(academicYear);
+            return results.Any();
         }
     }
 }
