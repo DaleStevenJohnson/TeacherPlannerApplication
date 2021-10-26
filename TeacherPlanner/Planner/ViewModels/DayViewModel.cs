@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using Database;
@@ -12,6 +9,8 @@ using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
 using TeacherPlanner.Planner.Models;
+using TeacherPlanner.PlannerYear.Models;
+using TeacherPlanner.PlannerYear.ViewModels;
 using TeacherPlanner.Timetable.Models;
 
 namespace TeacherPlanner.Planner.ViewModels
@@ -21,7 +20,7 @@ namespace TeacherPlanner.Planner.ViewModels
         // Fields
         private DayModel _dayModel;
         private CalendarViewModel _calendarViewModel;
-        
+
         private bool _isKeyDate;
         private bool _keyDatesAreShowing;
         private bool _isDeadline;
@@ -32,7 +31,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         private ObservableCollection<KeyDateItemViewModel> _allKeyDates;
         private ObservableCollection<KeyDateItemViewModel> _todaysKeyDates;
-        
+
 
         // Events / Commands / Actions
         public event EventHandler<AdvancePageState> TurnPageEvent;
@@ -49,7 +48,7 @@ namespace TeacherPlanner.Planner.ViewModels
             _calendarManager = calendarManager;
             CalendarViewModel = new CalendarViewModel(date, keyDates, calendarManager);
 
-            
+
 
             IsKeyDate = false;
             IsDeadline = false;
@@ -64,11 +63,11 @@ namespace TeacherPlanner.Planner.ViewModels
             UpdateTodaysKeyDates();
         }
 
-        
+
 
         // Properties
         // Public
-        public bool IsKeyDate 
+        public bool IsKeyDate
         {
             get => _isKeyDate;
             set => RaiseAndSetIfChanged(ref _isKeyDate, value);
@@ -92,14 +91,14 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _todaysKeyDates, value);
         }
 
-        
+
         public AdvancePageState Forward1 { get; private set; }
         public AdvancePageState Forward7 { get; private set; }
         public AdvancePageState ForwardMonth { get; private set; }
         public AdvancePageState Backward1 { get; private set; }
         public AdvancePageState Backward7 { get; private set; }
         public AdvancePageState BackwardMonth { get; private set; }
-        public CalendarViewModel CalendarViewModel 
+        public CalendarViewModel CalendarViewModel
         {
             get => _calendarViewModel;
             set => RaiseAndSetIfChanged(ref _calendarViewModel, value);
@@ -112,7 +111,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
         // Private Properties
         private TimetableModel Timetable { get; }
-        
+
 
         private ObservableCollection<KeyDateItemViewModel> AllKeyDates
         {
@@ -137,62 +136,10 @@ namespace TeacherPlanner.Planner.ViewModels
             KeyDatesAreShowing = false;
 
             // Load Day from Database
-            var dayDBModel = DatabaseManager.GetDay(_academicYear.ID, date);
-            if (dayDBModel == null)
-            {
-                var newDBDay = new Day()
-                {
-                    AcademicYearID = _academicYear.ID,
-                    Date = date,
-                    Notes = null,
-                };
-
-                if (DatabaseManager.TryAddDay(newDBDay, out var id))
-                {
-                    dayDBModel = newDBDay;
-                    dayDBModel.ID = id;
-                }
-                else
-                {
-                    // Todo - implement this better
-                    MessageBox.Show("Error Loading Day");
-                    return;
-                }
-            }
+            var dayDBModel = DatabaseModelManager.GetDayDBModel(date, _academicYear.ID);
 
             // Load Periods from Database
-            var PERIODS = 9;
-            var periodDBModels = DatabaseManager.GetPeriods(dayDBModel.ID);
-            var periodModels = new ObservableCollection<PeriodModel>();
-            
-            for (var i = 0; i < PERIODS; i++)
-            {
-                Period periodDBModel;
-                var periodCodeInt = (int)PeriodCodesConverter.ConvertIntToPeriodCodes(i);
-
-
-                if (periodDBModels.Count != 0 && i < periodDBModels.Count && periodDBModels[i].PeriodNumber == periodCodeInt)
-                {
-                    periodDBModel = periodDBModels[i];
-                    periodDBModel.TimetableClasscode = GetTimetablePeriodID(date, periodCodeInt);
-                }
-                else
-                {
-                    periodDBModel = new Period()
-                    {
-                        DayID = dayDBModel.ID,
-                        TimetableClasscode = GetTimetablePeriodID(date, periodCodeInt),
-                        UserEnteredClasscode = null,
-                        PeriodNumber = periodCodeInt,
-                        MarginText = null,
-                        MainText = null,
-                        SideText = null
-                    };
-                }
-                    
-                var periodModel = new PeriodModel(periodDBModel);
-                periodModels.Add(periodModel);
-            }
+            var periodModels = DatabaseModelManager.GetTodaysPeriodModels(dayDBModel, Timetable, _calendarManager);
 
             DayModel = new DayModel(dayDBModel, periodModels);
             CalendarViewModel = new CalendarViewModel(date, _allKeyDates, _calendarManager);
@@ -201,43 +148,15 @@ namespace TeacherPlanner.Planner.ViewModels
 
         internal void SaveDayToDatabase()
         {
-            
+
             // Add periods to Database
-            foreach (var period in DayModel.Periods)
-            {
-                var dbModel = period.GetDBModel();
-                if (!DatabaseManager.TryUpdatePeriod(dbModel))
-                {
-                    if (DatabaseManager.TryAddPeriod(dbModel, out var id))
-                    {
-                        period.ID = id;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error saving Period to Database");
-                    }
-                }
-            }
+            DayModel.Periods = DatabaseModelManager.TryUpdatePeriods(DayModel.Periods);
 
             // Add Day to Database
-
-            var day = DayModel.GetDBModel();
-
-            if (!DatabaseManager.TryUpdateDay(day))
-            {
-                if (DatabaseManager.TryAddDay(day, out var id))
-                {
-                    DayModel.ID = id;
-                }
-                else
-                {
-                    // Todo make this better
-                    MessageBox.Show("Failed to Save Day to Database");
-                }
-            }
+            DayModel.ID = DatabaseModelManager.TryUpdateDay(DayModel);
         }
 
-       
+
 
         private string GetClassCodeFromTimetable(DateTime date, int period)
         {
@@ -256,23 +175,7 @@ namespace TeacherPlanner.Planner.ViewModels
             return string.Empty;
         }
 
-        private int? GetTimetablePeriodID(DateTime date, int period)
-        {
-            if (Timetable.Week1 == null || Timetable.Week2 == null)
-                return null;
-            
-            var day = (int)date.DayOfWeek;
-            var week = _calendarManager.GetWeek(date);
-            
-            if (week == 1 || week == 2)
-            {
-                // Todo maybe fix me
-                var timetablePeriodModel = Timetable.GetPeriod(week, day, (PeriodCodes)period);
-                return timetablePeriodModel.ID;
-            }
-
-            return null;
-        }
+        
 
         private void OnTurnPage(object v)
         {

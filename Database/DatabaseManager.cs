@@ -260,6 +260,17 @@ namespace Database
                 return null;
         }
 
+        public static List<TimetablePeriod> GetTimetablePeriodsFromClasscode(string classcode)
+        {
+            string query = $"SELECT * FROM TimetablePeriods WHERE classcode=@classcode;";
+            var parameters = new Dictionary<string, object> { { "@classcode", classcode } };
+            var result = GetModelsFromDatabase<TimetablePeriod>(query, parameters);
+            if (result.Any())
+                return result;
+            else
+                return null;
+        }
+
         public static bool TimetablePeriodIsInDatabase(TimetablePeriod timetablePeriod, out int id)
         {
             string query = "SELECT * FROM TimetablePeriods WHERE academic_year_ID=@AcademicYearID AND week=@Week AND day=@Day AND period=@Period;";

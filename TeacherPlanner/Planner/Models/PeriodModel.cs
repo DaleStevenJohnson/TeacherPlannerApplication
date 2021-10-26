@@ -7,14 +7,13 @@ namespace TeacherPlanner.Planner.Models
 {
     public class PeriodModel : ObservableObject
     {
-        private readonly string _delimiter = "`";
         private string _marginText;
         private string _mainText;
         private string _sideText;
 
         private int? _id = null;
         private int _dayID;
-        private int? _timetableClasscodeID;
+        private readonly int? _timetableClasscodeID;
         private string _classcode;
         private string _userEnteredClasscode;
 
@@ -68,7 +67,7 @@ namespace TeacherPlanner.Planner.Models
             set => RaiseAndSetIfChanged(ref _classcode, value);
         }
 
-        private string UserEnteredClasscode
+        public string UserEnteredClasscode
         {
             get => _userEnteredClasscode;
             set
@@ -79,6 +78,17 @@ namespace TeacherPlanner.Planner.Models
                         Classcode = GetTimetablePeriodClasscode();
                 }
             }
+        }
+
+        public string GetTimetablePeriodClasscode()
+        {
+            if (_timetableClasscodeID == null)
+                return string.Empty;
+
+            var timetableClasscode = DatabaseManager.GetTimetablePeriodClasscode((int)_timetableClasscodeID);
+            if (timetableClasscode != null)
+                return timetableClasscode;
+            return string.Empty;
         }
 
         public void UpdateUserEnteredClassCode(string userinput)
@@ -116,13 +126,7 @@ namespace TeacherPlanner.Planner.Models
             return string.Empty;
         }
 
-        private string GetTimetablePeriodClasscode()
-        {
-            var timetableClasscode = DatabaseManager.GetTimetablePeriodClasscode((int)_timetableClasscodeID);
-            if (timetableClasscode != null)
-                return timetableClasscode;
-            return string.Empty;
-        }
+        
 
         
     }

@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="TeacherPlanner.LessonSequence.Views.LessonSequenceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.LessonSequence.Views"
+             xmlns:viewmodel="clr-namespace:TeacherPlanner.LessonSequence.ViewModels"
+             xmlns:timetable="clr-namespace:TeacherPlanner.Timetable.Views"
+             d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:LessonSequenceViewModel}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920">
+
+    
+    <Grid>
+        
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto"  Grid.Row="1" Grid.RowSpan="2" Grid.Column="1">
+            <ItemsControl ItemsSource="{Binding LessonSequence}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:ClassPeriodView />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Vertical">
+            <TextBlock Text="Lesson Sequencer Controls" FontFamily="{StaticResource TitleHandwritten}" FontSize="40" Margin="164,0"/>
+            <StackPanel Orientation="Horizontal" Margin="164,10">
+                <Button Width="50" Height="50" Margin="25" Content="-7" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="-7"/>
+                <Button Width="50" Height="50" Margin="25" Content="-1" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="-1"/>
+                <Button Width="50" Height="50" Margin="25" Content="⌂" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="999"/>
+                <Button Width="50" Height="50" Margin="25" Content="+1" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="1"/>
+                <Button Width="50" Height="50" Margin="25" Content="+7" Style="{StaticResource ButtonOverride}" Command="{Binding ChangeDateCommand}" CommandParameter="7"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" 
+                        Margin="250, 10">
+                <Label Style="{StaticResource DefaultLabelBody}">Date:</Label>
+                <DatePicker Margin="10" Width="200" SelectedDate="{Binding SelectedDate}"/>
+                
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="250, 10">
+                <Label Style="{StaticResource DefaultLabelBody}" Content="Class:"/>
+                <ComboBox  Margin="10" Width="100" Height="25" ItemsSource="{Binding ClassCodes}" 
+                          SelectedItem="{Binding SelectedClassCode}" SelectionChanged="ComboBox_SelectionChanged">
+                    
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="325, 10">
+                <Button Content="Save" Width="100" Style="{StaticResource ButtonOverride}" Command="{Binding UpdatePeriodsCommand}"/>
+            </StackPanel>
+
+            <timetable:TimetableWeekView Margin="0, 100" DataContext="{Binding SelectedClassCodeTimetable}"></timetable:TimetableWeekView>
+        </StackPanel>
+
+
+    </Grid>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding UpdatePeriodsCommand}"/>
+    </UserControl.InputBindings>
+</UserControl>

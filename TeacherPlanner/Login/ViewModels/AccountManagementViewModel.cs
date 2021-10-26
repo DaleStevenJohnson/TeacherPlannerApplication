@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Controls;
 using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Login.ViewModels
@@ -13,5 +14,11 @@ namespace TeacherPlanner.Login.ViewModels
         
         public LoginViewModel LoginViewModel { get; set; }
         public CreateAccountViewModel CreateAccountViewModel { get; set; }
+
+        public void OnTabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LoginViewModel.Username = "";
+            CreateAccountViewModel.Username = "";
+        }
     }
 }

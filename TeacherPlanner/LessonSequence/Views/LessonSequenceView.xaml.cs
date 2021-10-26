@@ -8,20 +8,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.ViewModels;
 
-namespace TeacherPlanner.Planner.Views.SettingsWindows
+namespace TeacherPlanner.LessonSequence.Views
 {
     /// <summary>
-    /// Interaction logic for DefineTimetableWeeksWindow.xaml
+    /// Interaction logic for LessonSequenceView.xaml
     /// </summary>
-    public partial class DefineTimetableWeeksWindow : Window
+    public partial class LessonSequenceView : UserControl
     {
-        public DefineTimetableWeeksWindow()
+        public LessonSequenceView()
         {
             InitializeComponent();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

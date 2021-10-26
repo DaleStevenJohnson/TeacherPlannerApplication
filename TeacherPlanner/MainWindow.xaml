@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:plannerview="clr-namespace:TeacherPlanner.Planner.Views"
+        xmlns:plannerview="clr-namespace:TeacherPlanner.PlannerYear.Views"
         xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
         xmlns:local="clr-namespace:TeacherPlanner"
         xmlns:constant="clr-namespace:TeacherPlanner.Constants"

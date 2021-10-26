@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class KeyDateItemViewModel
     {

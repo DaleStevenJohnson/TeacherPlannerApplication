@@ -6,6 +6,7 @@ using TeacherPlanner.Constants;
 using Database;
 using TeacherPlanner.Planner.Models;
 using System.Linq;
+using TeacherPlanner.PlannerYear.Models;
 
 namespace TeacherPlanner.Helpers
 {

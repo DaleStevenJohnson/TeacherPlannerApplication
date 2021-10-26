@@ -76,7 +76,8 @@
                 Background="LightGray" BorderBrush="Transparent" BorderThickness="2" 
                 MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"
                 Command="{Binding Path=CreateAccountButtonClickedCommand}" CommandParameter="{Binding ElementName=Password}"
-                Style="{DynamicResource RoundButton}">
+                Style="{DynamicResource RoundButton}"
+                IsEnabled="{Binding ValidCredentials}">
             
         </Button>
 

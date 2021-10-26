@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Database;
 using Database.DatabaseModels;
-using TeacherPlanner.Constants;
 using TeacherPlanner.Helpers;
 using TeacherPlanner.Login.Models;
-using TeacherPlanner.Planner.Models;
+using TeacherPlanner.PlannerYear.Models;
 
-namespace TeacherPlanner.Planner.ViewModels
+namespace TeacherPlanner.PlannerYear.ViewModels
 {
     public class DefineTimetableWeeksViewModel : ObservableObject
     {
@@ -32,7 +30,7 @@ namespace TeacherPlanner.Planner.ViewModels
             else
                 TimetableWeeks = CreateTimeTableWeeks();
         }
-        
+
         // Properties
 
         public ObservableCollection<TimetableWeekModel> TimetableWeeks
@@ -41,7 +39,7 @@ namespace TeacherPlanner.Planner.ViewModels
             set => RaiseAndSetIfChanged(ref _timetableWeeks, value);
         }
 
-        
+
         // Methods
         private bool TryGetTimeTableWeeks(out ObservableCollection<TimetableWeekModel> timetableWeeks)
         {
@@ -53,7 +51,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             return timetableWeeks.Any();
         }
-        
+
         private ObservableCollection<TimetableWeekModel> CreateTimeTableWeeks()
         {
             var schoolYear = GetSchoolYear();
@@ -66,7 +64,7 @@ namespace TeacherPlanner.Planner.ViewModels
                 var weekBeginning = date.AddDays(i * 7);
 
                 var dbModel = new TimetableWeek()
-                { 
+                {
                     AcademicYearID = _academicYearModel.ID,
                     WeekBeginning = weekBeginning,
                     Week = 0,
@@ -78,7 +76,7 @@ namespace TeacherPlanner.Planner.ViewModels
 
             return timetableWeeks;
         }
-  
+
         private DateTime GetFirstMonday(int schoolYear)
         {
             DateTime date = new DateTime(schoolYear, 9, 1);

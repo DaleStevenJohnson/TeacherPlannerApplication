@@ -5,22 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.Planner.Views"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.Planner.ViewModels"
+             xmlns:planneryearviewmodel="clr-namespace:TeacherPlanner.PlannerYear.ViewModels"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:DayViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="960">
     <UserControl.Resources>
-        <Style x:Key="Label.DateHeading.Default" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="Black"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontFamily" Value="{StaticResource BodyText}"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0"/>
-        </Style>
-
-        <DataTemplate x:Key="KeyDateDropDownTemplate" DataType="{x:Type viewmodel:KeyDateItemViewModel}">
+        <DataTemplate x:Key="KeyDateDropDownTemplate" DataType="{x:Type planneryearviewmodel:KeyDateItemViewModel}">
             <Label Content="{Binding }" Style="{StaticResource Label.DateHeading.Default}" Foreground="{Binding Type, Converter={StaticResource KeyDateTypeToColourConverter}}"/>
         </DataTemplate>
     </UserControl.Resources>
@@ -82,11 +72,11 @@
             
 
             
-            <Label
+            <TextBlock
                 Grid.Column="1"
-                Style="{StaticResource Label.DateHeading.Default}"
+                Style="{StaticResource TextBlock.DateHeading.Default}"
                 Foreground="{Binding IsDeadline, Converter={StaticResource BooleanToRedConverter }}"
-                Content="{Binding CalendarViewModel.DisplayDate}"/>
+                Text="{Binding DayModel.Date, StringFormat=dddd\, dd MMMM}"/>
 
             
             <Button

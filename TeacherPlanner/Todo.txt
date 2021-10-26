@@ -1,87 +1,34 @@
-﻿Features
+﻿ +++ Completed Features +++
+ --------------------------
++ Add Top Menu Bar
++ Add Import Timetable function
++ Add / Revamp Scrolling between pages
++ Key Dates
++ CreateAccount
++ Database Implementation
++ Days Refactor
 
-Add Top Menu Bar
-
-Add Import Timetable function
-+ Option selected from menu bar
-+ File Picker Dialog box
-+ Load and Store user provided timetable
-+ Standardise how the Timetable file should be structured - SIMS Export to excel, save as CSV
-+ Save user-entered timetable weeks
-+ Load saved timetable weeks
-
+@@@ In Progress Features @@@
+............................
 Add Login screen
-+ Allow create user
-+ Store user data sensibly - Encryption - hash passwords - Not in AppData?
-+ Only access planner and todo upon successful login
 - Session? Stay logged in?
 
-Add Encryption to files
-+ Appdata files
-+ Could be storing sensitive student information
+Add Encryption to database
+- Will be storing sensitive student information
 
 Add Calendar
-+ Display Dates under appropriate day
 - Clicking a Date takes you to that page
-- Add CalendarViewModel
-
-Add / Revamp Scrolling between pages
-+ Radio for Single/Dual page scrolling - Settings tab?
-+ Shift Clicking a +/- button makes it scroll a week
+- Add faint end of last month dates to calendar
 
 Settings Tab
 - Dark mode?
 - Log out
-
-Key Dates
-+ Parents Evening, Reports, Events, CPD, Meetings,
-+ Read in from Day view to check whether Key date or not
-+ Display on day view if Key date
-+ Read in from Calendar view to check whether Key date or not
-+ Display on Calendar view if Key date
-+ Change Remove to Checkbox
-+ Move close button to command on VM
-+ Sort DropDown Keydates list
-+ Add Keydates updated event to propogate from keydates window to planner and dayview
-
-
-
-Fixes
-+ Get Scrolling working
-+ Remove Debug
-+ Add prompt for timetable and weeks import on startup of year selection
-+ Add Today button - set left day to today
-+ Add Timetable Scrolling
-+ Change where period counts are being calculated + add in total occurances
-+ Timetable weeks import updating timetable
-+ Fix timetable import oddness - blank days if already saved
-	+ Maybe if day is completely blank then it is not saved by the app.
-+ Add bookend end of academic year / start of academic year
-
-
-+ Investigate how to handle subscribe and unsubscribing to events
-- Add faint end of last month dates to calendar
-
 - Add day timings
-
 - Add Settings Config file & track user settings through storing on the usermodel
 - Add Options Tab to combine all 
 
-
-TODO List APP
-- Add Saving
-- Add Loading
-+ Add moving of completed tasks to the done list
-+ Auto select new list tab
-+ Get rid of hover-over on listbox
-+ Replace data triggers with converter
+TODO List
 - Tidy up placeholder for no list
-
-BUGS
-- Notes section not saving when rest of page is blank
-
-CreateAccount
-- Replace the invalid message box with locking of the button on the UI.
 
 Timetable
 - Make timetable editable
@@ -90,24 +37,14 @@ Codebase
 - Use StringFormat in Datetime bindings for WPF controls instead of string properties
 - Update enums to use extension method with dictionary (see KeyDateTypes) rather than big switch statements.
 
-Database Implementation
-+ Create a Class diagram
+Lesson Sequencer
+- Change controls to use grid instead of stackpanel
+- Add tickbox to Sequencer controls to give option for user entered classcodes
 
-+ Add Database models
-+ Change KeyDateItemViewModel to contain an ObservableCollection of KeyDateItemModels
-
-Days Refactor
-+ Change period control & notes control to one text box rather than 7
-+ Add Methods to Database manager for Update, Select and Insert.
-+ Add reg period & ensure reg classcode is in correct position
-+ Ensure Enums are used for periods and days (DayOfWeek).
-+ Ensure viewmodel is not being refreshed and Model is the thing which is being updated.
-
-
-microsoft.data.sqllite
-dapper
-Map_names_with_underscore
-
-Rename database schema
-
-Store UTC, display local times
+/\ ## ~ ~ ~ ~ ~ Notes ~ ~ ~ ~ ~ ## /\
+=====================================
+| microsoft.data.sqllite			|
+| dapper							|
+| Map_names_with_underscore			|
+| Rename database schema			|
+| Store UTC, display local times	|

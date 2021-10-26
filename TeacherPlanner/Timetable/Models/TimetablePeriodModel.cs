@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 using Database.DatabaseModels;
+using TeacherPlanner.Constants;
+using TeacherPlanner.Helpers;
 
 namespace TeacherPlanner.Timetable.Models
 {
-    public class TimetablePeriodModel
+    public class TimetablePeriodModel : ObservableObject
     {
-        public TimetablePeriodModel(TimetablePeriod timetablePeriod)
+        private string _classCode;
+        private string _room;
+        private int _occurance;
+        private int _occurances;
+
+        public TimetablePeriodModel(TimetablePeriod timetablePeriod, TimetableDisplayModes displayMode)
         {
+            DisplayMode = displayMode;
             if (timetablePeriod != null)
             {
                 ID = timetablePeriod.ID;
@@ -17,9 +25,37 @@ namespace TeacherPlanner.Timetable.Models
             }
         }
         public int ID { get; }
-        public string ClassCode { get; set; }
-        public string Room { get; set; }
-        public int Occurance { get; set; }
-        public int Occurances { get; set; }
+        public string ClassCode 
+        {
+            get => _classCode;
+            set => RaiseAndSetIfChanged(ref _classCode, value);
+        }
+
+        public string Room
+        {
+            get => _room;
+            set => RaiseAndSetIfChanged(ref _room, value);
+        }
+
+        public int Occurance
+        {
+            get => _occurance;
+            set => RaiseAndSetIfChanged(ref _occurance, value);
+        }
+
+        public int Occurances
+        {
+            get => _occurances;
+            set => RaiseAndSetIfChanged(ref _occurances, value);
+        }
+
+        public TimetableDisplayModes DisplayMode { get; set; }
+        public void Clear()
+        {
+            ClassCode = "";
+            Room = "";
+            Occurance = 0;
+            Occurances = 0;
+        }
     }
 }

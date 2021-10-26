@@ -9,17 +9,19 @@ namespace TeacherPlanner.Timetable.Models
 {
     public class TimetableDayModel
     {
-        public TimetableDayModel(List<TimetablePeriod> timetablePeriods)
+        public TimetableDayModel(List<TimetablePeriod> timetablePeriods, TimetableDisplayModes displayMode)
         {
-            Registration = new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Registration));
-            Period1 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period1));
-            Period2 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period2));
-            Break =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Break));
-            Period3 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period3));
-            Lunch =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Lunch));
-            Period4 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period4));
-            Period5 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period5));
-            Twilight =     new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Twilight));
+            DisplayMode = displayMode;
+
+            Registration = new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Registration), displayMode);
+            Period1 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period1), displayMode);
+            Period2 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period2), displayMode);
+            Break =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Break), displayMode);
+            Period3 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period3), displayMode);
+            Lunch =        new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Lunch), displayMode);
+            Period4 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period4), displayMode);
+            Period5 =      new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Period5), displayMode);
+            Twilight =     new TimetablePeriodModel(timetablePeriods.FirstOrDefault(t => t.Period == (int)PeriodCodes.Twilight), displayMode);
         }
 
         public TimetablePeriodModel Registration { get; }
@@ -31,6 +33,7 @@ namespace TeacherPlanner.Timetable.Models
         public TimetablePeriodModel Period4 { get; }
         public TimetablePeriodModel Period5 { get; }
         public TimetablePeriodModel Twilight { get; }
+        private TimetableDisplayModes DisplayMode { get; }
         public TimetablePeriodModel GetPeriod(PeriodCodes period)
         {
             return period switch

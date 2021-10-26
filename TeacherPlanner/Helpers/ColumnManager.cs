@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using TeacherPlanner.Constants;
 using TeacherPlanner.Planner.ViewModels;
+using TeacherPlanner.PlannerYear.ViewModels;
 
 namespace TeacherPlanner.Helpers
 {

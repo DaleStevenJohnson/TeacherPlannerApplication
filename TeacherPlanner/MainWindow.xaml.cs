@@ -1,13 +1,7 @@
 ﻿using System.Windows;
+using TeacherPlanner.Login.Models;
 using TeacherPlanner.Login.ViewModels;
 using TeacherPlanner.Login.Views;
-using TeacherPlanner.Planner.ViewModels;
-using TeacherPlanner.Planner.Views.SettingsWindows;
-using TeacherPlanner.Planner.Views;
-using System.Windows.Controls;
-using TeacherPlanner.Login.Models;
-using Database;
-using Database.DatabaseModels;
 
 namespace TeacherPlanner
 {
@@ -32,22 +26,17 @@ namespace TeacherPlanner
             {
                 Application.Current.Shutdown();
             }
-
-            var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
-            var mainViewModel = new MainViewModel(user);
-            
-            this.DataContext = mainViewModel;
-            this.DataContextChanged += (sender, args) =>
+            else
             {
-                this.DataContext = args.NewValue;
-            };
+                var user = new UserModel(accountManagementViewModel.LoginViewModel.User);
+                var mainViewModel = new MainViewModel(user);
 
-            
-            //var chooseYearViewModel = new ChooseYearViewModel();
-            //UserControl chooseYearPage = new ChooseYearPage() { DataContext = chooseYearViewModel};
-            //this.AddLogicalChild(chooseYearPage);
+                this.DataContext = mainViewModel;
+                this.DataContextChanged += (sender, args) =>
+                {
+                    this.DataContext = args.NewValue;
+                };
+            }
         }
-
-        
     }
 }
