@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="TeacherPlanner.PlannerYear.Views.LoadingPlannerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TeacherPlanner.PlannerYear.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid Background="White">
+        <Label Content="Loading Planner..."
+               Name="MyFadingText"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontFamily="{StaticResource TitleHandwritten}"
+               FontSize="100">
+            <!-- Animates the text block's opacity. -->
+            <Label.Triggers>
+                <EventTrigger RoutedEvent="Label.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="MyFadingText" 
+                                Storyboard.TargetProperty="(Label.Opacity)"
+                                From="1.0" To="0.2" Duration="0:0:2" 
+                                AutoReverse="True" RepeatBehavior="Forever" />  
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Label.Triggers>
+        </Label>
+    </Grid>
+</UserControl>
