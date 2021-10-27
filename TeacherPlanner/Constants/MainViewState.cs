@@ -8,5 +8,7 @@ namespace TeacherPlanner.Constants
     {
         ChooseYearPage = 1,
         PlannerPage = 2,
+        AcademicYearConfiguration = 3,
+        LoadingPlannerPage = 4,
     }
 }

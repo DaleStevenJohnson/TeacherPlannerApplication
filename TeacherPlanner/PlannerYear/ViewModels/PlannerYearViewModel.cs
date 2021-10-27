@@ -28,16 +28,20 @@ namespace TeacherPlanner.PlannerYear.ViewModels
 
         // Commands / Actions / Events
         public ICommand DefineTimetableWeeksCommand { get; }
-        public ICommand SwitchViewCommand { get; }
+        public ICommand SwitchViewToChooseYearViewCommand { get; }
+        public ICommand SwitchViewToConfigureAcademicYearViewCommand { get; }
         public ICommand KeyDatesClickedCommand { get; }
         public ICommand ImportTimetableCommand { get; }
 
-        public event EventHandler<string> SwitchViewEvent;
+        public event EventHandler<MainViewState> SwitchViewToChooseYearViewEvent;
+        public event EventHandler<MainViewState> SwitchViewToConfigureAcademicYearViewEvent;
         public PlannerYearViewModel(UserModel userModel, AcademicYearModel year)
         {
+            // Parameter Assignment
             _academicYear = year;
             UserModel = userModel;
-            //FileHandlingHelper.SetDirectories(UserModel, yearString);
+            
+            // Property Assignment
             KeyDates = new ObservableCollection<KeyDateItemViewModel>();
 
             CalendarManager = new CalendarManager(year);
@@ -54,11 +58,14 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             _keyDatesWindowViewModel.KeyDatesListUpdatedEvent += (_, __) => UpdateKeyDatesList();
             _keyDatesWindowViewModel.CloseWindowEvent += (_, __) => OnKeyDatesWindowClosed();
 
+            // Other Event Subscription
             LessonSequenceViewModel.PeriodsUpdatedEvent += (_, __) => PlannerViewModel.LoadNewDays();
             PlannerViewModel.PlannerUpdatedEvent += (_, __) => LessonSequenceViewModel.UpdateLessonSequence();
 
+            // Command Assignment
             DefineTimetableWeeksCommand = new SimpleCommand(_ => OnDefineTimetableWeeks());
-            SwitchViewCommand = new SimpleCommand(_ => OnSwitchView(_));
+            SwitchViewToChooseYearViewCommand = new SimpleCommand(_ => OnSwitchViewToChooseYearView());
+            SwitchViewToConfigureAcademicYearViewCommand = new SimpleCommand(_ => OnSwitchViewToConfigureAcademicYearView());
             KeyDatesClickedCommand = new SimpleCommand(_ => OnKeyDatesClicked());
             ImportTimetableCommand = new SimpleCommand(_ => OnImportTimetable());
 
@@ -125,11 +132,14 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             PlannerViewModel.LeftDay.UpdateTodaysKeyDates();
             PlannerViewModel.RightDay.UpdateTodaysKeyDates();
         }
-        private void OnSwitchView(object v)
+        private void OnSwitchViewToChooseYearView()
         {
-            SwitchViewEvent.Invoke(null, (string)v);
+            SwitchViewToChooseYearViewEvent.Invoke(null, MainViewState.ChooseYearPage);
         }
-
+        private void OnSwitchViewToConfigureAcademicYearView()
+        {
+            SwitchViewToConfigureAcademicYearViewEvent.Invoke(null, MainViewState.AcademicYearConfiguration);
+        }
 
         private void OnKeyDatesClicked()
         {
@@ -152,7 +162,7 @@ namespace TeacherPlanner.PlannerYear.ViewModels
             _keyDatesWindow = null;
         }
 
-        private void OnImportTimetable()
+        public void OnImportTimetable()
         {
             var importWindow = new ImportTimetableWindow();
             var importTimetableViewModel = new ImportTimetableWindowViewModel(_academicYear);

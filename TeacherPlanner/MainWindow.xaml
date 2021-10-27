@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:plannerview="clr-namespace:TeacherPlanner.PlannerYear.Views"
-        xmlns:todoview="clr-namespace:TeacherPlanner.ToDo.Views"
+        xmlns:configurationview="clr-namespace:TeacherPlanner.AcademicYearConfiguration.Views"
         xmlns:local="clr-namespace:TeacherPlanner"
         xmlns:constant="clr-namespace:TeacherPlanner.Constants"
         xmlns:model="clr-namespace:TeacherPlanner.Planner.Models"
@@ -65,8 +65,39 @@
             <plannerview:PlannerYearPage DataContext="{Binding PlannerYearViewModel}"/>
             
         </UserControl>
-        
-        
+
+        <UserControl Grid.Column="0" Grid.Row="0">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static constant:MainViewState.AcademicYearConfiguration}">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <configurationview:AcademicYearConfigurationView DataContext="{Binding AcademicYearConfigurationViewModel}"/>
+
+        </UserControl>
+
+        <UserControl Grid.Column="0" Grid.Row="0">
+            <UserControl.Style>
+                <Style TargetType="UserControl">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentView}" Value="{x:Static constant:MainViewState.LoadingPlannerPage}">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </UserControl.Style>
+
+            <plannerview:LoadingPlannerView/>
+
+        </UserControl>
+
     </Grid>
 
 </Window>

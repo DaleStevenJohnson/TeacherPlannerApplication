@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AcademicYearConfiguration\Models\" />
     <Folder Include="LessonSequence\Models\" />
     <Folder Include="UserData\DJohnson\2021\202108\" />
   </ItemGroup>

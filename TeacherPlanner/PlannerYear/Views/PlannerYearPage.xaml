@@ -26,6 +26,7 @@
     
 	<UserControl.InputBindings>
 		<KeyBinding Key="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Y"  Command="{Binding SwitchViewToChooseYearViewCommand}"/>
 	</UserControl.InputBindings>
     <Grid MouseDown="PlannerYearWindow_MouseDown">
         <Grid.RowDefinitions>
@@ -39,11 +40,15 @@
                     <MenuItem Header="Log Out"/>
                     <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
-                
 
+                <MenuItem Header="Academic Year">
+                    <MenuItem Header="Change Year" InputGestureText="Ctrl+Y" Command="{Binding SwitchViewToChooseYearViewCommand}"/>
+                    <MenuItem Header="Configure Year" Command="{Binding SwitchViewToConfigureAcademicYearViewCommand}"/>
+                </MenuItem>
                 <MenuItem Header="Planner">
                     <MenuItem Header="Locked Scrolling" IsCheckable="True" IsChecked="{Binding CalendarManager.DatesAreNeighbours}"/>
                     <MenuItem Header="Go to Today" InputGestureText="Home" Command="{Binding PlannerViewModel.GoToTodayCommand}"/>
+                    
                     <Separator/>
                     <MenuItem Header="Key Dates..." Command="{Binding KeyDatesClickedCommand}"/>
                 </MenuItem>
@@ -51,7 +56,6 @@
                 <MenuItem Header="Timetable">
                     <MenuItem Header="Import..." Command="{Binding ImportTimetableCommand}"/>
                     <MenuItem Header="Define Weeks" Command="{Binding DefineTimetableWeeksCommand}"/>
-                    <MenuItem Header="Change Year" Command="{Binding SwitchViewCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="Todo List">
