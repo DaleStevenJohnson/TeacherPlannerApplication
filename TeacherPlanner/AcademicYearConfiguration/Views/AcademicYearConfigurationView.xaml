@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TeacherPlanner.AcademicYearConfiguration.Views"
+             xmlns:constant="clr-namespace:TeacherPlanner.Constants"
              xmlns:viewmodel="clr-namespace:TeacherPlanner.AcademicYearConfiguration.ViewModels"
              d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:AcademicYearConfigurationViewModel}}"
              mc:Ignorable="d" 
@@ -19,6 +20,10 @@
             <Setter Property="Width" Value="100"/>
             <Setter Property="Background" Value="Transparent"/>
         </Style>
+
+        <DataTemplate x:Key="PeriodTimingItem">
+            <ComboBox Style="{StaticResource ComboBox.Style}" ItemsSource="{x:Static constant:ComboBoxLists.HoursList}" SelectedItem="{Binding StartTimeHour}"/>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
@@ -49,7 +54,10 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            
+            <!--Left Side-->
             <!-- Period Selection-->
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="20" Height="100">
                 <Label Content="Periods per School Day:" 
@@ -61,9 +69,23 @@
                        VerticalContentAlignment="Center"/>
                 <ComboBox ItemsSource="{Binding ComboBoxPeriodList}"
                           Style="{StaticResource ComboBox.Style}"
-                          ItemContainerStyle="{StaticResource ComboBox.Items}"/>
+                          ItemContainerStyle="{StaticResource ComboBox.Items}"
+                          SelectedItem="{Binding PeriodCount}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="20" Height="100">
+                <Label Content="Breaks per School Day:" 
+                       Margin="20"
+                       Width="500"
+                       HorizontalContentAlignment="Right"
+                       FontFamily="{StaticResource BodyText}"
+                       FontSize="30"
+                       VerticalContentAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding ComboBoxTimetableWeeksList}"
+                          Style="{StaticResource ComboBox.Style}"
+                          ItemContainerStyle="{StaticResource ComboBox.Items}">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Margin="20" Height="100">
                 <Label Content="Weeks on your timetable:" 
                        Margin="20"
                        Width="500"
@@ -71,12 +93,21 @@
                        FontFamily="{StaticResource BodyText}"
                        FontSize="30"
                        VerticalContentAlignment="Center"/>
-                <ComboBox ItemsSource="{Binding TimetableWeeksList}"
+                <ComboBox ItemsSource="{Binding ComboBoxTimetableWeeksList}"
                           Style="{StaticResource ComboBox.Style}"
                           ItemContainerStyle="{StaticResource ComboBox.Items}">
                 </ComboBox>
             </StackPanel>
+            <!--Right Side-->
+            <ListView ItemsSource="{Binding PeriodTimingsModels}" 
+                      ItemTemplate="{StaticResource PeriodTimingItem}"
+                      Grid.Column="1" Grid.RowSpan="4">
+                
+            </ListView>
+
         </Grid>
+        
+        <!--Control Buttons-->
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
             <Button Style="{StaticResource ButtonOverride}" Command="{Binding ConfirmConfigurationCommand}"
                     Content="Confirm" FontFamily="{StaticResource BodyText}" FontSize="20"
@@ -88,5 +119,7 @@
                     Background="Transparent"
                     />
         </StackPanel>
+        
+        
     </Grid>
 </UserControl>

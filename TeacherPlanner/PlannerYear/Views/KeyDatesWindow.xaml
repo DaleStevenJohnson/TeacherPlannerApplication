@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeacherPlanner.PlannerYear.Views"
         xmlns:helper="clr-namespace:TeacherPlanner.Helpers"
+        xmlns:constant="clr-namespace:TeacherPlanner.Constants"
         xmlns:viewmodel="clr-namespace:TeacherPlanner.PlannerYear.ViewModels"
         d:DataContext="{Binding Source={d:DesignInstance Type=viewmodel:KeyDatesWindowViewModel}}"
         mc:Ignorable="d"
@@ -293,14 +294,14 @@
                     <ComboBox Width="63" Margin="5,2" 
                               Style="{StaticResource AddNew.ComboBox.Default}"
                               ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
-                              ItemsSource="{Binding HoursList}"
+                              ItemsSource="{x:Static constant:ComboBoxLists.HoursList}"
                               SelectedItem="{Binding NewKeyDateTimeHour}"/>
                     
                     <Label Content="Minute" Style="{StaticResource AddNew.Label.Description}"/>
                     <ComboBox Width="63" Margin="5,2" 
                               Style="{StaticResource AddNew.ComboBox.Default}"
                               ItemContainerStyle="{StaticResource AddNew.ComboBoxItem.Default}"
-                              ItemsSource="{Binding MinuteList}"
+                              ItemsSource="{x:Static constant:ComboBoxLists.HoursList}"
                               SelectedItem="{Binding NewKeyDateTimeMinute}"/>
                 </StackPanel>
                 <!-- Feedback -->
