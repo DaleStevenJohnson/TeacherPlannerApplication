@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TeacherPlanner.Helpers
 {
-    public class CustomComparer : IComparer<string>
+    public class ClassCodeComparer : IComparer<string>
     {
         public int Compare(string x, string y)
         {

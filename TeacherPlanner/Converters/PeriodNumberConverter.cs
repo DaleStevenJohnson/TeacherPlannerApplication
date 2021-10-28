@@ -13,11 +13,11 @@ namespace TeacherPlanner.Converters
         {
             switch ((PeriodCodes)value)
             {
-                case PeriodCodes.Registration:
+                case PeriodCodes.Registration1:
                     return "R";
-                case PeriodCodes.Break:
+                case PeriodCodes.Break1:
                     return "B";
-                case PeriodCodes.Lunch:
+                case PeriodCodes.Lunch1:
                     return "L";
                 case PeriodCodes.Twilight:
                     return "T";

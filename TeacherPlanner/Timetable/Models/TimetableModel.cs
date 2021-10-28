@@ -81,7 +81,7 @@ namespace TeacherPlanner.Timetable.Models
                     {
                         foreach (PeriodCodes period in Enum.GetValues(typeof(PeriodCodes)))
                         {
-                            if (period == PeriodCodes.Registration)
+                            if (period == PeriodCodes.Registration1)
                                 break;
 
                             var timetablePeriod = GetPeriod(week, day, period);
@@ -93,7 +93,7 @@ namespace TeacherPlanner.Timetable.Models
                         }
                     }
                 }
-                var myComparer = new CustomComparer();
+                var myComparer = new ClassCodeComparer();
                 classcodes.Sort(myComparer);
             }
             return classcodes;

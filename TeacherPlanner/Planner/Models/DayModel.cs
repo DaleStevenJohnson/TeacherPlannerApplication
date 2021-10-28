@@ -50,7 +50,7 @@ namespace TeacherPlanner.Planner.Models
             set
             {
                 if (RaiseAndSetIfChanged(ref _periods, value))
-                    Lessons = new ObservableCollection<PeriodModel>(value.Where(p => p.Number < PeriodCodes.Break));
+                    Lessons = new ObservableCollection<PeriodModel>(value.Where(p => p.Number < PeriodCodes.Break1));
             }
         }
 
