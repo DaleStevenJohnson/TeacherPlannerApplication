@@ -20,11 +20,13 @@ namespace TeacherPlanner.AcademicYearConfiguration.Models
             PeriodCode = periodCode;
 
             // Property Assignment
-            _startTimeHour = ComboBoxLists.HoursList[0];
-            _startTimeMinute = ComboBoxLists.MinuteList[0];
-            _endTimeHour = ComboBoxLists.HoursList[0];
-            _endTimeMinute = ComboBoxLists.MinuteList[0];
+            _startTimeHour = ComboBoxLists.HoursList[10];
+            _startTimeMinute = ComboBoxLists.MinuteList[10];
+            _endTimeHour = ComboBoxLists.HoursList[10];
+            _endTimeMinute = ComboBoxLists.MinuteList[10];
 
+            StartTime = new DateTime(2000, 1, 1, int.Parse(StartTimeHour), int.Parse(StartTimeMinute), 1);
+            EndTime = new DateTime(2000, 1, 1, int.Parse(EndTimeHour), int.Parse(EndTimeMinute), 0);
         }
         public string DisplayName
         {

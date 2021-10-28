@@ -48,8 +48,9 @@ Lesson Sequencer
 
 Academic Year Configuration
 + Add Period timings models
-- Fix removing of periods - list is now being sorted which can cause issues.
-- Add dynamic generation of period timings input based on period selection
++ Fix removing of periods - list is now being sorted which can cause issues.
+- Fix all instances of relying on 2 week timetable with 5 lessons to be more dynamic according to user entered data on configuration screen
++ Add dynamic generation of period timings input based on period selection
 - Add extra Properties to AcademicYearModel
 - Mirror this in DB objects and DB schema
 

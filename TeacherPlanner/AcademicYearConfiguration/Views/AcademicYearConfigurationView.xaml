@@ -103,7 +103,7 @@
                 <StackPanel Orientation="Horizontal" Height="100">
                     <Label Content="Registration / Tutor:" Style="{StaticResource Label.Selectors.Header}"/>
                     
-                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToThreeList}"
+                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToTwoList}"
                               Style="{StaticResource ComboBox.Style}"
                               ItemContainerStyle="{StaticResource ComboBox.Items}"
                               SelectedItem="{Binding RegistrationCount}">
@@ -124,7 +124,7 @@
                 <StackPanel Orientation="Horizontal"  Height="100">
                     <Label Content="Breaks:" Style="{StaticResource Label.Selectors.Header}"/>
                     
-                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToThreeList}"
+                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToTwoList}"
                               Style="{StaticResource ComboBox.Style}"
                               ItemContainerStyle="{StaticResource ComboBox.Items}"
                               SelectedItem="{Binding BreakCount}">
@@ -135,7 +135,7 @@
                 <StackPanel Orientation="Horizontal" Height="100">
                     <Label Content="Lunches:" Style="{StaticResource Label.Selectors.Header}"/>
                     
-                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToThreeList}"
+                    <ComboBox ItemsSource="{x:Static constant:ComboBoxLists.ZeroToTwoList}"
                               Style="{StaticResource ComboBox.Style}"
                               ItemContainerStyle="{StaticResource ComboBox.Items}"
                               SelectedItem="{Binding LunchCount}">
@@ -147,11 +147,10 @@
                     <Label Content="Twilight:" Style="{StaticResource Label.Selectors.Header}"/>
 
                     <ComboBox 
+                              ItemsSource="{x:Static constant:ComboBoxLists.ZeroToOneList}"
                               Style="{StaticResource ComboBox.Style}"
                               ItemContainerStyle="{StaticResource ComboBox.Items}"
                               SelectedItem="{Binding TwilightCount}">
-                        <ComboBoxItem>0</ComboBoxItem>
-                        <ComboBoxItem>1</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
 

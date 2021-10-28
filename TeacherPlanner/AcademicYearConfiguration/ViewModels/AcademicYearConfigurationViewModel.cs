@@ -143,10 +143,11 @@ namespace TeacherPlanner.AcademicYearConfiguration.ViewModels
             {
                 mostRecentPeriodCode = PeriodCodesConverter.ConvertPeriodTypeToPeriodCodes(periodType);
             }
-            else
+            else if (extraPeriods > 0)
             {
                 mostRecentPeriodCode = mostRecentPeriodCode.Next();
             }
+           
 
             if (extraPeriods > 0)
             {
@@ -164,15 +165,20 @@ namespace TeacherPlanner.AcademicYearConfiguration.ViewModels
                 while (extraPeriods < 0)
                 {
                     var model = PeriodTimingsModels[position];
-                    if (model.Type == periodType)
-                        model.TimeUpdatedEvent -= (_,__) => SortPeriodTimingsModels();
+                    if (model.PeriodCode == mostRecentPeriodCode)
+                    {
+                        model.TimeUpdatedEvent -= (_, __) => SortPeriodTimingsModels();
                         PeriodTimingsModels.Remove(model);
+                        mostRecentPeriodCode = mostRecentPeriodCode.Previous();
                         extraPeriods += 1;
+                    }
                     position--;
+                    if (position < 0)
+                    {
+                        position = PeriodTimingsModels.Count - 1;
+                    }
                 }
             }
-
-
             SortPeriodTimingsModels();
         }
 
@@ -196,11 +202,11 @@ namespace TeacherPlanner.AcademicYearConfiguration.ViewModels
                 case "Break":
                     return BreakCount - countOfExistingPeriodType;
                 case "Lunch":
-                    return LessonCount - countOfExistingPeriodType;
+                    return LunchCount - countOfExistingPeriodType;
                 case "Registration":
-                    return LessonCount - countOfExistingPeriodType;
+                    return RegistrationCount - countOfExistingPeriodType;
                 case "Twilight":
-                    return LessonCount - countOfExistingPeriodType;
+                    return TwilightCount - countOfExistingPeriodType;
                 default:
                     return 0;
             }
@@ -215,7 +221,8 @@ namespace TeacherPlanner.AcademicYearConfiguration.ViewModels
                 if (periodTimingModel.Type == periodType)
                 {
                     counter++;
-                    mostRecentPeriodCode = periodTimingModel.PeriodCode;
+                    if (periodTimingModel.PeriodCode > mostRecentPeriodCode)
+                        mostRecentPeriodCode = periodTimingModel.PeriodCode;
                 }
             }
             return counter;
