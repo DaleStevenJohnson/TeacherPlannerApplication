@@ -47,7 +47,8 @@ Lesson Sequencer
 - Add tickbox to Sequencer controls to give option for user entered classcodes
 
 Academic Year Configuration
-- Add Period timings models
++ Add Period timings models
+- Fix removing of periods - list is now being sorted which can cause issues.
 - Add dynamic generation of period timings input based on period selection
 - Add extra Properties to AcademicYearModel
 - Mirror this in DB objects and DB schema
