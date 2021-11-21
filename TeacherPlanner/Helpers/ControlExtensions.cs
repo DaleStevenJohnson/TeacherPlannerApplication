@@ -12,6 +12,7 @@ namespace TeacherPlanner.Helpers
         public static string GetHeaderOfPreviouslySelectedTab(SelectionChangedEventArgs e)
         {
             TabItem[] tabItems = new TabItem[e.RemovedItems.Count];
+            // TODO: There's a crash on this line below
             e.RemovedItems.CopyTo(tabItems, 0);
             if (tabItems.Any())
             {
